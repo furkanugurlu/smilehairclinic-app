@@ -1,0 +1,423 @@
+import React, { useState, useEffect } from 'react';
+import {
+  View,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
+  ScrollView,
+  ActivityIndicator,
+  Alert,
+  Image,
+} from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { Formik } from 'formik';
+import * as Yup from 'yup';
+import { Text } from '../../components';
+import { useAuthStore } from '../../store/authStore';
+import { supabase } from '../../config/supabase';
+import {
+  pickImageFromGallery,
+  uploadAvatarToSupabase,
+  deleteAvatarFromSupabase,
+} from '../../utils/imageUpload';
+
+interface ProfileEditScreenProps {
+  navigation: any;
+}
+
+const ProfileSchema = Yup.object().shape({
+  fullName: Yup.string()
+    .min(2, 'Ad Soyad en az 2 karakter olmalıdır')
+    .required('Ad Soyad zorunludur'),
+  phone: Yup.string()
+    .matches(/^[0-9]{10}$/, 'Geçerli bir telefon numarası giriniz (10 haneli)')
+    .required('Telefon numarası zorunludur'),
+});
+
+const ProfileEditScreen: React.FC<ProfileEditScreenProps> = ({ navigation }) => {
+  const { user } = useAuthStore();
+  const [loading, setLoading] = useState(false);
+  const [uploadingAvatar, setUploadingAvatar] = useState(false);
+  const [avatarUrl, setAvatarUrl] = useState<string | undefined>(user?.avatar_url);
+
+  const handleSelectAvatar = async () => {
+    try {
+      setUploadingAvatar(true);
+
+      // Galeriden resim seç
+      const image = await pickImageFromGallery();
+      if (!image) {
+        setUploadingAvatar(false);
+        return;
+      }
+
+      if (!user?.id) {
+        Alert.alert('Hata', 'Kullanıcı bulunamadı');
+        setUploadingAvatar(false);
+        return;
+      }
+
+      // Eski avatarı sil (varsa)
+      if (avatarUrl) {
+        await deleteAvatarFromSupabase(avatarUrl);
+      }
+
+      // Yeni avatarı yükle
+      const publicUrl = await uploadAvatarToSupabase(user.id, image);
+
+      // Profile tablosunu güncelle
+      const { error } = await supabase
+        .from('profiles')
+        .update({
+          avatar_url: publicUrl,
+          updated_at: new Date().toISOString(),
+        })
+        .eq('id', user.id);
+
+      if (error) throw error;
+
+      // State'i güncelle
+      setAvatarUrl(publicUrl);
+
+      // AuthStore'u güncelle
+      const { initialize } = useAuthStore.getState();
+      await initialize();
+
+      console.log('✅ Avatar güncellendi');
+      Alert.alert('Başarılı', 'Profil fotoğrafınız güncellendi');
+    } catch (error: any) {
+      console.error('❌ Avatar yükleme hatası:', error);
+      Alert.alert('Hata', error.message || 'Fotoğraf yüklenirken bir hata oluştu');
+    } finally {
+      setUploadingAvatar(false);
+    }
+  };
+
+  const handleUpdate = async (values: { fullName: string; phone: string }) => {
+    try {
+      setLoading(true);
+      console.log('💾 Profil güncelleniyor...');
+
+      if (!user?.id) {
+        Alert.alert('Hata', 'Kullanıcı bulunamadı');
+        return;
+      }
+
+      // Profile tablosunu güncelle
+      const { data, error } = await supabase
+        .from('profiles')
+        .update({
+          full_name: values.fullName,
+          phone: values.phone,
+          updated_at: new Date().toISOString(),
+        })
+        .eq('id', user.id)
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      console.log('✅ Profil güncellendi');
+      
+      // AuthStore'u güncelle (yeni profile bilgileriyle)
+      if (data) {
+        // Store'daki user state'ini manuel güncelle
+        const { initialize } = useAuthStore.getState();
+        await initialize();
+      }
+
+      Alert.alert('Başarılı', 'Profil bilgileriniz güncellendi', [
+        {
+          text: 'Tamam',
+          onPress: () => navigation.goBack(),
+        },
+      ]);
+    } catch (error: any) {
+      console.error('❌ Profil güncelleme hatası:', error);
+      Alert.alert('Hata', error.message || 'Profil güncellenirken bir hata oluştu');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <SafeAreaView style={styles.container}>
+      <View style={styles.header}>
+        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+          <Text weight="semibold" style={styles.backText}>← Geri</Text>
+        </TouchableOpacity>
+        <Text weight="bold" style={styles.title}>Profil Bilgileri</Text>
+        <View style={styles.placeholder} />
+      </View>
+
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <View style={styles.content}>
+          {/* Avatar Section */}
+          <View style={styles.avatarSection}>
+            <View style={styles.avatarContainer}>
+              {avatarUrl ? (
+                <Image source={{ uri: avatarUrl }} style={styles.avatar} />
+              ) : (
+                <View style={styles.avatarPlaceholder}>
+                  <Text weight="bold" style={styles.avatarPlaceholderText}>
+                    {user?.full_name?.charAt(0).toUpperCase() || 'U'}
+                  </Text>
+                </View>
+              )}
+              {uploadingAvatar && (
+                <View style={styles.avatarLoading}>
+                  <ActivityIndicator color="#FFFFFF" size="large" />
+                </View>
+              )}
+            </View>
+            <TouchableOpacity
+              style={styles.changeAvatarButton}
+              onPress={handleSelectAvatar}
+              disabled={uploadingAvatar}
+            >
+              <Text weight="semibold" style={styles.changeAvatarText}>
+                {uploadingAvatar ? 'Yükleniyor...' : 'Fotoğraf Değiştir'}
+              </Text>
+            </TouchableOpacity>
+          </View>
+
+          <Formik
+            initialValues={{
+              fullName: user?.full_name || '',
+              phone: user?.phone || '',
+            }}
+            validationSchema={ProfileSchema}
+            onSubmit={handleUpdate}
+            enableReinitialize
+          >
+            {({
+              handleChange,
+              handleBlur,
+              handleSubmit,
+              values,
+              errors,
+              touched,
+            }) => (
+              <View style={styles.form}>
+                <View style={styles.inputContainer}>
+                  <Text weight="semibold" style={styles.label}>E-posta</Text>
+                  <View style={styles.disabledInput}>
+                    <Text weight="regular" style={styles.disabledText}>
+                      {user?.email}
+                    </Text>
+                  </View>
+                  <Text weight="regular" style={styles.hint}>
+                    E-posta adresi değiştirilemez
+                  </Text>
+                </View>
+
+                <View style={styles.inputContainer}>
+                  <Text weight="semibold" style={styles.label}>Ad Soyad</Text>
+                  <TextInput
+                    style={[
+                      styles.input,
+                      touched.fullName && errors.fullName && styles.inputError,
+                    ]}
+                    placeholder="Adınız Soyadınız"
+                    placeholderTextColor="#999"
+                    onChangeText={handleChange('fullName')}
+                    onBlur={handleBlur('fullName')}
+                    value={values.fullName}
+                    autoCapitalize="words"
+                  />
+                  {touched.fullName && errors.fullName && (
+                    <Text style={styles.errorText}>{errors.fullName}</Text>
+                  )}
+                </View>
+
+                <View style={styles.inputContainer}>
+                  <Text weight="semibold" style={styles.label}>Telefon</Text>
+                  <TextInput
+                    style={[
+                      styles.input,
+                      touched.phone && errors.phone && styles.inputError,
+                    ]}
+                    placeholder="5XXXXXXXXX"
+                    placeholderTextColor="#999"
+                    onChangeText={handleChange('phone')}
+                    onBlur={handleBlur('phone')}
+                    value={values.phone}
+                    keyboardType="phone-pad"
+                    maxLength={10}
+                  />
+                  {touched.phone && errors.phone && (
+                    <Text style={styles.errorText}>{errors.phone}</Text>
+                  )}
+                </View>
+
+                <TouchableOpacity
+                  style={[styles.button, loading && styles.buttonDisabled]}
+                  onPress={() => handleSubmit()}
+                  disabled={loading}
+                >
+                  {loading ? (
+                    <ActivityIndicator color="#FFFFFF" />
+                  ) : (
+                    <Text weight="semibold" style={styles.buttonText}>
+                      Güncelle
+                    </Text>
+                  )}
+                </TouchableOpacity>
+              </View>
+            )}
+          </Formik>
+        </View>
+      </ScrollView>
+    </SafeAreaView>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#F9FAFB',
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingHorizontal: 24,
+    paddingVertical: 16,
+    backgroundColor: '#FFFFFF',
+    borderBottomWidth: 1,
+    borderBottomColor: '#E5E7EB',
+  },
+  backButton: {
+    padding: 8,
+  },
+  backText: {
+    fontSize: 16,
+    color: '#3B82F6',
+  },
+  title: {
+    fontSize: 18,
+    color: '#1A1A1A',
+  },
+  placeholder: {
+    width: 60,
+  },
+  content: {
+    padding: 24,
+  },
+  avatarSection: {
+    alignItems: 'center',
+    marginBottom: 24,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    padding: 24,
+  },
+  avatarContainer: {
+    position: 'relative',
+    marginBottom: 16,
+  },
+  avatar: {
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    backgroundColor: '#F3F4F6',
+  },
+  avatarPlaceholder: {
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    backgroundColor: '#3B82F6',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  avatarPlaceholderText: {
+    fontSize: 48,
+    color: '#FFFFFF',
+  },
+  avatarLoading: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    borderRadius: 60,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  changeAvatarButton: {
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#3B82F6',
+  },
+  changeAvatarText: {
+    color: '#3B82F6',
+    fontSize: 14,
+  },
+  form: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    padding: 20,
+  },
+  inputContainer: {
+    marginBottom: 20,
+  },
+  label: {
+    fontSize: 14,
+    color: '#1A1A1A',
+    marginBottom: 8,
+  },
+  input: {
+    backgroundColor: '#F9FAFB',
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
+    borderRadius: 12,
+    paddingHorizontal: 16,
+    paddingVertical: 14,
+    fontSize: 16,
+    color: '#1A1A1A',
+  },
+  inputError: {
+    borderColor: '#EF4444',
+  },
+  disabledInput: {
+    backgroundColor: '#F3F4F6',
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
+    borderRadius: 12,
+    paddingHorizontal: 16,
+    paddingVertical: 14,
+  },
+  disabledText: {
+    fontSize: 16,
+    color: '#6B7280',
+  },
+  hint: {
+    fontSize: 12,
+    color: '#9CA3AF',
+    marginTop: 4,
+  },
+  errorText: {
+    color: '#EF4444',
+    fontSize: 12,
+    marginTop: 4,
+  },
+  button: {
+    backgroundColor: '#3B82F6',
+    paddingVertical: 16,
+    borderRadius: 12,
+    alignItems: 'center',
+    marginTop: 8,
+  },
+  buttonDisabled: {
+    opacity: 0.6,
+  },
+  buttonText: {
+    color: '#FFFFFF',
+    fontSize: 16,
+  },
+});
+
+export default ProfileEditScreen;
+

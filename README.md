@@ -1,97 +1,159 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# 💇‍♂️ Smile Hair Clinic App
 
-# Getting Started
+Modern ve kullanıcı dostu saç kliniği mobil uygulaması. React Native, TypeScript, Supabase ve Zustand ile geliştirilmiştir.
 
-> **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
+## ✨ Özellikler
 
-## Step 1: Start Metro
+- 🎨 Modern ve kullanıcı dostu UI/UX
+- 🔐 Güvenli authentication (Supabase)
+- 📝 Form validasyonu (Formik + Yup)
+- 🗂️ State yönetimi (Zustand)
+- 🧭 Navigation (React Navigation)
+- 📱 Onboarding ekranları
+- 👤 Kullanıcı profil yönetimi
+- 📅 Randevu sistemi (yakında)
+- 💬 Mesajlaşma (yakında)
 
-First, you will need to run **Metro**, the JavaScript build tool for React Native.
+## 🚀 Hızlı Başlangıç
 
-To start the Metro dev server, run the following command from the root of your React Native project:
+> **Not**: Başlamadan önce [React Native ortamınızı kurduğunuzdan](https://reactnative.dev/docs/set-up-your-environment) emin olun.
 
-```sh
-# Using npm
+### 📋 Gereksinimler
+
+- Node.js >= 20
+- React Native CLI
+- iOS: Xcode ve CocoaPods
+- Android: Android Studio ve JDK
+- Supabase hesabı
+
+### 📦 Kurulum
+
+1. **Bağımlılıkları yükleyin:**
+
+```bash
+npm install
+```
+
+2. **iOS için CocoaPods yükleyin:**
+
+```bash
+cd ios
+pod install
+cd ..
+```
+
+3. **Supabase yapılandırması:**
+
+Detaylı kurulum talimatları için [SETUP.md](./SETUP.md) dosyasına bakın.
+
+## 🎯 Uygulamayı Çalıştırma
+
+### 1. Metro Bundler'ı Başlatın
+
+```bash
 npm start
-
-# OR using Yarn
-yarn start
 ```
 
-## Step 2: Build and run your app
+### 2. Uygulamayı Çalıştırın
 
-With Metro running, open a new terminal window/pane from the root of your React Native project, and use one of the following commands to build and run your Android or iOS app:
-
-### Android
-
-```sh
-# Using npm
-npm run android
-
-# OR using Yarn
-yarn android
-```
-
-### iOS
-
-For iOS, remember to install CocoaPods dependencies (this only needs to be run on first clone or after updating native deps).
-
-The first time you create a new project, run the Ruby bundler to install CocoaPods itself:
-
-```sh
-bundle install
-```
-
-Then, and every time you update your native dependencies, run:
-
-```sh
-bundle exec pod install
-```
-
-For more information, please visit [CocoaPods Getting Started guide](https://guides.cocoapods.org/using/getting-started.html).
-
-```sh
-# Using npm
+**iOS:**
+```bash
 npm run ios
-
-# OR using Yarn
-yarn ios
 ```
 
-If everything is set up correctly, you should see your new app running in the Android Emulator, iOS Simulator, or your connected device.
+**Android:**
+```bash
+npm run android
+```
 
-This is one way to run your app — you can also build it directly from Android Studio or Xcode.
+## 📱 Ekran Görüntüleri
 
-## Step 3: Modify your app
+### Onboarding
+- 3 sayfalık modern onboarding deneyimi
+- Swipe ile geçiş
+- Atla butonu
 
-Now that you have successfully run the app, let's make changes!
+### Authentication
+- Login ekranı (Email + Şifre)
+- Register ekranı (Ad Soyad + Email + Şifre)
+- Form validasyonu
 
-Open `App.tsx` in your text editor of choice and make some changes. When you save, your app will automatically update and reflect these changes — this is powered by [Fast Refresh](https://reactnative.dev/docs/fast-refresh).
+### Ana Uygulama
+- Ana Sayfa (Hızlı işlemler, Hizmetler)
+- Randevular
+- Mesajlar
+- Profil (Kullanıcı bilgileri, Ayarlar)
 
-When you want to forcefully reload, for example to reset the state of your app, you can perform a full reload:
+## 🏗️ Proje Yapısı
 
-- **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Dev Menu**, accessed via <kbd>Ctrl</kbd> + <kbd>M</kbd> (Windows/Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (macOS).
-- **iOS**: Press <kbd>R</kbd> in iOS Simulator.
+```
+src/
+├── config/          # Yapılandırma (Supabase)
+├── store/           # Zustand stores
+├── screens/         # Ekranlar
+│   ├── auth/        # Login, Register
+│   ├── onboarding/  # Onboarding
+│   └── main/        # Ana uygulama ekranları
+├── navigation/      # Navigation yapısı
+├── components/      # Reusable components
+├── types/           # TypeScript types
+└── utils/           # Yardımcı fonksiyonlar
+```
 
-## Congratulations! :tada:
+## 🛠️ Kullanılan Teknolojiler
 
-You've successfully run and modified your React Native App. :partying_face:
+- **React Native 0.82.1** - Mobil framework
+- **TypeScript** - Tip güvenliği
+- **Formik** - Form yönetimi
+- **Yup** - Validasyon
+- **Zustand** - State yönetimi
+- **Supabase** - Backend & Auth
+- **React Navigation** - Navigasyon
+- **AsyncStorage** - Local storage
 
-### Now what?
+## 📚 Dokümantasyon
 
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [docs](https://reactnative.dev/docs/getting-started).
+- [SETUP.md](./SETUP.md) - Detaylı kurulum rehberi
+- [PROJECT_SUMMARY.md](./PROJECT_SUMMARY.md) - Proje özeti ve durum
 
-# Troubleshooting
+## 🐛 Sorun Giderme
 
-If you're having issues getting the above steps to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
+### Metro Cache Temizleme
+```bash
+npm start -- --reset-cache
+```
 
-# Learn More
+### iOS Pod Sorunları
+```bash
+cd ios
+pod deintegrate
+pod install
+cd ..
+```
 
-To learn more about React Native, take a look at the following resources:
+### Android Build Temizleme
+```bash
+cd android
+./gradlew clean
+cd ..
+```
 
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+## 🤝 Katkıda Bulunma
+
+Katkılarınızı bekliyoruz! Lütfen bir issue açın veya pull request gönderin.
+
+## 📄 Lisans
+
+Bu proje MIT lisansı altında lisanslanmıştır.
+
+## 🔗 Faydalı Linkler
+
+- [React Native Dokümantasyonu](https://reactnative.dev)
+- [Supabase Dokümantasyonu](https://supabase.com/docs)
+- [React Navigation](https://reactnavigation.org)
+- [Formik](https://formik.org)
+- [Zustand](https://zustand-demo.pmnd.rs)
+
+---
+
+**Smile Hair Clinic** ile saç sağlığınız güvende! 💇‍♂️✨

@@ -86,17 +86,26 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
 
         <View style={styles.section}>
           <Text weight="semibold" style={styles.sectionTitle}>Destek</Text>
-          <TouchableOpacity style={styles.menuItem}>
+          <TouchableOpacity 
+            style={styles.menuItem}
+            onPress={() => navigation.navigate('HelpCenter')}
+          >
             <Text style={styles.menuIcon}>❓</Text>
             <Text weight="regular" style={styles.menuText}>Yardım Merkezi</Text>
             <Text style={styles.menuArrow}>›</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.menuItem}>
+          <TouchableOpacity 
+            style={styles.menuItem}
+            onPress={() => navigation.navigate('Contact')}
+          >
             <Text style={styles.menuIcon}>📧</Text>
             <Text weight="regular" style={styles.menuText}>İletişim</Text>
             <Text style={styles.menuArrow}>›</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.menuItem}>
+          <TouchableOpacity 
+            style={styles.menuItem}
+            onPress={() => navigation.navigate('About')}
+          >
             <Text style={styles.menuIcon}>ℹ️</Text>
             <Text weight="regular" style={styles.menuText}>Hakkında</Text>
             <Text style={styles.menuArrow}>›</Text>

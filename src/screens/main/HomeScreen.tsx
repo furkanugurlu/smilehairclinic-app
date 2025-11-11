@@ -121,6 +121,10 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation, route }) => {
     navigation.navigate('HairCheckDetail', { check });
   };
 
+  const handleProfilePress = () => {
+    navigation.navigate('Profile');
+  };
+
   const getStatusColor = (status?: AnalysisStatus) => {
     switch (status) {
       case 'good':
@@ -160,11 +164,12 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation, route }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-       <View style={styles.header}>
-          <View>
-            <Text weight="regular" style={styles.greeting}>Merhaba,</Text>
-            <Text weight="bold" style={styles.userName}>{user?.full_name || 'Kullanıcı'}</Text>
-          </View>
+      <View style={styles.header}>
+        <View>
+          <Text weight="regular" style={styles.greeting}>Merhaba,</Text>
+          <Text weight="bold" style={styles.userName}>{user?.full_name || 'Kullanıcı'}</Text>
+        </View>
+        <TouchableOpacity onPress={handleProfilePress} activeOpacity={0.7}>
           {user?.avatar_url ? (
             <Image source={{ uri: user.avatar_url }} style={styles.avatar} />
           ) : (
@@ -174,7 +179,8 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation, route }) => {
               </Text>
             </View>
           )}
-        </View>
+        </TouchableOpacity>
+      </View>
       {loading && !refreshing ? <View style={styles.loadingContainer}>
         <ActivityIndicator size="small" color="#01213D" />
       </View> : <ScrollView 

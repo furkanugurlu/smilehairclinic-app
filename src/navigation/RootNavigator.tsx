@@ -8,19 +8,19 @@ import SplashScreen from '../screens/SplashScreen';
 import OnboardingScreen from '../screens/onboarding/OnboardingScreen';
 import AuthStack from './AuthStack';
 import MainTabs from './MainTabs';
+import HairCheckScreen from '../screens/main/HairCheckScreen';
 
 const Stack = createNativeStackNavigator();
 
 const ONBOARDING_KEY = '@onboarding_completed';
 
 const RootNavigator: React.FC = () => {
-  const { user, loading, initialize } = useAuthStore();
+  const { user, loading } = useAuthStore();
   const [showOnboarding, setShowOnboarding] = useState<boolean | null>(null);
   const [showSplash, setShowSplash] = useState(true);
 
   useEffect(() => {
     checkOnboarding();
-    initialize();
   }, []);
 
   const checkOnboarding = async () => {
@@ -46,7 +46,6 @@ const RootNavigator: React.FC = () => {
   };
 
   const handleSplashFinish = () => {
-    console.log('🎬 Splash ekranı tamamlandı');
     setShowSplash(false);
   };
 
@@ -66,7 +65,13 @@ const RootNavigator: React.FC = () => {
               {() => <OnboardingScreen onComplete={handleOnboardingComplete} />}
             </Stack.Screen>
           ) : user ? (
-            <Stack.Screen name="Main" component={MainTabs} />
+            <>
+              <Stack.Screen name="Main" component={MainTabs} />
+              <Stack.Screen 
+                name="HairCheckCapture" 
+                component={HairCheckScreen}
+              />
+            </>
           ) : (
             <Stack.Screen name="Auth" component={AuthStack} />
           )}

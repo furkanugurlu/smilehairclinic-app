@@ -38,7 +38,9 @@
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Profil fotoğrafınızı güncellemek için fotoğraf galerinize erişmemiz gerekiyor.</string>
 	<key>NSCameraUsageDescription</key>
-	<string>Profil fotoğrafı çekmek için kameranıza erişmemiz gerekiyor.</string>
+	<string>Saç analizi için fotoğraf çekmek ve profil fotoğrafınızı güncellemek için kameranıza erişmemiz gerekiyor.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Bu özellik mikrofon kullanmaz.</string>
 	<key>RCTNewArchEnabled</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>
@@ -55,5 +57,9 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>UIAppFonts</key>
+	<array>
+		<string>Ionicons.ttf</string>
+	</array>
 </dict>
 </plist>

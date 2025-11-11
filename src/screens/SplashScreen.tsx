@@ -6,6 +6,7 @@ import {
   Dimensions,
   StatusBar,
 } from 'react-native';
+import { useAuthStore } from '../store/authStore';
 
 const { width } = Dimensions.get('window');
 
@@ -14,14 +15,32 @@ interface SplashScreenProps {
 }
 
 const SplashScreen: React.FC<SplashScreenProps> = ({ onFinish }) => {
-  useEffect(() => {
-    // 2 saniye sonra splash'i kapat
-    const timer = setTimeout(() => {
-      onFinish();
-    }, 2000);
+  const { initialize } = useAuthStore();
 
-    return () => clearTimeout(timer);
-  }, []);
+  useEffect(() => {
+    let timer: ReturnType<typeof setTimeout>;
+
+    const initializeApp = async () => {
+      // Auth state'i initialize et
+      console.log('🚀 Uygulama başlatılıyor...');
+      await initialize();
+      console.log('✅ Auth state yüklendi');
+      
+      // 2 saniye sonra splash'i kapat
+      timer = setTimeout(() => {
+        console.log('🎬 Splash ekranı tamamlandı');
+        onFinish();
+      }, 2000);
+    };
+
+    initializeApp();
+
+    return () => {
+      if (timer) {
+        clearTimeout(timer);
+      }
+    };
+  }, [initialize, onFinish]);
 
   return (
     <View style={styles.container}>

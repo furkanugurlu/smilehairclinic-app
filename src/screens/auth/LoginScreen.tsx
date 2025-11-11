@@ -142,11 +142,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
                   onPress={() => handleSubmit()}
                   disabled={loading}
                 >
-                  {loading ? (
-                    <ActivityIndicator color="#FFFFFF" />
-                  ) : (
                     <Text weight="semibold" style={styles.buttonText}>Giriş Yap</Text>
-                  )}
                 </TouchableOpacity>
 
                 <View style={styles.footer}>

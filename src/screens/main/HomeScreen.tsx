@@ -21,13 +21,17 @@ interface HairCheckResult {
   notes: string;
 }
 
-const HomeScreen: React.FC = () => {
+interface HomeScreenProps {
+  navigation: any;
+}
+
+const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
   const { user } = useAuthStore();
   const [lastCheck] = useState<HairCheckResult | null>(null); // Bu veriyi API'den alacağız
 
   const handleStartCheck = () => {
     console.log('🔬 Saç durumu kontrolü başlatılıyor...');
-    // TODO: Saç kontrolü sayfasına yönlendir
+    navigation.navigate('HairCheck');
   };
 
   const getStatusColor = (status: string) => {

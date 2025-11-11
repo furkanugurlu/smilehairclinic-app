@@ -44,12 +44,20 @@ const ProfileEditScreen: React.FC<ProfileEditScreenProps> = ({ navigation }) => 
     try {
       setUploadingAvatar(true);
 
+      console.log('🖼️ Galeri açılıyor...');
       // Galeriden resim seç
       const image = await pickImageFromGallery();
       if (!image) {
+        console.log('📸 Resim seçimi iptal edildi');
         setUploadingAvatar(false);
         return;
       }
+
+      console.log('✅ Resim seçildi:', { 
+        uri: image.uri, 
+        type: image.type, 
+        size: image.size 
+      });
 
       if (!user?.id) {
         Alert.alert('Hata', 'Kullanıcı bulunamadı');
@@ -59,13 +67,17 @@ const ProfileEditScreen: React.FC<ProfileEditScreenProps> = ({ navigation }) => 
 
       // Eski avatarı sil (varsa)
       if (avatarUrl) {
+        console.log('🗑️ Eski avatar siliniyor...');
         await deleteAvatarFromSupabase(avatarUrl);
       }
 
       // Yeni avatarı yükle
+      console.log('⬆️ Avatar yükleniyor...');
       const publicUrl = await uploadAvatarToSupabase(user.id, image);
+      console.log('✅ Avatar yüklendi:', publicUrl);
 
       // Profile tablosunu güncelle
+      console.log('💾 Profil güncelleniyor...');
       const { error } = await supabase
         .from('profiles')
         .update({
@@ -74,20 +86,38 @@ const ProfileEditScreen: React.FC<ProfileEditScreenProps> = ({ navigation }) => 
         })
         .eq('id', user.id);
 
-      if (error) throw error;
+      if (error) {
+        console.error('❌ Profil güncelleme hatası:', error);
+        throw error;
+      }
 
       // State'i güncelle
       setAvatarUrl(publicUrl);
 
       // AuthStore'u güncelle
+      console.log('🔄 AuthStore güncelleniyor...');
       const { initialize } = useAuthStore.getState();
       await initialize();
 
-      console.log('✅ Avatar güncellendi');
+      console.log('✅ Avatar başarıyla güncellendi');
       Alert.alert('Başarılı', 'Profil fotoğrafınız güncellendi');
     } catch (error: any) {
       console.error('❌ Avatar yükleme hatası:', error);
-      Alert.alert('Hata', error.message || 'Fotoğraf yüklenirken bir hata oluştu');
+      
+      // Daha detaylı hata mesajı
+      let errorMessage = 'Fotoğraf yüklenirken bir hata oluştu';
+      
+      if (error.message) {
+        if (error.message.includes('Network')) {
+          errorMessage = 'Network hatası. İnternet bağlantınızı kontrol edin.';
+        } else if (error.message.includes('Storage')) {
+          errorMessage = 'Storage hatası. Lütfen daha sonra tekrar deneyin.';
+        } else {
+          errorMessage = error.message;
+        }
+      }
+      
+      Alert.alert('Hata', errorMessage);
     } finally {
       setUploadingAvatar(false);
     }

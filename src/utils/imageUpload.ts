@@ -1,5 +1,7 @@
 import { supabase } from '../config/supabase';
 import { launchImageLibrary } from 'react-native-image-picker';
+import ReactNativeBlobUtil from 'react-native-blob-util';
+import { decode as base64Decode } from 'base-64';
 
 export interface ImagePickerResult {
   uri: string;
@@ -49,41 +51,45 @@ export const uploadAvatarToSupabase = async (
   imageData: ImagePickerResult
 ): Promise<string> => {
   try {
-    console.log('📤 Avatar yükleniyor...');
+    console.log('📤 Avatar yükleniyor (react-native-blob-util)...', { 
+      uri: imageData.uri,
+      type: imageData.type,
+      name: imageData.name,
+    });
 
     // Dosya uzantısını al
     const fileExt = imageData.name.split('.').pop();
     const fileName = `${userId}_${Date.now()}.${fileExt}`;
     const filePath = `avatars/${fileName}`;
 
-    // XMLHttpRequest ile dosyayı ArrayBuffer olarak oku
-    const arrayBuffer = await new Promise<ArrayBuffer>((resolve, reject) => {
-      const xhr = new XMLHttpRequest();
-      xhr.open('GET', imageData.uri, true);
-      xhr.responseType = 'arraybuffer';
-      
-      xhr.onload = () => {
-        if (xhr.status === 200) {
-          resolve(xhr.response);
-        } else {
-          reject(new Error(`Failed to load image: ${xhr.status}`));
-        }
-      };
-      
-      xhr.onerror = () => reject(new Error('Network error'));
-      xhr.send();
-    });
-
-    console.log('📦 Dosya hazırlandı:', {
+    // Dosya path'ini temizle (file:// önekini kaldır)
+    const cleanUri = imageData.uri.replace('file://', '');
+    
+    console.log('📥 Dosya base64\'e çevriliyor...', { cleanUri });
+    
+    // Dosyayı base64 olarak oku (Native module kullanarak - Android uyumlu)
+    const base64Data = await ReactNativeBlobUtil.fs.readFile(cleanUri, 'base64');
+    
+    console.log('📦 Base64 hazırlandı, boyut:', base64Data.length);
+    
+    // Base64'ü ArrayBuffer'a çevir
+    const binaryString = base64Decode(base64Data);
+    const bytes = new Uint8Array(binaryString.length);
+    for (let i = 0; i < binaryString.length; i++) {
+      bytes[i] = binaryString.charCodeAt(i);
+    }
+    const arrayBuffer = bytes.buffer;
+    
+    console.log('⬆️ Supabase Storage\'a yükleniyor...', {
       size: arrayBuffer.byteLength,
       type: imageData.type,
     });
 
-    // Supabase Storage'a yükle (ArrayBuffer olarak)
+    // Supabase Storage'a yükle
     const { data, error } = await supabase.storage
       .from('avatars')
       .upload(filePath, arrayBuffer, {
-        contentType: imageData.type,
+        contentType: imageData.type || 'image/jpeg',
         upsert: false,
       });
 
@@ -99,9 +105,15 @@ export const uploadAvatarToSupabase = async (
       .from('avatars')
       .getPublicUrl(data.path);
 
+    console.log('🔗 Public URL alındı:', publicUrlData.publicUrl);
+
     return publicUrlData.publicUrl;
-  } catch (error) {
-    console.error('❌ Avatar yükleme hatası:', error);
+  } catch (error: any) {
+    console.error('❌ Avatar yükleme hatası detayı:', {
+      message: error.message,
+      name: error.name,
+      uri: imageData.uri,
+    });
     throw error;
   }
 };

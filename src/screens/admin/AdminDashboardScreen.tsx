@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   RefreshControl,
   Alert,
+  ActivityIndicator,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Text, LoadingModal } from '../../components';
@@ -121,10 +122,6 @@ const AdminDashboardScreen: React.FC<AdminDashboardScreenProps> = ({ navigation 
     });
   };
 
-  if (loading && !refreshing) {
-    return <LoadingModal visible={true} message="Yükleniyor..." />;
-  }
-
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
@@ -136,7 +133,9 @@ const AdminDashboardScreen: React.FC<AdminDashboardScreenProps> = ({ navigation 
         </View>
       </View>
 
-      <ScrollView
+      {loading && !refreshing ? <View style={styles.loadingContainer}>
+        <ActivityIndicator size="small" color="#01213D" />
+      </View> : <ScrollView
         showsVerticalScrollIndicator={false}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
@@ -350,7 +349,7 @@ const AdminDashboardScreen: React.FC<AdminDashboardScreenProps> = ({ navigation 
         </View>
 
         <View style={{ height: 40 }} />
-      </ScrollView>
+      </ScrollView>}
     </SafeAreaView>
   );
 };
@@ -359,6 +358,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#F9FAFB',
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   header: {
     flexDirection: 'row',

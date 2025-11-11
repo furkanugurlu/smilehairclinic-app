@@ -19,28 +19,36 @@ const SplashScreen: React.FC<SplashScreenProps> = ({ onFinish }) => {
 
   useEffect(() => {
     let timer: ReturnType<typeof setTimeout>;
+    let mounted = true;
 
     const initializeApp = async () => {
       // Auth state'i initialize et
       console.log('🚀 Uygulama başlatılıyor...');
       await initialize();
+      
+      if (!mounted) return;
+      
       console.log('✅ Auth state yüklendi');
       
       // 2 saniye sonra splash'i kapat
       timer = setTimeout(() => {
-        console.log('🎬 Splash ekranı tamamlandı');
-        onFinish();
+        if (mounted) {
+          console.log('🎬 Splash ekranı tamamlandı');
+          onFinish();
+        }
       }, 2000);
     };
 
     initializeApp();
 
     return () => {
+      mounted = false;
       if (timer) {
         clearTimeout(timer);
       }
     };
-  }, [initialize, onFinish]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Sadece component mount olduğunda bir kere çalışmalı
 
   return (
     <View style={styles.container}>

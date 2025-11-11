@@ -7,9 +7,10 @@ import {
   RefreshControl,
   Alert,
   Image,
+  ActivityIndicator,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Text, LoadingModal } from '../../components';
+import { Text, LoadingModal, FilterTabs, FilterOption } from '../../components';
 import { supabase } from '../../config/supabase';
 import { HairCheck, HairCheckStatus } from '../../types';
 
@@ -19,28 +20,33 @@ interface AdminHairChecksScreenProps {
 
 const AdminHairChecksScreen: React.FC<AdminHairChecksScreenProps> = ({ navigation }) => {
   const [hairChecks, setHairChecks] = useState<HairCheck[]>([]);
+  const [filteredHairChecks, setFilteredHairChecks] = useState<HairCheck[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [filter, setFilter] = useState<'all' | HairCheckStatus>('all');
 
   useEffect(() => {
     fetchHairChecks();
-  }, [filter]);
+  }, []);
+
+  // Filtre değiştiğinde client-side filtreleme yap
+  useEffect(() => {
+    if (filter === 'all') {
+      setFilteredHairChecks(hairChecks);
+    } else {
+      setFilteredHairChecks(hairChecks.filter(h => h.status === filter));
+    }
+  }, [filter, hairChecks]);
 
   const fetchHairChecks = async () => {
     try {
       setLoading(true);
 
-      let query = supabase
+      // Her zaman tüm kontrolleri getir, filtreleme client-side'da yapılacak
+      const { data, error } = await supabase
         .from('hair_checks')
         .select('*, profiles!hair_checks_user_id_fkey(full_name, email)')
         .order('created_at', { ascending: false });
-
-      if (filter !== 'all') {
-        query = query.eq('status', filter);
-      }
-
-      const { data, error } = await query;
 
       if (error) throw error;
 
@@ -57,7 +63,7 @@ const AdminHairChecksScreen: React.FC<AdminHairChecksScreenProps> = ({ navigatio
     setRefreshing(true);
     await fetchHairChecks();
     setRefreshing(false);
-  }, [filter]);
+  }, []);
 
   const handleViewDetail = (check: HairCheck) => {
     navigation.navigate('HairCheckDetail', { check });
@@ -104,11 +110,45 @@ const AdminHairChecksScreen: React.FC<AdminHairChecksScreenProps> = ({ navigatio
     });
   };
 
-  const filteredHairChecks = hairChecks;
-
-  if (loading && !refreshing) {
-    return <LoadingModal visible={true} message="Yükleniyor..." />;
-  }
+  // Filter options için data hazırla
+  // Count değerleri her zaman tüm hairChecks'ten hesaplanır (filtreden bağımsız)
+  const filterOptions: FilterOption[] = [
+    {
+      id: 'all',
+      label: 'Tümü',
+      icon: 'apps',
+      color: '#666',
+      count: hairChecks.length,
+    },
+    {
+      id: 'pending',
+      label: 'Bekleyen',
+      icon: 'time',
+      color: '#F59E0B',
+      count: hairChecks.filter(h => h.status === 'pending').length,
+    },
+    {
+      id: 'analyzing',
+      label: 'Analiz Ediliyor',
+      icon: 'analytics',
+      color: '#3B82F6',
+      count: hairChecks.filter(h => h.status === 'analyzing').length,
+    },
+    {
+      id: 'completed',
+      label: 'Tamamlandı',
+      icon: 'checkmark-done',
+      color: '#10B981',
+      count: hairChecks.filter(h => h.status === 'completed').length,
+    },
+    {
+      id: 'failed',
+      label: 'Başarısız',
+      icon: 'close-circle',
+      color: '#EF4444',
+      count: hairChecks.filter(h => h.status === 'failed').length,
+    },
+  ];
 
   return (
     <SafeAreaView style={styles.container}>
@@ -116,55 +156,16 @@ const AdminHairChecksScreen: React.FC<AdminHairChecksScreenProps> = ({ navigatio
         <Text weight="bold" style={styles.title}>Saç Kontrolleri</Text>
       </View>
 
-      {/* Filter Tabs */}
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.filterContainer}>
-        <TouchableOpacity
-          style={[styles.filterTab, filter === 'all' && styles.filterTabActive]}
-          onPress={() => setFilter('all')}
-        >
-          <Text
-            weight="semibold"
-            style={[styles.filterText, filter === 'all' && styles.filterTextActive]}
-          >
-            Tümü
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.filterTab, filter === 'pending' && styles.filterTabActive]}
-          onPress={() => setFilter('pending')}
-        >
-          <Text
-            weight="semibold"
-            style={[styles.filterText, filter === 'pending' && styles.filterTextActive]}
-          >
-            Bekleyen
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.filterTab, filter === 'analyzing' && styles.filterTabActive]}
-          onPress={() => setFilter('analyzing')}
-        >
-          <Text
-            weight="semibold"
-            style={[styles.filterText, filter === 'analyzing' && styles.filterTextActive]}
-          >
-            Analiz Ediliyor
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.filterTab, filter === 'completed' && styles.filterTabActive]}
-          onPress={() => setFilter('completed')}
-        >
-          <Text
-            weight="semibold"
-            style={[styles.filterText, filter === 'completed' && styles.filterTextActive]}
-          >
-            Tamamlandı
-          </Text>
-        </TouchableOpacity>
-      </ScrollView>
+      {/* Filter Tabs Component */}
+      <FilterTabs
+        options={filterOptions}
+        selectedFilter={filter}
+        onFilterChange={(filterId) => setFilter(filterId as 'all' | HairCheckStatus)}
+      />
 
-      <ScrollView
+     {loading && !refreshing ? <View style={styles.loadingContainer}>
+        <ActivityIndicator size="small" color="#01213D" />
+      </View> : <ScrollView
         showsVerticalScrollIndicator={false}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
@@ -256,7 +257,7 @@ const AdminHairChecksScreen: React.FC<AdminHairChecksScreenProps> = ({ navigatio
           </View>
         )}
         <View style={{ height: 40 }} />
-      </ScrollView>
+      </ScrollView>}
     </SafeAreaView>
   );
 };
@@ -265,6 +266,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#F9FAFB',
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   header: {
     backgroundColor: '#FFFFFF',
@@ -276,30 +282,6 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     color: '#1A1A1A',
-  },
-  filterContainer: {
-    backgroundColor: '#FFFFFF',
-    paddingHorizontal: 20,
-    paddingVertical: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: '#F3F4F6',
-  },
-  filterTab: {
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 20,
-    marginRight: 8,
-    backgroundColor: '#F3F4F6',
-  },
-  filterTabActive: {
-    backgroundColor: '#3B82F6',
-  },
-  filterText: {
-    fontSize: 14,
-    color: '#666',
-  },
-  filterTextActive: {
-    color: '#FFFFFF',
   },
   listContainer: {
     paddingHorizontal: 24,

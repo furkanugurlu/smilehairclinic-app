@@ -6,9 +6,11 @@ import {
   TouchableOpacity,
   RefreshControl,
   Alert,
+  ActivityIndicator,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Text, LoadingModal } from '../../components';
+import Icon from 'react-native-vector-icons/Ionicons';
+import { Text, LoadingModal, FilterTabs, FilterOption } from '../../components';
 import { supabase } from '../../config/supabase';
 import { Appointment, AppointmentStatus } from '../../types';
 
@@ -18,29 +20,34 @@ interface AdminAppointmentsScreenProps {
 
 const AdminAppointmentsScreen: React.FC<AdminAppointmentsScreenProps> = ({ navigation }) => {
   const [appointments, setAppointments] = useState<Appointment[]>([]);
+  const [filteredAppointments, setFilteredAppointments] = useState<Appointment[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [filter, setFilter] = useState<'all' | AppointmentStatus>('all');
 
   useEffect(() => {
     fetchAppointments();
-  }, [filter]);
+  }, []);
+
+  // Filtre değiştiğinde client-side filtreleme yap
+  useEffect(() => {
+    if (filter === 'all') {
+      setFilteredAppointments(appointments);
+    } else {
+      setFilteredAppointments(appointments.filter(a => a.status === filter));
+    }
+  }, [filter, appointments]);
 
   const fetchAppointments = async () => {
     try {
       setLoading(true);
 
-      let query = supabase
+      // Her zaman tüm randevuları getir, filtreleme client-side'da yapılacak
+      const { data, error } = await supabase
         .from('appointments')
         .select('*, profiles!appointments_user_id_fkey(full_name, email)')
         .order('appointment_date', { ascending: true })
         .order('appointment_time', { ascending: true });
-
-      if (filter !== 'all') {
-        query = query.eq('status', filter);
-      }
-
-      const { data, error } = await query;
 
       if (error) throw error;
 
@@ -57,7 +64,7 @@ const AdminAppointmentsScreen: React.FC<AdminAppointmentsScreenProps> = ({ navig
     setRefreshing(true);
     await fetchAppointments();
     setRefreshing(false);
-  }, [filter]);
+  }, []);
 
   const handleStatusChange = async (appointmentId: string, newStatus: AppointmentStatus) => {
     try {
@@ -129,11 +136,49 @@ const AdminAppointmentsScreen: React.FC<AdminAppointmentsScreenProps> = ({ navig
     return timeString.substring(0, 5);
   };
 
-  const filteredAppointments = appointments;
+  // Filter options için data hazırla
+  // Count değerleri her zaman tüm appointments'tan hesaplanır (filtreden bağımsız)
+  const filterOptions: FilterOption[] = [
+    {
+      id: 'all',
+      label: 'Tümü',
+      icon: 'apps',
+      color: '#666',
+      count: appointments.length,
+    },
+    {
+      id: 'pending',
+      label: 'Bekleyen',
+      icon: 'time',
+      color: '#F59E0B',
+      count: appointments.filter(a => a.status === 'pending').length,
+    },
+    {
+      id: 'confirmed',
+      label: 'Onaylı',
+      icon: 'checkmark-circle',
+      color: '#10B981',
+      count: appointments.filter(a => a.status === 'confirmed').length,
+    },
+    {
+      id: 'completed',
+      label: 'Tamamlandı',
+      icon: 'checkmark-done',
+      color: '#6B7280',
+      count: appointments.filter(a => a.status === 'completed').length,
+    },
+    {
+      id: 'cancelled',
+      label: 'İptal',
+      icon: 'close-circle',
+      color: '#EF4444',
+      count: appointments.filter(a => a.status === 'cancelled').length,
+    },
+  ];
 
-  if (loading && !refreshing) {
-    return <LoadingModal visible={true} message="Yükleniyor..." />;
-  }
+  console.log('appointments', appointments);
+  console.log('filteredAppointments', filteredAppointments);
+  
 
   return (
     <SafeAreaView style={styles.container}>
@@ -141,66 +186,16 @@ const AdminAppointmentsScreen: React.FC<AdminAppointmentsScreenProps> = ({ navig
         <Text weight="bold" style={styles.title}>Randevular</Text>
       </View>
 
-      {/* Filter Tabs */}
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.filterContainer}>
-        <TouchableOpacity
-          style={[styles.filterTab, filter === 'all' && styles.filterTabActive]}
-          onPress={() => setFilter('all')}
-        >
-          <Text
-            weight="semibold"
-            style={[styles.filterText, filter === 'all' && styles.filterTextActive]}
-          >
-            Tümü
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.filterTab, filter === 'pending' && styles.filterTabActive]}
-          onPress={() => setFilter('pending')}
-        >
-          <Text
-            weight="semibold"
-            style={[styles.filterText, filter === 'pending' && styles.filterTextActive]}
-          >
-            Bekleyen
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.filterTab, filter === 'confirmed' && styles.filterTabActive]}
-          onPress={() => setFilter('confirmed')}
-        >
-          <Text
-            weight="semibold"
-            style={[styles.filterText, filter === 'confirmed' && styles.filterTextActive]}
-          >
-            Onaylı
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.filterTab, filter === 'completed' && styles.filterTabActive]}
-          onPress={() => setFilter('completed')}
-        >
-          <Text
-            weight="semibold"
-            style={[styles.filterText, filter === 'completed' && styles.filterTextActive]}
-          >
-            Tamamlandı
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.filterTab, filter === 'cancelled' && styles.filterTabActive]}
-          onPress={() => setFilter('cancelled')}
-        >
-          <Text
-            weight="semibold"
-            style={[styles.filterText, filter === 'cancelled' && styles.filterTextActive]}
-          >
-            İptal
-          </Text>
-        </TouchableOpacity>
-      </ScrollView>
+      {/* Filter Tabs Component */}
+      <FilterTabs
+        options={filterOptions}
+        selectedFilter={filter}
+        onFilterChange={(filterId) => setFilter(filterId as 'all' | AppointmentStatus)}
+      />
 
-      <ScrollView
+      {loading && !refreshing ? <View style={styles.loadingContainer}>
+        <ActivityIndicator size="small" color="#01213D" />
+      </View> : <ScrollView
         showsVerticalScrollIndicator={false}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
@@ -327,7 +322,7 @@ const AdminAppointmentsScreen: React.FC<AdminAppointmentsScreenProps> = ({ navig
           </View>
         )}
         <View style={{ height: 40 }} />
-      </ScrollView>
+      </ScrollView>}
     </SafeAreaView>
   );
 };
@@ -336,6 +331,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#F9FAFB',
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   header: {
     backgroundColor: '#FFFFFF',
@@ -347,30 +347,6 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     color: '#1A1A1A',
-  },
-  filterContainer: {
-    backgroundColor: '#FFFFFF',
-    paddingHorizontal: 20,
-    paddingVertical: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: '#F3F4F6',
-  },
-  filterTab: {
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 20,
-    marginRight: 8,
-    backgroundColor: '#F3F4F6',
-  },
-  filterTabActive: {
-    backgroundColor: '#3B82F6',
-  },
-  filterText: {
-    fontSize: 14,
-    color: '#666',
-  },
-  filterTextActive: {
-    color: '#FFFFFF',
   },
   listContainer: {
     paddingHorizontal: 24,

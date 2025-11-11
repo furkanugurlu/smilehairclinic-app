@@ -8,11 +8,10 @@ import SplashScreen from '../screens/SplashScreen';
 import OnboardingScreen from '../screens/onboarding/OnboardingScreen';
 import AuthStack from './AuthStack';
 import MainTabs from './MainTabs';
-import AdminTabs from './AdminTabs';
 import HairCheckCaptureScreen from '../screens/haircheck/HairCheckCaptureScreen';
 import HairCheckDetailScreen from '../screens/haircheck/HairCheckDetailScreen';
 import AppointmentCreateScreen from '../screens/appointments/AppointmentCreateScreen';
-import AdminChatScreen from '../screens/admin/AdminChatScreen';
+import ChatScreen from '../screens/messages/ChatScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -71,36 +70,24 @@ const RootNavigator: React.FC = () => {
             </Stack.Screen>
           ) : user ? (
             <>
-              {/* Admin veya Normal Kullanıcı için farklı tabs */}
-              {user.is_admin ? (
-                <>
-                  <Stack.Screen name="AdminTabs" component={AdminTabs} />
-                  <Stack.Screen 
-                    name="AdminChat" 
-                    component={AdminChatScreen}
-                  />
-                  <Stack.Screen 
-                    name="HairCheckDetail" 
-                    component={HairCheckDetailScreen}
-                  />
-                </>
-              ) : (
-                <>
-                  <Stack.Screen name="MainTabs" component={MainTabs} />
-                  <Stack.Screen 
-                    name="HairCheckCapture" 
-                    component={HairCheckCaptureScreen}
-                  />
-                  <Stack.Screen 
-                    name="HairCheckDetail" 
-                    component={HairCheckDetailScreen}
-                  />
-                  <Stack.Screen 
-                    name="AppointmentCreate" 
-                    component={AppointmentCreateScreen}
-                  />
-                </>
-              )}
+              {/* Tek MainTabs hem admin hem normal kullanıcı için */}
+              <Stack.Screen name="MainTabs" component={MainTabs} />
+              <Stack.Screen 
+                name="Chat" 
+                component={ChatScreen}
+              />
+              <Stack.Screen 
+                name="HairCheckCapture" 
+                component={HairCheckCaptureScreen}
+              />
+              <Stack.Screen 
+                name="HairCheckDetail" 
+                component={HairCheckDetailScreen}
+              />
+              <Stack.Screen 
+                name="AppointmentCreate" 
+                component={AppointmentCreateScreen}
+              />
             </>
           ) : (
             <Stack.Screen name="Auth" component={AuthStack} />
@@ -110,7 +97,6 @@ const RootNavigator: React.FC = () => {
       
       <LoadingModal 
         visible={isLoading} 
-        message="Uygulama yükleniyor..." 
       />
     </>
   );

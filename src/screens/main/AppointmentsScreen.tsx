@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   RefreshControl,
   Alert,
+  ActivityIndicator,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Text, LoadingModal } from '../../components';
@@ -179,10 +180,6 @@ const AppointmentsScreen: React.FC<AppointmentsScreenProps> = ({ navigation }) =
     return aptDate < now || apt.status === 'cancelled' || apt.status === 'completed';
   });
 
-  if (loading && !refreshing) {
-    return <LoadingModal visible={true} message="Randevular yükleniyor..." />;
-  }
-
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
@@ -195,7 +192,9 @@ const AppointmentsScreen: React.FC<AppointmentsScreenProps> = ({ navigation }) =
         </TouchableOpacity>
       </View>
 
-      <ScrollView
+     {loading && !refreshing ? <View style={styles.loadingContainer}>
+        <ActivityIndicator size="small" color="#01213D" />
+      </View> : <ScrollView
         showsVerticalScrollIndicator={false}
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
@@ -378,7 +377,7 @@ const AppointmentsScreen: React.FC<AppointmentsScreenProps> = ({ navigation }) =
         )}
 
         <View style={{ height: 100 }} />
-      </ScrollView>
+      </ScrollView>}
     </SafeAreaView>
   );
 };
@@ -387,6 +386,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#F9FAFB',
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   header: {
     flexDirection: 'row',

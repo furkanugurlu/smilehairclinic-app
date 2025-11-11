@@ -7,6 +7,7 @@ import {
   Image,
   Dimensions,
   RefreshControl,
+  ActivityIndicator,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAuthStore } from '../../store/authStore';
@@ -157,20 +158,9 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation, route }) => {
 
   const lastCheck = hairChecks.length > 0 ? hairChecks[0] : null;
 
-  if (loading && !refreshing) {
-    return <LoadingModal visible={true} message="Yükleniyor..." />;
-  }
-
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView 
-        showsVerticalScrollIndicator={false}
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }
-      >
-        {/* Header */}
-        <View style={styles.header}>
+       <View style={styles.header}>
           <View>
             <Text weight="regular" style={styles.greeting}>Merhaba,</Text>
             <Text weight="bold" style={styles.userName}>{user?.full_name || 'Kullanıcı'}</Text>
@@ -185,6 +175,16 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation, route }) => {
             </View>
           )}
         </View>
+      {loading && !refreshing ? <View style={styles.loadingContainer}>
+        <ActivityIndicator size="small" color="#01213D" />
+      </View> : <ScrollView 
+        showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      >
+        {/* Header */}
+       
 
         {/* Hero Section - Saç Durumu Kontrolü */}
         <View style={styles.heroSection}>
@@ -445,7 +445,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation, route }) => {
         </View>
 
         <View style={{ height: 40 }} />
-      </ScrollView>
+      </ScrollView>}
     </SafeAreaView>
   );
 };
@@ -454,6 +454,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#F9FAFB',
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   header: {
     flexDirection: 'row',

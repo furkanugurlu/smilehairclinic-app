@@ -35,12 +35,6 @@ const LoadingModal: React.FC<LoadingModalProps> = ({
               resizeMode="contain"
             />
             <ActivityIndicator size="small" color="#01213D" />
-            <Text weight="medium" style={styles.message}>
-              {message}
-            </Text>
-            <Text weight="regular" style={styles.subtitle}>
-              Smile Hair Clinic
-            </Text>
           </View>
         </View>
       </View>
@@ -62,7 +56,7 @@ const styles = StyleSheet.create({
   content: {
     backgroundColor: '#FFFFFF',
     borderRadius: 20,
-    padding: 32,
+    padding: 80,
     alignItems: 'center',
     shadowColor: '#000',
     shadowOffset: {

@@ -1,27 +1,32 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import HomeScreen from '../screens/main/HomeScreen';
-import HairCheckStartScreen from '../screens/haircheck/HairCheckStartScreen';
-import AppointmentsScreen from '../screens/main/AppointmentsScreen';
-import MessagesScreen from '../screens/main/MessagesScreen';
-import ProfileStack from './ProfileStack';
 import { StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { useAuthStore } from '../store/authStore';
 
-export type MainTabsParamList = {
-  Home: undefined;
-  HairCheck: undefined;
-  Appointments: undefined;
-  Messages: undefined;
-  Profile: undefined;
-};
+// Admin Screens
+import AdminDashboardScreen from '../screens/admin/AdminDashboardScreen';
+import AdminAppointmentsScreen from '../screens/admin/AdminAppointmentsScreen';
+import AdminHairChecksScreen from '../screens/admin/AdminHairChecksScreen';
 
-const Tab = createBottomTabNavigator<MainTabsParamList>();
+// User Screens
+import HomeScreen from '../screens/main/HomeScreen';
+import HairCheckStartScreen from '../screens/haircheck/HairCheckStartScreen';
+import AppointmentsScreen from '../screens/main/AppointmentsScreen';
+import ProfileScreen from '../screens/main/ProfileScreen';
+
+// Shared Screens
+import MessageListScreen from '../screens/messages/MessageListScreen';
+import ProfileStack from './ProfileStack';
+
+const Tab = createBottomTabNavigator();
 
 const MainTabs: React.FC = () => {
   const insets = useSafeAreaInsets();
-  
+  const { user } = useAuthStore();
+  const isAdmin = user?.is_admin || false;
+
   return (
     <Tab.Navigator
       screenOptions={{
@@ -36,49 +41,57 @@ const MainTabs: React.FC = () => {
         },
         tabBarActiveTintColor: '#3B82F6',
         tabBarInactiveTintColor: '#9CA3AF',
-        tabBarLabelStyle: styles. tabBarLabel,
+        tabBarLabelStyle: styles.tabBarLabel,
       }}
     >
+      {/* Tab 1: Ana Sayfa / Dashboard */}
       <Tab.Screen
-        name="Home"
-        component={HomeScreen}
+        name={isAdmin ? 'AdminDashboard' : 'Home'}
+        component={isAdmin ? AdminDashboardScreen : HomeScreen}
         options={{
           tabBarLabel: 'Ana Sayfa',
           tabBarIcon: ({ color, focused }) => (
-            <Icon 
-              name={focused ? 'home' : 'home-outline'} 
-              size={24} 
-              color={color} 
+            <Icon
+              name={focused ? 'home' : 'home-outline'}
+              size={24}
+              color={color}
             />
           ),
         }}
       />
-     
-       <Tab.Screen
-         name="Appointments"
-         component={AppointmentsScreen}
-         options={{
-           tabBarLabel: 'Randevular',
-           tabBarIcon: ({ color, focused }) => (
-             <Icon 
-               name={focused ? 'calendar' : 'calendar-outline'} 
-               size={24} 
-               color={color} 
-             />
-           ),
-         }}
-       />
+
+      {/* Tab 2: Randevular */}
+      <Tab.Screen
+        name={isAdmin ? 'AdminAppointments' : 'Appointments'}
+        component={isAdmin ? AdminAppointmentsScreen : AppointmentsScreen}
+        options={{
+          tabBarLabel: 'Randevular',
+          tabBarIcon: ({ color, focused }) => (
+            <Icon
+              name={focused ? 'calendar' : 'calendar-outline'}
+              size={24}
+              color={color}
+            />
+          ),
+        }}
+      />
+
+      {/* Tab 3: Orta Tab - Admin için Kontroller / Kullanıcı için Hair Check */}
+      {isAdmin ? (
         <Tab.Screen
-          name="HairCheck"
-          component={HairCheckStartScreen}
+          name="AdminHairChecks"
+          component={AdminHairChecksScreen}
           options={{
             tabBarLabel: '',
-            tabBarIcon: () => (
+            tabBarIcon: ({ focused }) => (
               <View style={styles.fabContainer}>
-                <View style={styles.fab}>
+                <View style={[
+                  styles.fab,
+                  focused ? styles.fabActive : styles.fabInactive
+                ]}>
                   <Icon 
-                    name="camera" 
-                    size={30} 
+                    name={focused ? "flask" : "flask-outline"} 
+                    size={focused ? 32 : 28} 
                     color="#FFFFFF" 
                   />
                 </View>
@@ -86,34 +99,61 @@ const MainTabs: React.FC = () => {
             ),
           }}
         />
+      ) : (
         <Tab.Screen
-          name="Messages"
-          component={MessagesScreen}
+          name="HairCheck"
+          component={HairCheckStartScreen}
           options={{
-            tabBarLabel: 'Mesajlar',
-            tabBarIcon: ({ color, focused }) => (
-              <Icon 
-                name={focused ? 'chatbubbles' : 'chatbubbles-outline'} 
-                size={24} 
-                color={color} 
-              />
+            tabBarLabel: '',
+            tabBarIcon: ({ focused }) => (
+              <View style={styles.fabContainer}>
+                <View style={[
+                  styles.fab,
+                  focused ? styles.fabActive : styles.fabInactive
+                ]}>
+                  <Icon 
+                    name={focused ? "camera" : "camera-outline"} 
+                    size={focused ? 32 : 28} 
+                    color="#FFFFFF" 
+                  />
+                </View>
+              </View>
             ),
           }}
         />
-        <Tab.Screen
-          name="Profile"
-          component={ProfileStack}
-          options={{
-            tabBarLabel: 'Profil',
-            tabBarIcon: ({ color, focused }) => (
-              <Icon 
-                name={focused ? 'person' : 'person-outline'} 
-                size={24} 
-                color={color} 
-              />
-            ),
-          }}
-        />
+      )}
+
+      {/* Tab 4: Mesajlar / Destek */}
+      <Tab.Screen
+        name={isAdmin ? 'AdminMessages' : 'Messages'}
+        component={MessageListScreen}
+        options={{
+          tabBarLabel: isAdmin ? 'Mesajlar' : 'Destek',
+          tabBarIcon: ({ color, focused }) => (
+            <Icon
+              name={focused ? 'chatbubbles' : 'chatbubbles-outline'}
+              size={24}
+              color={color}
+            />
+          ),
+        }}
+      />
+
+      {/* Tab 5: Profil */}
+      <Tab.Screen
+        name={isAdmin ? 'AdminProfile' : 'Profile'}
+        component={ProfileStack}
+        options={{
+          tabBarLabel: 'Profil',
+          tabBarIcon: ({ color, focused }) => (
+            <Icon
+              name={focused ? 'person' : 'person-outline'}
+              size={24}
+              color={color}
+            />
+          ),
+        }}
+      />
     </Tab.Navigator>
   );
 };
@@ -134,21 +174,35 @@ const styles = StyleSheet.create({
     width: 60,
     height: 60,
     borderRadius: 30,
-    backgroundColor: '#3B82F6',
     justifyContent: 'center',
     alignItems: 'center',
+    borderWidth: 4,
+    borderColor: '#FFFFFF',
+  },
+  fabActive: {
+    backgroundColor: '#3B82F6',
     shadowColor: '#3B82F6',
     shadowOffset: {
       width: 0,
-      height: 4,
+      height: 6,
     },
-    shadowOpacity: 0.4,
-    shadowRadius: 8,
-    elevation: 8,
-    borderWidth: 4,
-    borderColor: '#FFFFFF',
+    shadowOpacity: 0.5,
+    shadowRadius: 12,
+    elevation: 12,
+    transform: [{ scale: 1.05 }],
+  },
+  fabInactive: {
+    backgroundColor: '#9CA3AF',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 4,
+    transform: [{ scale: 1 }],
   },
 });
 
 export default MainTabs;
-

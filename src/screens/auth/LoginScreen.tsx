@@ -41,6 +41,16 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
     }
   };
 
+  const adminUser = { 
+    email: 'admin@smilehairclinic.com',
+    password: 'şifre1234',
+  }
+
+  const normalUser = {
+    email: 'furkancelik@gmail.com',
+    password: '123456',
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       <KeyboardAvoidingView
@@ -62,7 +72,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
           </View>
 
           <Formik
-            initialValues={{ email: 'furkancelik@gmail.com', password: '123456' }}
+            initialValues={normalUser}
             validationSchema={LoginSchema}
             onSubmit={handleLogin}
           >

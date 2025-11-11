@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   View,
   StyleSheet,
@@ -6,35 +6,121 @@ import {
   TouchableOpacity,
   Image,
   Dimensions,
+  RefreshControl,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAuthStore } from '../../store/authStore';
-import { Text } from '../../components';
+import { Text, LoadingModal } from '../../components';
+import { supabase } from '../../config/supabase';
+import { HairCheck, AnalysisStatus } from '../../types';
 
 const { width } = Dimensions.get('window');
 
-interface HairCheckResult {
-  id: string;
-  date: string;
-  status: 'good' | 'warning' | 'critical';
-  score: number;
-  notes: string;
-}
-
 interface HomeScreenProps {
   navigation: any;
+  route?: any;
 }
 
-const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
+const HomeScreen: React.FC<HomeScreenProps> = ({ navigation, route }) => {
   const { user } = useAuthStore();
-  const [lastCheck] = useState<HairCheckResult | null>(null); // Bu veriyi API'den alacağız
+  const [hairChecks, setHairChecks] = useState<HairCheck[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
+  const [stats, setStats] = useState({
+    totalChecks: 0,
+    averageScore: 0,
+    lastCheckDate: '',
+    improvement: 0,
+  });
+
+  useEffect(() => {
+    fetchHairChecks();
+  }, []);
+
+  useEffect(() => {
+    if (route?.params?.refresh) {
+      fetchHairChecks();
+    }
+  }, [route?.params?.refresh]);
+
+  const fetchHairChecks = async () => {
+    if (!user?.id) return;
+
+    try {
+      setLoading(true);
+      
+      const { data, error } = await supabase
+        .from('hair_checks')
+        .select('*')
+        .eq('user_id', user.id)
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        console.error('❌ Hair checks yükleme hatası:', error);
+        throw error;
+      }
+
+      console.log('✅ Hair checks yüklendi:', data?.length);
+      setHairChecks(data || []);
+      calculateStats(data || []);
+    } catch (error: any) {
+      console.error('❌ Fetch error:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+    await fetchHairChecks();
+    setRefreshing(false);
+  }, [user?.id]);
+
+  const calculateStats = (checks: HairCheck[]) => {
+    const completedChecks = checks.filter(c => c.status === 'completed' && c.analysis_score);
+    const totalChecks = checks.length;
+    
+    let averageScore = 0;
+    if (completedChecks.length > 0) {
+      const sum = completedChecks.reduce((acc, check) => acc + (check.analysis_score || 0), 0);
+      averageScore = Math.round(sum / completedChecks.length);
+    }
+
+    let lastCheckDate = '';
+    if (checks.length > 0) {
+      const lastDate = new Date(checks[0].created_at);
+      lastCheckDate = lastDate.toLocaleDateString('tr-TR', { 
+        day: 'numeric', 
+        month: 'long' 
+      });
+    }
+
+    // İyileşme hesaplama (son 2 kontrol karşılaştırması)
+    let improvement = 0;
+    if (completedChecks.length >= 2) {
+      const latest = completedChecks[0].analysis_score || 0;
+      const previous = completedChecks[1].analysis_score || 0;
+      improvement = latest - previous;
+    }
+
+    setStats({
+      totalChecks,
+      averageScore,
+      lastCheckDate,
+      improvement,
+    });
+  };
 
   const handleStartCheck = () => {
     console.log('🔬 Saç durumu kontrolü başlatılıyor...');
     navigation.navigate('HairCheck');
   };
 
-  const getStatusColor = (status: string) => {
+  const handleViewCheckDetail = (check: HairCheck) => {
+    navigation.navigate('HairCheckDetail', { check });
+  };
+
+  const getStatusColor = (status?: AnalysisStatus) => {
     switch (status) {
       case 'good':
         return '#10B981';
@@ -47,7 +133,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
     }
   };
 
-  const getStatusText = (status: string) => {
+  const getStatusText = (status?: AnalysisStatus) => {
     switch (status) {
       case 'good':
         return 'İyi';
@@ -60,9 +146,29 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
     }
   };
 
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('tr-TR', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+    });
+  };
+
+  const lastCheck = hairChecks.length > 0 ? hairChecks[0] : null;
+
+  if (loading && !refreshing) {
+    return <LoadingModal visible={true} message="Yükleniyor..." />;
+  }
+
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView showsVerticalScrollIndicator={false}>
+      <ScrollView 
+        showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      >
         {/* Header */}
         <View style={styles.header}>
           <View>
@@ -104,37 +210,37 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
           </View>
         </View>
 
-        {/* Son Kontrol Sonucu */}
-        {lastCheck ? (
+        {/* Son Kontrol Sonucu veya Kontrol Listesi */}
+        {lastCheck && lastCheck.status === 'completed' ? (
           <View style={styles.section}>
             <Text weight="bold" style={styles.sectionTitle}>Son Kontrol Sonucu</Text>
             <View style={styles.resultCard}>
               <View style={styles.resultHeader}>
                 <View>
                   <Text weight="semibold" style={styles.resultDate}>
-                    {lastCheck.date}
+                    {formatDate(lastCheck.created_at)}
                   </Text>
                   <View style={styles.resultStatus}>
                     <View 
                       style={[
                         styles.statusDot, 
-                        { backgroundColor: getStatusColor(lastCheck.status) }
+                        { backgroundColor: getStatusColor(lastCheck.analysis_status) }
                       ]} 
                     />
                     <Text 
                       weight="semibold" 
                       style={[
                         styles.statusText,
-                        { color: getStatusColor(lastCheck.status) }
+                        { color: getStatusColor(lastCheck.analysis_status) }
                       ]}
                     >
-                      {getStatusText(lastCheck.status)}
+                      {getStatusText(lastCheck.analysis_status)}
                     </Text>
                   </View>
                 </View>
                 <View style={styles.scoreContainer}>
                   <Text weight="bold" style={styles.scoreNumber}>
-                    {lastCheck.score}
+                    {lastCheck.analysis_score || '-'}
                   </Text>
                   <Text weight="regular" style={styles.scoreLabel}>
                     /100
@@ -142,14 +248,84 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
                 </View>
               </View>
               <Text weight="regular" style={styles.resultNotes}>
-                {lastCheck.notes}
+                {lastCheck.analysis_notes || 'Analiz notları bekleniyor...'}
               </Text>
-              <TouchableOpacity style={styles.resultButton}>
+              <TouchableOpacity 
+                style={styles.resultButton}
+                onPress={() => handleViewCheckDetail(lastCheck)}
+              >
                 <Text weight="semibold" style={styles.resultButtonText}>
                   Detayları Gör
                 </Text>
               </TouchableOpacity>
             </View>
+          </View>
+        ) : hairChecks.length > 0 ? (
+          <View style={styles.section}>
+            <Text weight="bold" style={styles.sectionTitle}>Kontrollerim</Text>
+            {hairChecks.map((check) => (
+              <TouchableOpacity 
+                key={check.id}
+                style={styles.checkCard}
+                onPress={() => handleViewCheckDetail(check)}
+              >
+                <View style={styles.checkCardLeft}>
+                  <Image 
+                    source={{ uri: check.photo_front }} 
+                    style={styles.checkThumbnail}
+                  />
+                  <View style={styles.checkInfo}>
+                    <Text weight="semibold" style={styles.checkDate}>
+                      {formatDate(check.created_at)}
+                    </Text>
+                    <View style={styles.checkStatusBadge}>
+                      {check.status === 'pending' && (
+                        <>
+                          <Text style={styles.checkStatusIcon}>⏳</Text>
+                          <Text weight="medium" style={styles.checkStatusText}>
+                            İnceleniyor
+                          </Text>
+                        </>
+                      )}
+                      {check.status === 'analyzing' && (
+                        <>
+                          <Text style={styles.checkStatusIcon}>🔬</Text>
+                          <Text weight="medium" style={styles.checkStatusText}>
+                            Analiz Ediliyor
+                          </Text>
+                        </>
+                      )}
+                      {check.status === 'completed' && (
+                        <>
+                          <View 
+                            style={[
+                              styles.statusDot, 
+                              { backgroundColor: getStatusColor(check.analysis_status) }
+                            ]} 
+                          />
+                          <Text 
+                            weight="medium" 
+                            style={[
+                              styles.checkStatusText,
+                              { color: getStatusColor(check.analysis_status) }
+                            ]}
+                          >
+                            {getStatusText(check.analysis_status)}
+                          </Text>
+                        </>
+                      )}
+                    </View>
+                  </View>
+                </View>
+                {check.analysis_score && (
+                  <View style={styles.checkScore}>
+                    <Text weight="bold" style={styles.checkScoreNumber}>
+                      {check.analysis_score}
+                    </Text>
+                  </View>
+                )}
+              </TouchableOpacity>
+            ))}
           </View>
         ) : (
           <View style={styles.section}>
@@ -167,31 +343,47 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
         )}
 
         {/* İstatistikler */}
-        <View style={styles.section}>
-          <Text weight="bold" style={styles.sectionTitle}>İstatistikler</Text>
-          <View style={styles.statsGrid}>
-            <View style={styles.statCard}>
-              <Text style={styles.statIcon}>📊</Text>
-              <Text weight="bold" style={styles.statNumber}>0</Text>
-              <Text weight="regular" style={styles.statLabel}>Toplam Kontrol</Text>
-            </View>
-            <View style={styles.statCard}>
-              <Text style={styles.statIcon}>📈</Text>
-              <Text weight="bold" style={styles.statNumber}>-</Text>
-              <Text weight="regular" style={styles.statLabel}>İyileşme</Text>
-            </View>
-            <View style={styles.statCard}>
-              <Text style={styles.statIcon}>📅</Text>
-              <Text weight="bold" style={styles.statNumber}>-</Text>
-              <Text weight="regular" style={styles.statLabel}>Son Kontrol</Text>
-            </View>
-            <View style={styles.statCard}>
-              <Text style={styles.statIcon}>⭐</Text>
-              <Text weight="bold" style={styles.statNumber}>-</Text>
-              <Text weight="regular" style={styles.statLabel}>Ortalama Skor</Text>
+        {hairChecks.length > 0 && (
+          <View style={styles.section}>
+            <Text weight="bold" style={styles.sectionTitle}>İstatistikler</Text>
+            <View style={styles.statsGrid}>
+              <View style={styles.statCard}>
+                <Text style={styles.statIcon}>📊</Text>
+                <Text weight="bold" style={styles.statNumber}>{stats.totalChecks}</Text>
+                <Text weight="regular" style={styles.statLabel}>Toplam Kontrol</Text>
+              </View>
+              <View style={styles.statCard}>
+                <Text style={styles.statIcon}>
+                  {stats.improvement > 0 ? '📈' : stats.improvement < 0 ? '📉' : '➖'}
+                </Text>
+                <Text 
+                  weight="bold" 
+                  style={[
+                    styles.statNumber,
+                    { color: stats.improvement > 0 ? '#10B981' : stats.improvement < 0 ? '#EF4444' : '#666' }
+                  ]}
+                >
+                  {stats.improvement !== 0 ? (stats.improvement > 0 ? '+' : '') + stats.improvement : '-'}
+                </Text>
+                <Text weight="regular" style={styles.statLabel}>İyileşme</Text>
+              </View>
+              <View style={styles.statCard}>
+                <Text style={styles.statIcon}>📅</Text>
+                <Text weight="bold" style={styles.statNumber}>
+                  {stats.lastCheckDate || '-'}
+                </Text>
+                <Text weight="regular" style={styles.statLabel}>Son Kontrol</Text>
+              </View>
+              <View style={styles.statCard}>
+                <Text style={styles.statIcon}>⭐</Text>
+                <Text weight="bold" style={styles.statNumber}>
+                  {stats.averageScore || '-'}
+                </Text>
+                <Text weight="regular" style={styles.statLabel}>Ortalama Skor</Text>
+              </View>
             </View>
           </View>
-        </View>
+        )}
 
         {/* Öneriler */}
         <View style={styles.section}>
@@ -235,11 +427,17 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation }) => {
         <View style={styles.section}>
           <Text weight="bold" style={styles.sectionTitle}>Hızlı İşlemler</Text>
           <View style={styles.quickActions}>
-            <TouchableOpacity style={styles.actionCard}>
+            <TouchableOpacity 
+              style={styles.actionCard}
+              onPress={() => navigation.navigate('AppointmentCreate')}
+            >
               <Text style={styles.actionIcon}>📅</Text>
               <Text weight="semibold" style={styles.actionText}>Randevu Al</Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.actionCard}>
+            <TouchableOpacity 
+              style={styles.actionCard}
+              onPress={() => navigation.navigate('Messages')}
+            >
               <Text style={styles.actionIcon}>💬</Text>
               <Text weight="semibold" style={styles.actionText}>Uzman Desteği</Text>
             </TouchableOpacity>
@@ -538,6 +736,67 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#1A1A1A',
     textAlign: 'center',
+  },
+  checkCard: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 12,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.05,
+    shadowRadius: 8,
+    elevation: 2,
+  },
+  checkCardLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
+  },
+  checkThumbnail: {
+    width: 60,
+    height: 60,
+    borderRadius: 8,
+    backgroundColor: '#F3F4F6',
+    marginRight: 12,
+  },
+  checkInfo: {
+    flex: 1,
+  },
+  checkDate: {
+    fontSize: 14,
+    color: '#1A1A1A',
+    marginBottom: 6,
+  },
+  checkStatusBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  checkStatusIcon: {
+    fontSize: 14,
+    marginRight: 4,
+  },
+  checkStatusText: {
+    fontSize: 13,
+    color: '#666',
+  },
+  checkScore: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    backgroundColor: '#F3F4F6',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  checkScoreNumber: {
+    fontSize: 18,
+    color: '#3B82F6',
   },
 });
 

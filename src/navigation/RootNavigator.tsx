@@ -8,7 +8,11 @@ import SplashScreen from '../screens/SplashScreen';
 import OnboardingScreen from '../screens/onboarding/OnboardingScreen';
 import AuthStack from './AuthStack';
 import MainTabs from './MainTabs';
-import HairCheckScreen from '../screens/main/HairCheckScreen';
+import AdminTabs from './AdminTabs';
+import HairCheckCaptureScreen from '../screens/haircheck/HairCheckCaptureScreen';
+import HairCheckDetailScreen from '../screens/haircheck/HairCheckDetailScreen';
+import AppointmentCreateScreen from '../screens/appointments/AppointmentCreateScreen';
+import AdminChatScreen from '../screens/admin/AdminChatScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -55,6 +59,7 @@ const RootNavigator: React.FC = () => {
   }
 
   const isLoading = loading || showOnboarding === null;
+  
 
   return (
     <>
@@ -66,11 +71,36 @@ const RootNavigator: React.FC = () => {
             </Stack.Screen>
           ) : user ? (
             <>
-              <Stack.Screen name="Main" component={MainTabs} />
-              <Stack.Screen 
-                name="HairCheckCapture" 
-                component={HairCheckScreen}
-              />
+              {/* Admin veya Normal Kullanıcı için farklı tabs */}
+              {user.is_admin ? (
+                <>
+                  <Stack.Screen name="AdminTabs" component={AdminTabs} />
+                  <Stack.Screen 
+                    name="AdminChat" 
+                    component={AdminChatScreen}
+                  />
+                  <Stack.Screen 
+                    name="HairCheckDetail" 
+                    component={HairCheckDetailScreen}
+                  />
+                </>
+              ) : (
+                <>
+                  <Stack.Screen name="MainTabs" component={MainTabs} />
+                  <Stack.Screen 
+                    name="HairCheckCapture" 
+                    component={HairCheckCaptureScreen}
+                  />
+                  <Stack.Screen 
+                    name="HairCheckDetail" 
+                    component={HairCheckDetailScreen}
+                  />
+                  <Stack.Screen 
+                    name="AppointmentCreate" 
+                    component={AppointmentCreateScreen}
+                  />
+                </>
+              )}
             </>
           ) : (
             <Stack.Screen name="Auth" component={AuthStack} />

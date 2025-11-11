@@ -1,0 +1,579 @@
+import React, { useState } from 'react';
+import {
+  View,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+  Image,
+  Modal,
+  Dimensions,
+} from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { Text } from '../../components';
+import { HairCheck, AnalysisStatus } from '../../types';
+
+const { width } = Dimensions.get('window');
+
+const HairCheckDetailScreen = ({ navigation, route }: any) => {
+  const { check } = route.params;
+  const [selectedPhoto, setSelectedPhoto] = useState<string | null>(null);
+
+  const photos = [
+    { id: 'front', label: 'Ön Görünüm', icon: '😊', url: check.photo_front },
+    { id: 'right45', label: 'Sağ 45°', icon: '↻', url: check.photo_right45 },
+    { id: 'left45', label: 'Sol 45°', icon: '↺', url: check.photo_left45 },
+    { id: 'top', label: 'Üst Görünüm', icon: '↑', url: check.photo_top },
+    { id: 'back', label: 'Arka Görünüm', icon: '👤', url: check.photo_back },
+  ];
+
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('tr-TR', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+  };
+
+  const getStatusColor = (status?: AnalysisStatus) => {
+    switch (status) {
+      case 'good':
+        return '#10B981';
+      case 'warning':
+        return '#F59E0B';
+      case 'critical':
+        return '#EF4444';
+      default:
+        return '#6B7280';
+    }
+  };
+
+  const getStatusText = (status?: AnalysisStatus) => {
+    switch (status) {
+      case 'good':
+        return 'İyi';
+      case 'warning':
+        return 'Dikkat';
+      case 'critical':
+        return 'Kritik';
+      default:
+        return 'Bilinmiyor';
+    }
+  };
+
+  const getStatusIcon = () => {
+    if (check.status === 'pending') return '⏳';
+    if (check.status === 'analyzing') return '🔬';
+    if (check.status === 'completed') {
+      switch (check.analysis_status) {
+        case 'good':
+          return '✅';
+        case 'warning':
+          return '⚠️';
+        case 'critical':
+          return '🔴';
+        default:
+          return '📊';
+      }
+    }
+    return '📊';
+  };
+
+  const getStatusDescription = () => {
+    if (check.status === 'pending') {
+      return 'Kontrolünüz uzmanlarımız tarafından incelenmek üzere sıraya alındı.';
+    }
+    if (check.status === 'analyzing') {
+      return 'Fotoğraflarınız yapay zeka destekli sistemimiz tarafından analiz ediliyor.';
+    }
+    if (check.status === 'completed') {
+      return check.analysis_notes || 'Analiz tamamlandı.';
+    }
+    return 'İşlem durumu bilinmiyor.';
+  };
+
+  return (
+    <SafeAreaView style={styles.container}>
+      {/* Header */}
+      <View style={styles.header}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <Text style={styles.backButton}>←</Text>
+        </TouchableOpacity>
+        <Text weight="bold" style={styles.headerTitle}>
+          Kontrol Detayı
+        </Text>
+        <View style={{ width: 40 }} />
+      </View>
+
+      <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
+        {/* Tarih ve Durum */}
+        <View style={styles.section}>
+          <View style={styles.dateCard}>
+            <View style={styles.dateLeft}>
+              <Text style={styles.dateIcon}>📅</Text>
+              <View>
+                <Text weight="regular" style={styles.dateLabel}>
+                  Kontrol Tarihi
+                </Text>
+                <Text weight="semibold" style={styles.dateText}>
+                  {formatDate(check.created_at)}
+                </Text>
+              </View>
+            </View>
+            <View style={styles.statusBadge}>
+              <Text style={styles.statusIcon}>{getStatusIcon()}</Text>
+              {check.status === 'completed' ? (
+                <Text 
+                  weight="semibold" 
+                  style={[styles.statusText, { color: getStatusColor(check.analysis_status) }]}
+                >
+                  {getStatusText(check.analysis_status)}
+                </Text>
+              ) : (
+                <Text weight="semibold" style={styles.statusText}>
+                  {check.status === 'pending' ? 'İnceleniyor' : 'Analiz Ediliyor'}
+                </Text>
+              )}
+            </View>
+          </View>
+        </View>
+
+        {/* Analiz Sonucu */}
+        {check.status === 'completed' && check.analysis_score && (
+          <View style={styles.section}>
+            <Text weight="bold" style={styles.sectionTitle}>Analiz Sonucu</Text>
+            <View style={styles.scoreCard}>
+              <View style={styles.scoreCircle}>
+                <Text weight="bold" style={styles.scoreNumber}>
+                  {check.analysis_score}
+                </Text>
+                <Text weight="regular" style={styles.scoreLabel}>
+                  /100
+                </Text>
+              </View>
+              <View style={styles.scoreInfo}>
+                <Text weight="semibold" style={styles.scoreTitle}>
+                  Saç Sağlığı Skoru
+                </Text>
+                <Text weight="regular" style={styles.scoreDescription}>
+                  {getStatusDescription()}
+                </Text>
+              </View>
+            </View>
+          </View>
+        )}
+
+        {/* Açıklama */}
+        {check.status !== 'completed' && (
+          <View style={styles.section}>
+            <View style={styles.infoCard}>
+              <Text style={styles.infoIcon}>{getStatusIcon()}</Text>
+              <View style={styles.infoContent}>
+                <Text weight="semibold" style={styles.infoTitle}>
+                  {check.status === 'pending' ? 'İnceleme Aşamasında' : 'Analiz Ediliyor'}
+                </Text>
+                <Text weight="regular" style={styles.infoText}>
+                  {getStatusDescription()}
+                </Text>
+              </View>
+            </View>
+          </View>
+        )}
+
+        {/* Fotoğraflar */}
+        <View style={styles.section}>
+          <Text weight="bold" style={styles.sectionTitle}>Fotoğraflar</Text>
+          <View style={styles.photosGrid}>
+            {photos.map((photo, index) => (
+              <TouchableOpacity
+                key={photo.id}
+                style={styles.photoCard}
+                onPress={() => setSelectedPhoto(photo.url)}
+              >
+                <Image source={{ uri: photo.url }} style={styles.photoImage} />
+                <View style={styles.photoOverlay}>
+                  <Text style={styles.photoIcon}>{photo.icon}</Text>
+                  <Text weight="semibold" style={styles.photoLabel}>
+                    {photo.label}
+                  </Text>
+                </View>
+              </TouchableOpacity>
+            ))}
+          </View>
+        </View>
+
+        {/* Öneriler */}
+        {check.status === 'completed' && check.recommendations && (
+          <View style={styles.section}>
+            <Text weight="bold" style={styles.sectionTitle}>Öneriler</Text>
+            <View style={styles.recommendationsCard}>
+              <Text style={styles.recommendationsIcon}>💡</Text>
+              <Text weight="regular" style={styles.recommendationsText}>
+                {check.recommendations}
+              </Text>
+            </View>
+          </View>
+        )}
+
+        {/* Varsayılan Öneriler (eğer analiz tamamlanmadıysa) */}
+        {check.status !== 'completed' && (
+          <View style={styles.section}>
+            <Text weight="bold" style={styles.sectionTitle}>Genel Öneriler</Text>
+            <View style={styles.tipCard}>
+              <Text style={styles.tipIcon}>💧</Text>
+              <View style={styles.tipContent}>
+                <Text weight="semibold" style={styles.tipTitle}>
+                  Yeterli Su Tüketimi
+                </Text>
+                <Text weight="regular" style={styles.tipDescription}>
+                  Günde en az 2 litre su tüketerek saç sağlığınızı destekleyin
+                </Text>
+              </View>
+            </View>
+            <View style={styles.tipCard}>
+              <Text style={styles.tipIcon}>🥗</Text>
+              <View style={styles.tipContent}>
+                <Text weight="semibold" style={styles.tipTitle}>
+                  Dengeli Beslenme
+                </Text>
+                <Text weight="regular" style={styles.tipDescription}>
+                  Protein, vitamin ve mineral açısından zengin beslenerek saçlarınızı güçlendirin
+                </Text>
+              </View>
+            </View>
+            <View style={styles.tipCard}>
+              <Text style={styles.tipIcon}>🌞</Text>
+              <View style={styles.tipContent}>
+                <Text weight="semibold" style={styles.tipTitle}>
+                  Güneş Koruması
+                </Text>
+                <Text weight="regular" style={styles.tipDescription}>
+                  Saç derinizi güneşin zararlı etkilerinden koruyun
+                </Text>
+              </View>
+            </View>
+          </View>
+        )}
+
+        <View style={{ height: 40 }} />
+      </ScrollView>
+
+      {/* Fotoğraf Büyütme Modal */}
+      <Modal
+        visible={!!selectedPhoto}
+        transparent
+        animationType="fade"
+        onRequestClose={() => setSelectedPhoto(null)}
+      >
+        <View style={styles.modalContainer}>
+          <TouchableOpacity 
+            style={styles.modalOverlay}
+            activeOpacity={1}
+            onPress={() => setSelectedPhoto(null)}
+          >
+            <View style={styles.modalContent}>
+              <TouchableOpacity 
+                style={styles.closeButton}
+                onPress={() => setSelectedPhoto(null)}
+              >
+                <Text style={styles.closeButtonText}>✕</Text>
+              </TouchableOpacity>
+              {selectedPhoto && (
+                <Image 
+                  source={{ uri: selectedPhoto }} 
+                  style={styles.fullImage}
+                  resizeMode="contain"
+                />
+              )}
+            </View>
+          </TouchableOpacity>
+        </View>
+      </Modal>
+    </SafeAreaView>
+  );
+};
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#F9FAFB',
+  },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingHorizontal: 20,
+    paddingVertical: 16,
+    backgroundColor: '#FFFFFF',
+    borderBottomWidth: 1,
+    borderBottomColor: '#E5E7EB',
+  },
+  backButton: {
+    fontSize: 28,
+    color: '#1A1A1A',
+  },
+  headerTitle: {
+    fontSize: 18,
+    color: '#1A1A1A',
+  },
+  scrollView: {
+    flex: 1,
+  },
+  section: {
+    paddingHorizontal: 24,
+    marginTop: 20,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    color: '#1A1A1A',
+    marginBottom: 16,
+  },
+  dateCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    padding: 20,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.05,
+    shadowRadius: 8,
+    elevation: 2,
+  },
+  dateLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  dateIcon: {
+    fontSize: 32,
+    marginRight: 16,
+  },
+  dateLabel: {
+    fontSize: 12,
+    color: '#666',
+    marginBottom: 4,
+  },
+  dateText: {
+    fontSize: 14,
+    color: '#1A1A1A',
+  },
+  statusBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#F3F4F6',
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 20,
+  },
+  statusIcon: {
+    fontSize: 16,
+    marginRight: 6,
+  },
+  statusText: {
+    fontSize: 14,
+    color: '#1A1A1A',
+  },
+  scoreCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    padding: 24,
+    flexDirection: 'row',
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.05,
+    shadowRadius: 8,
+    elevation: 2,
+  },
+  scoreCircle: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    backgroundColor: '#EEF2FF',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 20,
+  },
+  scoreNumber: {
+    fontSize: 36,
+    color: '#3B82F6',
+  },
+  scoreLabel: {
+    fontSize: 14,
+    color: '#666',
+    marginTop: 4,
+  },
+  scoreInfo: {
+    flex: 1,
+  },
+  scoreTitle: {
+    fontSize: 16,
+    color: '#1A1A1A',
+    marginBottom: 8,
+  },
+  scoreDescription: {
+    fontSize: 14,
+    color: '#666',
+    lineHeight: 20,
+  },
+  infoCard: {
+    flexDirection: 'row',
+    backgroundColor: '#FEF3C7',
+    borderRadius: 16,
+    padding: 20,
+  },
+  infoIcon: {
+    fontSize: 32,
+    marginRight: 16,
+  },
+  infoContent: {
+    flex: 1,
+  },
+  infoTitle: {
+    fontSize: 16,
+    color: '#92400E',
+    marginBottom: 8,
+  },
+  infoText: {
+    fontSize: 14,
+    color: '#78350F',
+    lineHeight: 20,
+  },
+  photosGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+  },
+  photoCard: {
+    width: '48%',
+    aspectRatio: 1,
+    marginBottom: 12,
+    borderRadius: 12,
+    overflow: 'hidden',
+    backgroundColor: '#FFFFFF',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.05,
+    shadowRadius: 8,
+    elevation: 2,
+  },
+  photoImage: {
+    width: '100%',
+    height: '100%',
+  },
+  photoOverlay: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
+    padding: 8,
+    alignItems: 'center',
+  },
+  photoIcon: {
+    fontSize: 20,
+    marginBottom: 2,
+  },
+  photoLabel: {
+    fontSize: 11,
+    color: '#FFFFFF',
+  },
+  recommendationsCard: {
+    backgroundColor: '#DBEAFE',
+    borderRadius: 16,
+    padding: 20,
+    flexDirection: 'row',
+  },
+  recommendationsIcon: {
+    fontSize: 32,
+    marginRight: 16,
+  },
+  recommendationsText: {
+    flex: 1,
+    fontSize: 14,
+    color: '#1E40AF',
+    lineHeight: 22,
+  },
+  tipCard: {
+    flexDirection: 'row',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 12,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.05,
+    shadowRadius: 8,
+    elevation: 2,
+  },
+  tipIcon: {
+    fontSize: 32,
+    marginRight: 12,
+  },
+  tipContent: {
+    flex: 1,
+  },
+  tipTitle: {
+    fontSize: 15,
+    color: '#1A1A1A',
+    marginBottom: 4,
+  },
+  tipDescription: {
+    fontSize: 13,
+    color: '#666',
+    lineHeight: 18,
+  },
+  modalContainer: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.9)',
+  },
+  modalOverlay: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalContent: {
+    width: width - 40,
+    height: width - 40,
+    position: 'relative',
+  },
+  closeButton: {
+    position: 'absolute',
+    top: -40,
+    right: 0,
+    zIndex: 10,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  closeButtonText: {
+    fontSize: 24,
+    color: '#FFFFFF',
+  },
+  fullImage: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 12,
+  },
+});
+
+export default HairCheckDetailScreen;
+

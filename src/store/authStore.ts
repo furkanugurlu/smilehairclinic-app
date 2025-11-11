@@ -28,17 +28,22 @@ export const useAuthStore = create<AuthState>((set) => ({
           console.warn('⚠️ Profil bulunamadı, temel bilgiler kullanılıyor:', profileError.message);
         }
 
-        const user = userData || {
-          id: session.user.id,
-          email: session.user.email || '',
-          full_name: session.user.user_metadata?.full_name || '',
-          phone: session.user.user_metadata?.phone || '',
-          created_at: session.user.created_at || '',
-          updated_at: session.user.updated_at || '',
-          avatar_url: session.user.user_metadata?.avatar_url || '',
+        console.log('📊 userData:', userData);
+        console.log('📊 is_admin değeri:', userData?.is_admin);
+        
+        // userData profiles'dan geliyor, is_admin orada!
+        const user: User = {
+          id: userData?.id || session.user.id,
+          email: userData?.email || session.user.email || '',
+          full_name: userData?.full_name || session.user.user_metadata?.full_name || '',
+          phone: userData?.phone || session.user.user_metadata?.phone || '',
+          created_at: userData?.created_at || session.user.created_at || '',
+          updated_at: userData?.updated_at || session.user.updated_at || '',
+          avatar_url: userData?.avatar_url || session.user.user_metadata?.avatar_url || '',
+          is_admin: userData?.is_admin || false, // ← profiles'dan geliyor!
         };
 
-        console.log('✅ Kullanıcı otomatik giriş yaptı:', user.email);
+        console.log('✅ Kullanıcı otomatik giriş yaptı:', user.email, '| is_admin:', user.is_admin);
 
         set({
           session,
@@ -62,13 +67,26 @@ export const useAuthStore = create<AuthState>((set) => ({
             .eq('id', session.user.id)
             .single();
 
+          console.log('🔄 SIGNED_IN - userData:', userData);
+          console.log('🔄 SIGNED_IN - is_admin:', userData?.is_admin);
+            
+          // userData profiles'dan geliyor, is_admin orada!
+          const user: User = {
+            id: userData?.id || session.user.id,
+            email: userData?.email || session.user.email || '',
+            full_name: userData?.full_name || session.user.user_metadata?.full_name || '',
+            phone: userData?.phone || session.user.user_metadata?.phone || '',
+            created_at: userData?.created_at || session.user.created_at || '',
+            updated_at: userData?.updated_at || session.user.updated_at || '',
+            avatar_url: userData?.avatar_url || session.user.user_metadata?.avatar_url || '',
+            is_admin: userData?.is_admin || false, // ← profiles'dan geliyor!
+          };
+
+          console.log('✅ SIGNED_IN tamamlandı:', user.email, '| is_admin:', user.is_admin);
+
           set({
             session,
-            user: userData || {
-              id: session.user.id,
-              email: session.user.email || '',
-              full_name: session.user.user_metadata?.full_name || '',
-            },
+            user,
             loading: false,
           });
         } else if (event === 'SIGNED_OUT') {

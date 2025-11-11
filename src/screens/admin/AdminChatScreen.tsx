@@ -13,38 +13,48 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Text, LoadingModal } from '../../components';
 import { supabase } from '../../config/supabase';
 import { useAuthStore } from '../../store/authStore';
-import { Message } from '../../types';
+import { Message, ChatUser } from '../../types';
 
-const MessagesScreen: React.FC = () => {
-  const { user } = useAuthStore();
+interface AdminChatScreenProps {
+  navigation?: any;
+  route?: {
+    params?: {
+      chatUser?: ChatUser;
+    };
+  };
+}
+
+const AdminChatScreen: React.FC<AdminChatScreenProps> = ({ navigation, route }) => {
+  const { user: adminUser } = useAuthStore();
+  const chatUser = route?.params?.chatUser;
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState('');
   const [loading, setLoading] = useState(true);
   const [sending, setSending] = useState(false);
   const scrollViewRef = useRef<ScrollView>(null);
+  
+  if (!chatUser) {
+    return <LoadingModal visible={true} message="Yükleniyor..." />;
+  }
 
   useEffect(() => {
     fetchMessages();
+    markMessagesAsRead();
 
     // Gerçek zamanlı mesaj dinleme
     const channel = supabase
-      .channel(`user-chat-${user?.id}`)
+      .channel(`chat-${chatUser.user_id}`)
       .on(
         'postgres_changes',
         {
           event: 'INSERT',
           schema: 'public',
           table: 'messages',
-          filter: `user_id=eq.${user?.id}`,
+          filter: `user_id=eq.${chatUser.user_id}`,
         },
         (payload) => {
           setMessages((prev) => [...prev, payload.new as Message]);
           scrollToBottom();
-          
-          // Admin'den gelen mesajı okundu olarak işaretle
-          if ((payload.new as Message).is_from_admin) {
-            markMessageAsRead((payload.new as Message).id);
-          }
         }
       )
       .subscribe();
@@ -52,38 +62,21 @@ const MessagesScreen: React.FC = () => {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [user?.id]);
+  }, [chatUser.user_id]);
 
   const fetchMessages = async () => {
-    if (!user?.id) return;
-
     try {
       setLoading(true);
 
       const { data, error } = await supabase
         .from('messages')
         .select('*')
-        .eq('user_id', user.id)
+        .eq('user_id', chatUser.user_id)
         .order('created_at', { ascending: true });
 
       if (error) throw error;
 
       setMessages(data || []);
-      
-      // Admin'den gelen okunmamış mesajları okundu olarak işaretle
-      const unreadAdminMessages = data?.filter(
-        (m) => m.is_from_admin && !m.is_read
-      );
-      
-      if (unreadAdminMessages && unreadAdminMessages.length > 0) {
-        await supabase
-          .from('messages')
-          .update({ is_read: true })
-          .eq('user_id', user.id)
-          .eq('is_from_admin', true)
-          .eq('is_read', false);
-      }
-
       setTimeout(scrollToBottom, 100);
     } catch (error: any) {
       console.error('❌ Fetch messages error:', error);
@@ -93,19 +86,21 @@ const MessagesScreen: React.FC = () => {
     }
   };
 
-  const markMessageAsRead = async (messageId: string) => {
+  const markMessagesAsRead = async () => {
     try {
       await supabase
         .from('messages')
         .update({ is_read: true })
-        .eq('id', messageId);
+        .eq('user_id', chatUser.user_id)
+        .eq('is_from_admin', false)
+        .eq('is_read', false);
     } catch (error) {
       console.error('❌ Mark as read error:', error);
     }
   };
 
   const handleSendMessage = async () => {
-    if (!newMessage.trim() || !user?.id) return;
+    if (!newMessage.trim()) return;
 
     const messageText = newMessage.trim();
     setNewMessage('');
@@ -117,9 +112,9 @@ const MessagesScreen: React.FC = () => {
         .from('messages')
         .insert([
           {
-            user_id: user.id,
+            user_id: chatUser.user_id,
             message: messageText,
-            is_from_admin: false,
+            is_from_admin: true,
             is_read: false,
           },
         ])
@@ -195,17 +190,21 @@ const MessagesScreen: React.FC = () => {
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
       <View style={styles.header}>
-        <View style={styles.headerLeft}>
-          <View style={styles.adminAvatar}>
-            <Text weight="bold" style={styles.adminAvatarText}>A</Text>
-          </View>
-          <View>
-            <Text weight="bold" style={styles.title}>Uzman Destek</Text>
-            <Text weight="regular" style={styles.subtitle}>
-              Online
-            </Text>
-          </View>
+        <TouchableOpacity
+          style={styles.backButton}
+          onPress={() => navigation.goBack()}
+        >
+          <Text style={styles.backIcon}>←</Text>
+        </TouchableOpacity>
+        <View style={styles.headerCenter}>
+          <Text weight="bold" style={styles.headerName}>
+            {chatUser.full_name}
+          </Text>
+          <Text weight="regular" style={styles.headerEmail}>
+            {chatUser.email}
+          </Text>
         </View>
+        <View style={{ width: 40 }} />
       </View>
 
       <KeyboardAvoidingView
@@ -222,12 +221,8 @@ const MessagesScreen: React.FC = () => {
           {Object.keys(messageGroups).length === 0 ? (
             <View style={styles.emptyContainer}>
               <Text style={styles.emptyIcon}>💬</Text>
-              <Text weight="semibold" style={styles.emptyTitle}>
-                Mesaj Bulunamadı
-              </Text>
-              <Text weight="regular" style={styles.emptyText}>
-                Henüz bir mesajınız bulunmuyor. Uzman ekibimizle iletişime
-                geçmek için mesaj gönderebilirsiniz.
+              <Text weight="medium" style={styles.emptyText}>
+                Henüz mesaj yok. İlk mesajı gönderin!
               </Text>
             </View>
           ) : (
@@ -248,16 +243,11 @@ const MessagesScreen: React.FC = () => {
                         : styles.userMessage,
                     ]}
                   >
-                    {message.is_from_admin && (
-                      <Text weight="semibold" style={styles.senderName}>
-                        Uzman Destek
-                      </Text>
-                    )}
                     <Text
                       weight="regular"
                       style={[
                         styles.messageText,
-                        !message.is_from_admin && styles.userMessageText,
+                        message.is_from_admin && styles.adminMessageText,
                       ]}
                     >
                       {message.message}
@@ -266,7 +256,7 @@ const MessagesScreen: React.FC = () => {
                       weight="regular"
                       style={[
                         styles.messageTime,
-                        !message.is_from_admin && styles.userMessageTime,
+                        message.is_from_admin && styles.adminMessageTime,
                       ]}
                     >
                       {formatTime(message.created_at)}
@@ -316,36 +306,33 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 24,
-    paddingVertical: 16,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
     backgroundColor: '#FFFFFF',
     borderBottomWidth: 1,
     borderBottomColor: '#E5E7EB',
   },
-  headerLeft: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  adminAvatar: {
+  backButton: {
     width: 40,
     height: 40,
-    borderRadius: 20,
-    backgroundColor: '#3B82F6',
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: 12,
   },
-  adminAvatarText: {
-    fontSize: 18,
-    color: '#FFFFFF',
-  },
-  title: {
-    fontSize: 18,
+  backIcon: {
+    fontSize: 24,
     color: '#1A1A1A',
   },
-  subtitle: {
+  headerCenter: {
+    flex: 1,
+    alignItems: 'center',
+  },
+  headerName: {
+    fontSize: 16,
+    color: '#1A1A1A',
+  },
+  headerEmail: {
     fontSize: 12,
-    color: '#10B981',
+    color: '#666',
     marginTop: 2,
   },
   keyboardView: {
@@ -360,22 +347,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingVertical: 80,
-    paddingHorizontal: 40,
   },
   emptyIcon: {
     fontSize: 64,
     marginBottom: 16,
   },
-  emptyTitle: {
-    fontSize: 18,
-    color: '#1A1A1A',
-    marginBottom: 8,
-  },
   emptyText: {
     fontSize: 14,
     color: '#666',
     textAlign: 'center',
-    lineHeight: 20,
   },
   dateSeparator: {
     alignItems: 'center',
@@ -396,20 +376,15 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     marginBottom: 8,
   },
-  adminMessage: {
+  userMessage: {
     alignSelf: 'flex-start',
     backgroundColor: '#FFFFFF',
     borderBottomLeftRadius: 4,
   },
-  userMessage: {
+  adminMessage: {
     alignSelf: 'flex-end',
     backgroundColor: '#3B82F6',
     borderBottomRightRadius: 4,
-  },
-  senderName: {
-    fontSize: 12,
-    color: '#666',
-    marginBottom: 4,
   },
   messageText: {
     fontSize: 15,
@@ -417,14 +392,14 @@ const styles = StyleSheet.create({
     lineHeight: 20,
     marginBottom: 4,
   },
-  userMessageText: {
+  adminMessageText: {
     color: '#FFFFFF',
   },
   messageTime: {
     fontSize: 11,
     color: '#999',
   },
-  userMessageTime: {
+  adminMessageTime: {
     color: 'rgba(255, 255, 255, 0.8)',
   },
   inputContainer: {
@@ -465,4 +440,5 @@ const styles = StyleSheet.create({
   },
 });
 
-export default MessagesScreen;
+export default AdminChatScreen;
+

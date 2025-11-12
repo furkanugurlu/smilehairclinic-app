@@ -29,7 +29,9 @@ interface DashboardStats {
   unreadMessages: number;
 }
 
-const AdminDashboardScreen: React.FC<AdminDashboardScreenProps> = ({ navigation }) => {
+const AdminDashboardScreen: React.FC<AdminDashboardScreenProps> = ({
+  navigation,
+}) => {
   const { user } = useAuthStore();
   const [stats, setStats] = useState<DashboardStats>({
     totalAppointments: 0,
@@ -39,7 +41,9 @@ const AdminDashboardScreen: React.FC<AdminDashboardScreenProps> = ({ navigation 
     totalUsers: 0,
     unreadMessages: 0,
   });
-  const [recentAppointments, setRecentAppointments] = useState<Appointment[]>([]);
+  const [recentAppointments, setRecentAppointments] = useState<Appointment[]>(
+    [],
+  );
   const [recentHairChecks, setRecentHairChecks] = useState<HairCheck[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -48,7 +52,7 @@ const AdminDashboardScreen: React.FC<AdminDashboardScreenProps> = ({ navigation 
   useFocusEffect(
     useCallback(() => {
       fetchDashboardData();
-    }, [])
+    }, []),
   );
 
   const fetchDashboardData = async () => {
@@ -63,7 +67,8 @@ const AdminDashboardScreen: React.FC<AdminDashboardScreenProps> = ({ navigation 
 
       if (appointmentsError) throw appointmentsError;
 
-      const pendingAppointments = appointments?.filter(a => a.status === 'pending').length || 0;
+      const pendingAppointments =
+        appointments?.filter(a => a.status === 'pending').length || 0;
 
       // Saç kontrol istatistikleri
       const { data: hairChecks, error: hairChecksError } = await supabase
@@ -73,7 +78,8 @@ const AdminDashboardScreen: React.FC<AdminDashboardScreenProps> = ({ navigation 
 
       if (hairChecksError) throw hairChecksError;
 
-      const pendingHairChecks = hairChecks?.filter(h => h.status === 'pending').length || 0;
+      const pendingHairChecks =
+        hairChecks?.filter(h => h.status === 'pending').length || 0;
 
       // Kullanıcı sayısı
       const { count: userCount, error: usersError } = await supabase
@@ -131,230 +137,299 @@ const AdminDashboardScreen: React.FC<AdminDashboardScreenProps> = ({ navigation 
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
         <View>
-          <Text weight="regular" style={styles.greeting}>Admin Panel</Text>
+          <Text weight="regular" style={styles.greeting}>
+            Admin Panel
+          </Text>
           <Text weight="bold" style={styles.userName}>
             Hoş geldiniz, {user?.full_name || 'Admin'}
           </Text>
         </View>
       </View>
 
-      {loading && !refreshing ? <View style={styles.loadingContainer}>
-        <ActivityIndicator size="small" color="#01213D" />
-      </View> : <ScrollView
-        showsVerticalScrollIndicator={false}
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }
-      >
-        {/* İstatistikler */}
-        <View style={styles.section}>
-          <Text weight="bold" style={styles.sectionTitle}>Genel Bakış</Text>
-          <View style={styles.statsGrid}>
-            <TouchableOpacity
-              style={styles.statCard}
-              onPress={() => navigation.navigate('AdminAppointments')}
-            >
-              <View style={[styles.statIconContainer, { backgroundColor: '#DBEAFE' }]}>
-                <Icon name="calendar-outline" size={24} color="#01213D" />
-              </View>
-              <Text weight="bold" style={styles.statNumber}>
-                {stats.pendingAppointments}
-              </Text>
-              <Text weight="regular" style={styles.statLabel}>
-                Bekleyen Randevu
-              </Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={styles.statCard}
-              onPress={() => navigation.navigate('AdminHairChecks')}
-            >
-              <View style={[styles.statIconContainer, { backgroundColor: '#FCE7F3' }]}>
-                <Icon name="analytics-outline" size={24} color="#EC4899" />
-              </View>
-              <Text weight="bold" style={styles.statNumber}>
-                {stats.pendingHairChecks}
-              </Text>
-              <Text weight="regular" style={styles.statLabel}>
-                Bekleyen Kontrol
-              </Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={styles.statCard}
-              onPress={() => navigation.navigate('AdminMessages')}
-            >
-              <View style={[styles.statIconContainer, { backgroundColor: '#FEF3C7' }]}>
-                <Icon name="chatbubbles-outline" size={24} color="#F59E0B" />
-              </View>
-              <Text weight="bold" style={styles.statNumber}>
-                {stats.unreadMessages}
-              </Text>
-              <Text weight="regular" style={styles.statLabel}>
-                Okunmamış Mesaj
-              </Text>
-            </TouchableOpacity>
-
-            <View style={styles.statCard}>
-              <View style={[styles.statIconContainer, { backgroundColor: '#D1FAE5' }]}>
-                <Icon name="people-outline" size={24} color="#10B981" />
-              </View>
-              <Text weight="bold" style={styles.statNumber}>
-                {stats.totalUsers}
-              </Text>
-              <Text weight="regular" style={styles.statLabel}>
-                Toplam Kullanıcı
-              </Text>
-            </View>
-          </View>
+      {loading && !refreshing ? (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="small" color="#01213D" />
         </View>
-
-        {/* Son Randevular */}
-        <View style={styles.section}>
-          <View style={styles.sectionHeader}>
-            <Text weight="bold" style={styles.sectionTitle}>Son Randevular</Text>
-            <TouchableOpacity onPress={() => navigation.navigate('AdminAppointments')}>
-              <Text weight="semibold" style={styles.seeAllText}>Tümünü Gör</Text>
-            </TouchableOpacity>
-          </View>
-
-          {recentAppointments.length === 0 ? (
-            <View style={styles.emptyCard}>
-              <Icon name="calendar-outline" size={48} color="#D1D5DB" style={styles.emptyIcon} />
-              <Text weight="medium" style={styles.emptyText}>
-                Henüz randevu yok
-              </Text>
-            </View>
-          ) : (
-            recentAppointments.map((appointment) => (
+      ) : (
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
+        >
+          {/* İstatistikler */}
+          <View style={styles.section}>
+            <Text weight="bold" style={styles.sectionTitle}>
+              Genel Bakış
+            </Text>
+            <View style={styles.statsGrid}>
               <TouchableOpacity
-                key={appointment.id}
-                style={styles.itemCard}
+                style={styles.statCard}
                 onPress={() => navigation.navigate('AdminAppointments')}
               >
-                <View style={styles.itemLeft}>
-                  <View
-                    style={[
-                      styles.statusDot,
-                      {
-                        backgroundColor:
-                          appointment.status === 'pending'
-                            ? '#F59E0B'
-                            : appointment.status === 'confirmed'
-                            ? '#10B981'
-                            : '#6B7280',
-                      },
-                    ]}
-                  />
-                  <View>
-                    <Text weight="semibold" style={styles.itemTitle}>
-                      {appointment.appointment_date}
-                    </Text>
-                    <Text weight="regular" style={styles.itemSubtitle}>
-                      {appointment.appointment_time}
-                    </Text>
-                  </View>
+                <View
+                  style={[
+                    styles.statIconContainer,
+                    { backgroundColor: '#DBEAFE' },
+                  ]}
+                >
+                  <Icon name="calendar-outline" size={24} color="#01213D" />
                 </View>
-                <Text weight="regular" style={styles.itemTime}>
-                  {formatDate(appointment.created_at)}
+                <Text weight="bold" style={styles.statNumber}>
+                  {stats.pendingAppointments}
+                </Text>
+                <Text weight="regular" style={styles.statLabel}>
+                  Bekleyen Randevu
                 </Text>
               </TouchableOpacity>
-            ))
-          )}
-        </View>
 
-        {/* Son Kontroller */}
-        <View style={styles.section}>
-          <View style={styles.sectionHeader}>
-            <Text weight="bold" style={styles.sectionTitle}>Son Kontroller</Text>
-            <TouchableOpacity onPress={() => navigation.navigate('AdminHairChecks')}>
-              <Text weight="semibold" style={styles.seeAllText}>Tümünü Gör</Text>
-            </TouchableOpacity>
-          </View>
-
-          {recentHairChecks.length === 0 ? (
-            <View style={styles.emptyCard}>
-              <Icon name="analytics-outline" size={48} color="#D1D5DB" style={styles.emptyIcon} />
-              <Text weight="medium" style={styles.emptyText}>
-                Henüz kontrol yok
-              </Text>
-            </View>
-          ) : (
-            recentHairChecks.map((check) => (
               <TouchableOpacity
-                key={check.id}
-                style={styles.itemCard}
+                style={styles.statCard}
                 onPress={() => navigation.navigate('AdminHairChecks')}
               >
-                <View style={styles.itemLeft}>
-                  <View
-                    style={[
-                      styles.statusDot,
-                      {
-                        backgroundColor:
-                          check.status === 'pending'
-                            ? '#F59E0B'
-                            : check.status === 'completed'
-                            ? '#10B981'
-                            : '#6B7280',
-                      },
-                    ]}
-                  />
-                  <View>
-                    <Text weight="semibold" style={styles.itemTitle}>
-                      Saç Kontrolü
-                    </Text>
-                    <Text weight="regular" style={styles.itemSubtitle}>
-                      {check.status === 'pending' ? 'Beklemede' : 'Tamamlandı'}
-                    </Text>
-                  </View>
+                <View
+                  style={[
+                    styles.statIconContainer,
+                    { backgroundColor: '#FCE7F3' },
+                  ]}
+                >
+                  <Icon name="analytics-outline" size={24} color="#EC4899" />
                 </View>
-                <Text weight="regular" style={styles.itemTime}>
-                  {formatDate(check.created_at)}
+                <Text weight="bold" style={styles.statNumber}>
+                  {stats.pendingHairChecks}
+                </Text>
+                <Text weight="regular" style={styles.statLabel}>
+                  Bekleyen Kontrol
                 </Text>
               </TouchableOpacity>
-            ))
-          )}
-        </View>
 
-        {/* Hızlı Aksiyonlar */}
-        <View style={styles.section}>
-          <Text weight="bold" style={styles.sectionTitle}>Hızlı İşlemler</Text>
-          <View style={styles.quickActions}>
-            <TouchableOpacity
-              style={styles.actionButton}
-              onPress={() => navigation.navigate('AdminAppointments')}
-            >
-              <Icon name="calendar-outline" size={32} color="#01213D" style={styles.actionIcon} />
-              <Text weight="semibold" style={styles.actionText}>
-                Randevular
-              </Text>
-            </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.statCard}
+                onPress={() => navigation.navigate('AdminMessages')}
+              >
+                <View
+                  style={[
+                    styles.statIconContainer,
+                    { backgroundColor: '#FEF3C7' },
+                  ]}
+                >
+                  <Icon name="chatbubbles-outline" size={24} color="#F59E0B" />
+                </View>
+                <Text weight="bold" style={styles.statNumber}>
+                  {stats.unreadMessages}
+                </Text>
+                <Text weight="regular" style={styles.statLabel}>
+                  Okunmamış Mesaj
+                </Text>
+              </TouchableOpacity>
 
-            <TouchableOpacity
-              style={styles.actionButton}
-              onPress={() => navigation.navigate('AdminHairChecks')}
-            >
-              <Icon name="analytics-outline" size={32} color="#01213D" style={styles.actionIcon} />
-              <Text weight="semibold" style={styles.actionText}>
-                Kontroller
-              </Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={styles.actionButton}
-              onPress={() => navigation.navigate('AdminMessages')}
-            >
-              <Icon name="chatbubbles-outline" size={32} color="#01213D" style={styles.actionIcon} />
-              <Text weight="semibold" style={styles.actionText}>
-                Mesajlar
-              </Text>
-            </TouchableOpacity>
+              <View style={styles.statCard}>
+                <View
+                  style={[
+                    styles.statIconContainer,
+                    { backgroundColor: '#D1FAE5' },
+                  ]}
+                >
+                  <Icon name="people-outline" size={24} color="#10B981" />
+                </View>
+                <Text weight="bold" style={styles.statNumber}>
+                  {stats.totalUsers}
+                </Text>
+                <Text weight="regular" style={styles.statLabel}>
+                  Toplam Kullanıcı
+                </Text>
+              </View>
+            </View>
           </View>
-        </View>
 
-        <View style={{ height: 40 }} />
-      </ScrollView>}
+          {/* Son Randevular */}
+          <View style={styles.section}>
+            <View style={styles.sectionHeader}>
+              <Text weight="bold" style={styles.sectionTitle}>
+                Son Randevular
+              </Text>
+              <TouchableOpacity
+                onPress={() => navigation.navigate('AdminAppointments')}
+              >
+                <Text weight="semibold" style={styles.seeAllText}>
+                  Tümünü Gör
+                </Text>
+              </TouchableOpacity>
+            </View>
+
+            {recentAppointments.length === 0 ? (
+              <View style={styles.emptyCard}>
+                <Icon
+                  name="calendar-outline"
+                  size={48}
+                  color="#D1D5DB"
+                  style={styles.emptyIcon}
+                />
+                <Text weight="medium" style={styles.emptyText}>
+                  Henüz randevu yok
+                </Text>
+              </View>
+            ) : (
+              recentAppointments.map(appointment => (
+                <TouchableOpacity
+                  key={appointment.id}
+                  style={styles.itemCard}
+                  onPress={() => navigation.navigate('AdminAppointments')}
+                >
+                  <View style={styles.itemLeft}>
+                    <View
+                      style={[
+                        styles.statusDot,
+                        {
+                          backgroundColor:
+                            appointment.status === 'pending'
+                              ? '#F59E0B'
+                              : appointment.status === 'confirmed'
+                              ? '#10B981'
+                              : '#6B7280',
+                        },
+                      ]}
+                    />
+                    <View>
+                      <Text weight="semibold" style={styles.itemTitle}>
+                        {appointment.appointment_date}
+                      </Text>
+                      <Text weight="regular" style={styles.itemSubtitle}>
+                        {appointment.appointment_time}
+                      </Text>
+                    </View>
+                  </View>
+                  <Text weight="regular" style={styles.itemTime}>
+                    {formatDate(appointment.created_at)}
+                  </Text>
+                </TouchableOpacity>
+              ))
+            )}
+          </View>
+
+          {/* Son Kontroller */}
+          <View style={styles.section}>
+            <View style={styles.sectionHeader}>
+              <Text weight="bold" style={styles.sectionTitle}>
+                Son Kontroller
+              </Text>
+              <TouchableOpacity
+                onPress={() => navigation.navigate('AdminHairChecks')}
+              >
+                <Text weight="semibold" style={styles.seeAllText}>
+                  Tümünü Gör
+                </Text>
+              </TouchableOpacity>
+            </View>
+
+            {recentHairChecks.length === 0 ? (
+              <View style={styles.emptyCard}>
+                <Icon
+                  name="analytics-outline"
+                  size={48}
+                  color="#D1D5DB"
+                  style={styles.emptyIcon}
+                />
+                <Text weight="medium" style={styles.emptyText}>
+                  Henüz kontrol yok
+                </Text>
+              </View>
+            ) : (
+              recentHairChecks.map(check => (
+                <TouchableOpacity
+                  key={check.id}
+                  style={styles.itemCard}
+                  onPress={() => navigation.navigate('AdminHairChecks')}
+                >
+                  <View style={styles.itemLeft}>
+                    <View
+                      style={[
+                        styles.statusDot,
+                        {
+                          backgroundColor:
+                            check.status === 'pending'
+                              ? '#F59E0B'
+                              : check.status === 'completed'
+                              ? '#10B981'
+                              : '#6B7280',
+                        },
+                      ]}
+                    />
+                    <View>
+                      <Text weight="semibold" style={styles.itemTitle}>
+                        Saç Kontrolü
+                      </Text>
+                      <Text weight="regular" style={styles.itemSubtitle}>
+                        {check.status === 'pending'
+                          ? 'Beklemede'
+                          : 'Tamamlandı'}
+                      </Text>
+                    </View>
+                  </View>
+                  <Text weight="regular" style={styles.itemTime}>
+                    {formatDate(check.created_at)}
+                  </Text>
+                </TouchableOpacity>
+              ))
+            )}
+          </View>
+
+          {/* Hızlı Aksiyonlar */}
+          <View style={styles.section}>
+            <Text weight="bold" style={styles.sectionTitle}>
+              Hızlı İşlemler
+            </Text>
+            <View style={styles.quickActions}>
+              <TouchableOpacity
+                style={styles.actionButton}
+                onPress={() => navigation.navigate('AdminAppointments')}
+              >
+                <Icon
+                  name="calendar-outline"
+                  size={32}
+                  color="#01213D"
+                  style={styles.actionIcon}
+                />
+                <Text weight="semibold" style={styles.actionText}>
+                  Randevular
+                </Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={styles.actionButton}
+                onPress={() => navigation.navigate('AdminHairChecks')}
+              >
+                <Icon
+                  name="analytics-outline"
+                  size={32}
+                  color="#01213D"
+                  style={styles.actionIcon}
+                />
+                <Text weight="semibold" style={styles.actionText}>
+                  Kontroller
+                </Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={styles.actionButton}
+                onPress={() => navigation.navigate('AdminMessages')}
+              >
+                <Icon
+                  name="chatbubbles-outline"
+                  size={32}
+                  color="#01213D"
+                  style={styles.actionIcon}
+                />
+                <Text weight="semibold" style={styles.actionText}>
+                  Mesajlar
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+
+          <View style={{ height: 40 }} />
+        </ScrollView>
+      )}
     </SafeAreaView>
   );
 };
@@ -374,8 +449,9 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 24,
-    paddingVertical: 20,
+    paddingVertical: 16,
     backgroundColor: '#FFFFFF',
+    height: 68,
   },
   greeting: {
     fontSize: 14,
@@ -528,4 +604,3 @@ const styles = StyleSheet.create({
 });
 
 export default AdminDashboardScreen;
-

@@ -626,8 +626,9 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 24,
-    paddingVertical: 20,
+    paddingVertical: 16,
     backgroundColor: '#FFFFFF',
+    height: 68,
   },
   greeting: {
     fontSize: 14,

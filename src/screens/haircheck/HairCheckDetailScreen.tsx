@@ -147,7 +147,7 @@ const HairCheckDetailScreen = ({ navigation, route }: any) => {
         <Text weight="bold" style={styles.headerTitle}>
           Kontrol Detayı
         </Text>
-        <View style={{ width: 40 }} />
+        <View style={styles.headerRight} />
       </View>
 
       <ScrollView
@@ -411,13 +411,21 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     borderBottomWidth: 1,
     borderBottomColor: '#E5E7EB',
+    minHeight: 56,
   },
   backButton: {
     padding: 4,
+    width: 40,
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   headerTitle: {
     fontSize: 18,
     color: '#1A1A1A',
+  },
+  headerRight: {
+    width: 40,
   },
   scrollView: {
     flex: 1,

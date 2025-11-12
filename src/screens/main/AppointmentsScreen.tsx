@@ -20,7 +20,9 @@ interface AppointmentsScreenProps {
   navigation: any;
 }
 
-const AppointmentsScreen: React.FC<AppointmentsScreenProps> = ({ navigation }) => {
+const AppointmentsScreen: React.FC<AppointmentsScreenProps> = ({
+  navigation,
+}) => {
   const { user } = useAuthStore();
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [loading, setLoading] = useState(true);
@@ -30,7 +32,7 @@ const AppointmentsScreen: React.FC<AppointmentsScreenProps> = ({ navigation }) =
   useFocusEffect(
     useCallback(() => {
       fetchAppointments();
-    }, [user?.id])
+    }, [user?.id]),
   );
 
   const fetchAppointments = async () => {
@@ -100,7 +102,7 @@ const AppointmentsScreen: React.FC<AppointmentsScreenProps> = ({ navigation }) =
             }
           },
         },
-      ]
+      ],
     );
   };
 
@@ -177,18 +179,24 @@ const AppointmentsScreen: React.FC<AppointmentsScreenProps> = ({ navigation }) =
   const now = new Date();
   const upcomingAppointments = appointments.filter(apt => {
     const aptDate = new Date(`${apt.appointment_date}T${apt.appointment_time}`);
-    return aptDate >= now && apt.status !== 'cancelled' && apt.status !== 'completed';
+    return (
+      aptDate >= now && apt.status !== 'cancelled' && apt.status !== 'completed'
+    );
   });
 
   const pastAppointments = appointments.filter(apt => {
     const aptDate = new Date(`${apt.appointment_date}T${apt.appointment_time}`);
-    return aptDate < now || apt.status === 'cancelled' || apt.status === 'completed';
+    return (
+      aptDate < now || apt.status === 'cancelled' || apt.status === 'completed'
+    );
   });
 
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <Text weight="bold" style={styles.title}>Randevularım</Text>
+        <Text weight="bold" style={styles.title}>
+          Randevularım
+        </Text>
         <TouchableOpacity
           style={styles.addButton}
           onPress={handleCreateAppointment}
@@ -197,210 +205,261 @@ const AppointmentsScreen: React.FC<AppointmentsScreenProps> = ({ navigation }) =
         </TouchableOpacity>
       </View>
 
-     {loading && !refreshing ? <View style={styles.loadingContainer}>
-        <ActivityIndicator size="small" color="#01213D" />
-      </View> : <ScrollView
-        showsVerticalScrollIndicator={false}
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }
-      >
-        {appointments.length === 0 ? (
-          <View style={styles.content}>
-            <View style={styles.emptyState}>
-              <Icon name="calendar-outline" size={64} color="#D1D5DB" style={styles.emptyIcon} />
-              <Text weight="semibold" style={styles.emptyTitle}>
-                Randevu Bulunamadı
-              </Text>
-              <Text weight="regular" style={styles.emptyText}>
-                Henüz bir randevunuz bulunmuyor. Yeni bir randevu oluşturmak için
-                aşağıdaki butona tıklayın.
-              </Text>
-              <TouchableOpacity
-                style={styles.button}
-                onPress={handleCreateAppointment}
-              >
-                <Text weight="semibold" style={styles.buttonText}>
-                  Yeni Randevu Oluştur
+      {loading && !refreshing ? (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="small" color="#01213D" />
+        </View>
+      ) : (
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
+        >
+          {appointments.length === 0 ? (
+            <View style={styles.content}>
+              <View style={styles.emptyState}>
+                <Icon
+                  name="calendar-outline"
+                  size={64}
+                  color="#D1D5DB"
+                  style={styles.emptyIcon}
+                />
+                <Text weight="semibold" style={styles.emptyTitle}>
+                  Randevu Bulunamadı
                 </Text>
-              </TouchableOpacity>
+                <Text weight="regular" style={styles.emptyText}>
+                  Henüz bir randevunuz bulunmuyor. Yeni bir randevu oluşturmak
+                  için aşağıdaki butona tıklayın.
+                </Text>
+                <TouchableOpacity
+                  style={styles.button}
+                  onPress={handleCreateAppointment}
+                >
+                  <Text weight="semibold" style={styles.buttonText}>
+                    Yeni Randevu Oluştur
+                  </Text>
+                </TouchableOpacity>
+              </View>
             </View>
-          </View>
-        ) : (
-          <>
-            {/* Gelecek Randevular */}
-            {upcomingAppointments.length > 0 && (
-              <View style={styles.section}>
-                <Text weight="bold" style={styles.sectionTitle}>
-                  Yaklaşan Randevular
-                </Text>
-                {upcomingAppointments.map((appointment) => (
-                  <View key={appointment.id} style={styles.appointmentCard}>
-                    <View style={styles.appointmentHeader}>
-                      <View style={styles.appointmentDateContainer}>
-                        <Icon name="calendar" size={24} color="#01213D" style={styles.appointmentDateIcon} />
-                        <View>
-                          <Text weight="semibold" style={styles.appointmentDate}>
-                            {formatDate(appointment.appointment_date)}
-                          </Text>
-                          <View style={styles.timeRow}>
-                            <Icon name="time-outline" size={14} color="#666" />
-                            <Text weight="semibold" style={styles.appointmentTime}>
-                              {formatTime(appointment.appointment_time)}
+          ) : (
+            <>
+              {/* Gelecek Randevular */}
+              {upcomingAppointments.length > 0 && (
+                <View style={styles.section}>
+                  <Text weight="bold" style={styles.sectionTitle}>
+                    Yaklaşan Randevular
+                  </Text>
+                  {upcomingAppointments.map(appointment => (
+                    <View key={appointment.id} style={styles.appointmentCard}>
+                      <View style={styles.appointmentHeader}>
+                        <View style={styles.appointmentDateContainer}>
+                          <Icon
+                            name="calendar"
+                            size={24}
+                            color="#01213D"
+                            style={styles.appointmentDateIcon}
+                          />
+                          <View>
+                            <Text
+                              weight="semibold"
+                              style={styles.appointmentDate}
+                            >
+                              {formatDate(appointment.appointment_date)}
                             </Text>
+                            <View style={styles.timeRow}>
+                              <Icon
+                                name="time-outline"
+                                size={14}
+                                color="#666"
+                              />
+                              <Text
+                                weight="semibold"
+                                style={styles.appointmentTime}
+                              >
+                                {formatTime(appointment.appointment_time)}
+                              </Text>
+                            </View>
                           </View>
                         </View>
-                      </View>
-                      <View
-                        style={[
-                          styles.statusBadge,
-                          { backgroundColor: getStatusColor(appointment.status) + '20' },
-                        ]}
-                      >
-                        <Icon 
-                          name={getStatusIconName(appointment.status)} 
-                          size={14} 
-                          color={getStatusColor(appointment.status)} 
-                          style={styles.statusIcon}
-                        />
-                        <Text
-                          weight="semibold"
+                        <View
                           style={[
-                            styles.statusText,
-                            { color: getStatusColor(appointment.status) },
+                            styles.statusBadge,
+                            {
+                              backgroundColor:
+                                getStatusColor(appointment.status) + '20',
+                            },
                           ]}
                         >
-                          {getStatusText(appointment.status)}
-                        </Text>
+                          <Icon
+                            name={getStatusIconName(appointment.status)}
+                            size={14}
+                            color={getStatusColor(appointment.status)}
+                            style={styles.statusIcon}
+                          />
+                          <Text
+                            weight="semibold"
+                            style={[
+                              styles.statusText,
+                              { color: getStatusColor(appointment.status) },
+                            ]}
+                          >
+                            {getStatusText(appointment.status)}
+                          </Text>
+                        </View>
                       </View>
+
+                      <View style={styles.divider} />
+
+                      <View style={styles.appointmentBody}>
+                        <Text weight="semibold" style={styles.serviceTitle}>
+                          {getServiceTitle(appointment.service_type)}
+                        </Text>
+
+                        {appointment.patient_notes && (
+                          <View style={styles.notesContainer}>
+                            <Text weight="regular" style={styles.notesLabel}>
+                              Notlarınız:
+                            </Text>
+                            <Text weight="regular" style={styles.notesText}>
+                              {appointment.patient_notes}
+                            </Text>
+                          </View>
+                        )}
+
+                        {appointment.doctor_notes && (
+                          <View style={styles.notesContainer}>
+                            <Text weight="regular" style={styles.notesLabel}>
+                              Klinik Notları:
+                            </Text>
+                            <Text weight="regular" style={styles.notesText}>
+                              {appointment.doctor_notes}
+                            </Text>
+                          </View>
+                        )}
+
+                        {appointment.estimated_price && (
+                          <View style={styles.priceContainer}>
+                            <Text weight="regular" style={styles.priceLabel}>
+                              Tahmini Ücret:
+                            </Text>
+                            <Text weight="bold" style={styles.priceText}>
+                              ₺{appointment.estimated_price}
+                            </Text>
+                          </View>
+                        )}
+                      </View>
+
+                      {appointment.status === 'pending' && (
+                        <TouchableOpacity
+                          style={styles.cancelButton}
+                          onPress={() => handleCancelAppointment(appointment)}
+                        >
+                          <Text
+                            weight="semibold"
+                            style={styles.cancelButtonText}
+                          >
+                            Randevuyu İptal Et
+                          </Text>
+                        </TouchableOpacity>
+                      )}
                     </View>
+                  ))}
+                </View>
+              )}
 
-                    <View style={styles.divider} />
+              {/* Geçmiş Randevular */}
+              {pastAppointments.length > 0 && (
+                <View style={styles.section}>
+                  <Text weight="bold" style={styles.sectionTitle}>
+                    Geçmiş Randevular
+                  </Text>
+                  {pastAppointments.map(appointment => (
+                    <View
+                      key={appointment.id}
+                      style={styles.appointmentCardPast}
+                    >
+                      <View style={styles.appointmentHeader}>
+                        <View style={styles.appointmentDateContainer}>
+                          <Icon
+                            name="calendar"
+                            size={24}
+                            color="#999"
+                            style={styles.appointmentDateIcon}
+                          />
+                          <View>
+                            <Text
+                              weight="semibold"
+                              style={styles.appointmentDate}
+                            >
+                              {formatDate(appointment.appointment_date)}
+                            </Text>
+                            <View style={styles.timeRow}>
+                              <Icon
+                                name="time-outline"
+                                size={14}
+                                color="#666"
+                              />
+                              <Text
+                                weight="semibold"
+                                style={styles.appointmentTime}
+                              >
+                                {formatTime(appointment.appointment_time)}
+                              </Text>
+                            </View>
+                          </View>
+                        </View>
+                        <View
+                          style={[
+                            styles.statusBadge,
+                            {
+                              backgroundColor:
+                                getStatusColor(appointment.status) + '20',
+                            },
+                          ]}
+                        >
+                          <Icon
+                            name={getStatusIconName(appointment.status)}
+                            size={14}
+                            color={getStatusColor(appointment.status)}
+                            style={styles.statusIcon}
+                          />
+                          <Text
+                            weight="semibold"
+                            style={[
+                              styles.statusText,
+                              { color: getStatusColor(appointment.status) },
+                            ]}
+                          >
+                            {getStatusText(appointment.status)}
+                          </Text>
+                        </View>
+                      </View>
 
-                    <View style={styles.appointmentBody}>
+                      <View style={styles.divider} />
+
                       <Text weight="semibold" style={styles.serviceTitle}>
                         {getServiceTitle(appointment.service_type)}
                       </Text>
-                      
-                      {appointment.patient_notes && (
-                        <View style={styles.notesContainer}>
-                          <Text weight="regular" style={styles.notesLabel}>
-                            Notlarınız:
-                          </Text>
-                          <Text weight="regular" style={styles.notesText}>
-                            {appointment.patient_notes}
-                          </Text>
-                        </View>
-                      )}
-
-                      {appointment.doctor_notes && (
-                        <View style={styles.notesContainer}>
-                          <Text weight="regular" style={styles.notesLabel}>
-                            Klinik Notları:
-                          </Text>
-                          <Text weight="regular" style={styles.notesText}>
-                            {appointment.doctor_notes}
-                          </Text>
-                        </View>
-                      )}
-
-                      {appointment.estimated_price && (
-                        <View style={styles.priceContainer}>
-                          <Text weight="regular" style={styles.priceLabel}>
-                            Tahmini Ücret:
-                          </Text>
-                          <Text weight="bold" style={styles.priceText}>
-                            ₺{appointment.estimated_price}
-                          </Text>
-                        </View>
-                      )}
                     </View>
+                  ))}
+                </View>
+              )}
 
-                    {appointment.status === 'pending' && (
-                      <TouchableOpacity
-                        style={styles.cancelButton}
-                        onPress={() => handleCancelAppointment(appointment)}
-                      >
-                        <Text weight="semibold" style={styles.cancelButtonText}>
-                          Randevuyu İptal Et
-                        </Text>
-                      </TouchableOpacity>
-                    )}
-                  </View>
-                ))}
-              </View>
-            )}
-
-            {/* Geçmiş Randevular */}
-            {pastAppointments.length > 0 && (
-              <View style={styles.section}>
-                <Text weight="bold" style={styles.sectionTitle}>
-                  Geçmiş Randevular
+              <TouchableOpacity
+                style={styles.floatingButton}
+                onPress={handleCreateAppointment}
+              >
+                <Text weight="bold" style={styles.floatingButtonText}>
+                  + Yeni Randevu
                 </Text>
-                {pastAppointments.map((appointment) => (
-                  <View key={appointment.id} style={styles.appointmentCardPast}>
-                    <View style={styles.appointmentHeader}>
-                      <View style={styles.appointmentDateContainer}>
-                        <Icon name="calendar" size={24} color="#999" style={styles.appointmentDateIcon} />
-                        <View>
-                          <Text weight="semibold" style={styles.appointmentDate}>
-                            {formatDate(appointment.appointment_date)}
-                          </Text>
-                          <View style={styles.timeRow}>
-                            <Icon name="time-outline" size={14} color="#666" />
-                            <Text weight="semibold" style={styles.appointmentTime}>
-                              {formatTime(appointment.appointment_time)}
-                            </Text>
-                          </View>
-                        </View>
-                      </View>
-                      <View
-                        style={[
-                          styles.statusBadge,
-                          { backgroundColor: getStatusColor(appointment.status) + '20' },
-                        ]}
-                      >
-                        <Icon 
-                          name={getStatusIconName(appointment.status)} 
-                          size={14} 
-                          color={getStatusColor(appointment.status)} 
-                          style={styles.statusIcon}
-                        />
-                        <Text
-                          weight="semibold"
-                          style={[
-                            styles.statusText,
-                            { color: getStatusColor(appointment.status) },
-                          ]}
-                        >
-                          {getStatusText(appointment.status)}
-                        </Text>
-                      </View>
-                    </View>
+              </TouchableOpacity>
+            </>
+          )}
 
-                    <View style={styles.divider} />
-
-                    <Text weight="semibold" style={styles.serviceTitle}>
-                      {getServiceTitle(appointment.service_type)}
-                    </Text>
-                  </View>
-                ))}
-              </View>
-            )}
-
-            <TouchableOpacity
-              style={styles.floatingButton}
-              onPress={handleCreateAppointment}
-            >
-              <Text weight="bold" style={styles.floatingButtonText}>
-                + Yeni Randevu
-              </Text>
-            </TouchableOpacity>
-          </>
-        )}
-
-        <View style={{ height: 100 }} />
-      </ScrollView>}
+          <View style={{ height: 100 }} />
+        </ScrollView>
+      )}
     </SafeAreaView>
   );
 };
@@ -421,9 +480,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#FFFFFF',
     paddingHorizontal: 24,
-    paddingVertical: 20,
+    paddingVertical: 16,
     borderBottomWidth: 1,
     borderBottomColor: '#E5E7EB',
+    height: 68,
   },
   title: {
     fontSize: 24,
@@ -632,4 +692,3 @@ const styles = StyleSheet.create({
 });
 
 export default AppointmentsScreen;
-

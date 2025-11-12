@@ -42,7 +42,7 @@ const MessageListScreen: React.FC<MessageListScreenProps> = ({
           schema: 'public',
           table: 'messages',
         },
-        (payload) => {
+        payload => {
           console.log('📨 Yeni mesaj geldi, liste güncelleniyor...');
           fetchChatUsers(false);
         },
@@ -54,8 +54,10 @@ const MessageListScreen: React.FC<MessageListScreenProps> = ({
           schema: 'public',
           table: 'messages',
         },
-        (payload) => {
-          console.log('✏️ Mesaj güncellendi (okundu işaretlendi), liste güncelleniyor...');
+        payload => {
+          console.log(
+            '✏️ Mesaj güncellendi (okundu işaretlendi), liste güncelleniyor...',
+          );
           // UPDATE olduğunda badge'leri yenilemek için
           fetchChatUsers(false);
         },
@@ -72,7 +74,7 @@ const MessageListScreen: React.FC<MessageListScreenProps> = ({
     useCallback(() => {
       console.log('📱 MessageList ekranı focus oldu, liste yenileniyor...');
       fetchChatUsers(false);
-    }, [user?.id, isAdmin])
+    }, [user?.id, isAdmin]),
   );
 
   const fetchChatUsers = async (showLoader = true) => {
@@ -145,10 +147,15 @@ const MessageListScreen: React.FC<MessageListScreenProps> = ({
           );
         });
 
-        console.log('📋 Admin chat listesi güncellendi. Kullanıcı sayısı:', sorted.length);
+        console.log(
+          '📋 Admin chat listesi güncellendi. Kullanıcı sayısı:',
+          sorted.length,
+        );
         sorted.forEach(u => {
           if (u.unread_count > 0) {
-            console.log(`  🔴 ${u.full_name}: ${u.unread_count} okunmamış mesaj`);
+            console.log(
+              `  🔴 ${u.full_name}: ${u.unread_count} okunmamış mesaj`,
+            );
           } else {
             console.log(`  ✅ ${u.full_name}: tüm mesajlar okundu`);
           }
@@ -191,7 +198,7 @@ const MessageListScreen: React.FC<MessageListScreenProps> = ({
           '📊 Kullanıcı için admin mesajlarından okunmamış sayısı:',
           finalUnreadCount,
         );
-        
+
         if (finalUnreadCount > 0) {
           console.log(`  🔴 Uzman Destek: ${finalUnreadCount} okunmamış mesaj`);
         } else {
@@ -253,8 +260,7 @@ const MessageListScreen: React.FC<MessageListScreenProps> = ({
     navigation.navigate('Chat', { chatUser, isAdmin });
   };
 
-  console.log('chatUsers',chatUsers);
-  
+  console.log('chatUsers', chatUsers);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -361,11 +367,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     backgroundColor: '#FFFFFF',
     paddingHorizontal: 24,
-    paddingVertical: 20,
+    paddingVertical: 16,
     borderBottomWidth: 1,
     borderBottomColor: '#E5E7EB',
+    height: 68,
   },
   title: {
     fontSize: 24,

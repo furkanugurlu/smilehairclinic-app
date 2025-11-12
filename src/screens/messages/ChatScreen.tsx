@@ -11,7 +11,10 @@ import {
   ActivityIndicator,
   Image,
 } from 'react-native';
-import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
+import {
+  SafeAreaView,
+  useSafeAreaInsets,
+} from 'react-native-safe-area-context';
 import { useFocusEffect } from '@react-navigation/native';
 import { Text } from '../../components';
 import { supabase } from '../../config/supabase';
@@ -38,7 +41,7 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ navigation, route }) => {
   const [loading, setLoading] = useState(true);
   const [sending, setSending] = useState(false);
   const scrollViewRef = useRef<ScrollView>(null);
-  
+
   if (!chatUser) {
     navigation?.goBack();
     return null;
@@ -59,9 +62,11 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ navigation, route }) => {
           .eq('is_from_admin', false)
           .eq('is_read', false)
           .select();
-        
+
         if (error) throw error;
-        console.log(`✅ Admin: ${data?.length || 0} mesaj okundu olarak işaretlendi`);
+        console.log(
+          `✅ Admin: ${data?.length || 0} mesaj okundu olarak işaretlendi`,
+        );
       } else {
         // Kullanıcı okunmamış admin mesajlarını işaretle
         const { data, error } = await supabase
@@ -71,9 +76,13 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ navigation, route }) => {
           .eq('is_from_admin', true)
           .eq('is_read', false)
           .select();
-        
+
         if (error) throw error;
-        console.log(`✅ Kullanıcı: ${data?.length || 0} admin mesajı okundu olarak işaretlendi`);
+        console.log(
+          `✅ Kullanıcı: ${
+            data?.length || 0
+          } admin mesajı okundu olarak işaretlendi`,
+        );
       }
     } catch (error) {
       console.error('❌ Mark as read error:', error);
@@ -94,17 +103,17 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ navigation, route }) => {
           table: 'messages',
           filter: `user_id=eq.${messageUserId}`,
         },
-        (payload) => {
-          setMessages((prev) => [...prev, payload.new as Message]);
+        payload => {
+          setMessages(prev => [...prev, payload.new as Message]);
           scrollToBottom();
-          
+
           // Mesaj okundu olarak işaretle
           if (isAdmin && !(payload.new as Message).is_from_admin) {
             markMessageAsRead((payload.new as Message).id);
           } else if (!isAdmin && (payload.new as Message).is_from_admin) {
             markMessageAsRead((payload.new as Message).id);
           }
-        }
+        },
       )
       .subscribe();
 
@@ -116,17 +125,23 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ navigation, route }) => {
   // Ekran focus olduğunda ve unmount olduğunda mesajları okundu işaretle
   useFocusEffect(
     useCallback(() => {
-      console.log('📱 Chat ekranı focus oldu, mesajlar okundu olarak işaretleniyor...');
+      console.log(
+        '📱 Chat ekranı focus oldu, mesajlar okundu olarak işaretleniyor...',
+      );
       // Focus olduğunda mesajları okundu işaretle
       markMessagesAsRead();
 
       // Cleanup: Ekrandan çıkılırken de okundu işaretle (son kez)
       return () => {
-        console.log('👋 Chat ekranından çıkılıyor, son kez mesajlar okundu işaretleniyor...');
+        console.log(
+          '👋 Chat ekranından çıkılıyor, son kez mesajlar okundu işaretleniyor...',
+        );
         // Ekrandan çıkarken de son kez işaretle
-        markMessagesAsRead().catch(err => console.error('❌ Cleanup mark as read error:', err));
+        markMessagesAsRead().catch(err =>
+          console.error('❌ Cleanup mark as read error:', err),
+        );
       };
-    }, [markMessagesAsRead])
+    }, [markMessagesAsRead]),
   );
 
   const fetchMessages = async () => {
@@ -186,7 +201,7 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ navigation, route }) => {
 
       if (error) throw error;
 
-      setMessages((prev) => [...prev, data]);
+      setMessages(prev => [...prev, data]);
       scrollToBottom();
     } catch (error: any) {
       console.error('❌ Send message error:', error);
@@ -232,8 +247,8 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ navigation, route }) => {
   // Mesajları tarihe göre grupla
   const groupMessagesByDate = () => {
     const groups: { [key: string]: Message[] } = {};
-    
-    messages.forEach((message) => {
+
+    messages.forEach(message => {
       const date = new Date(message.created_at).toDateString();
       if (!groups[date]) {
         groups[date] = [];
@@ -315,14 +330,14 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ navigation, route }) => {
                 </Text>
               </View>
             ) : (
-              Object.keys(messageGroups).map((dateKey) => (
+              Object.keys(messageGroups).map(dateKey => (
                 <View key={dateKey}>
                   <View style={styles.dateSeparator}>
                     <Text weight="medium" style={styles.dateText}>
                       {formatDate(messageGroups[dateKey][0].created_at)}
                     </Text>
                   </View>
-                  {messageGroups[dateKey].map((message) => {
+                  {messageGroups[dateKey].map(message => {
                     const isMine = isMyMessage(message);
                     return (
                       <View
@@ -365,7 +380,12 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ navigation, route }) => {
           </ScrollView>
         )}
 
-        <View style={[styles.inputContainer, { paddingBottom: Math.max(insets.bottom, 12) }]}>
+        <View
+          style={[
+            styles.inputContainer,
+            { paddingBottom: Math.max(insets.bottom, 12) },
+          ]}
+        >
           <TextInput
             style={styles.input}
             placeholder="Mesajınızı yazın..."
@@ -383,9 +403,7 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ navigation, route }) => {
             onPress={handleSendMessage}
             disabled={!newMessage.trim() || sending}
           >
-            <Text style={styles.sendIcon}>
-              {sending ? '⏳' : '➤'}
-            </Text>
+            <Text style={styles.sendIcon}>{sending ? '⏳' : '➤'}</Text>
           </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>
@@ -402,11 +420,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 16,
-    paddingVertical: 12,
+    paddingHorizontal: 20,
+    paddingVertical: 16,
     backgroundColor: '#FFFFFF',
     borderBottomWidth: 1,
     borderBottomColor: '#E5E7EB',
+    minHeight: 56,
   },
   backButton: {
     width: 40,
@@ -565,4 +584,3 @@ const styles = StyleSheet.create({
 });
 
 export default ChatScreen;
-

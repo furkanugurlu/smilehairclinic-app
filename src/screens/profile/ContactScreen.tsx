@@ -29,18 +29,26 @@ const ContactScreen: React.FC<ContactScreenProps> = ({ navigation }) => {
   };
 
   const handleAddress = () => {
-    const address = 'Tatlısu, Alptekin Cd. No:15, 34774 Ümraniye/İstanbul, Türkiye';
-    const url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`;
+    const address =
+      'Tatlısu, Alptekin Cd. No:15, 34774 Ümraniye/İstanbul, Türkiye';
+    const url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+      address,
+    )}`;
     Linking.openURL(url);
   };
 
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          style={styles.backButton}
+        >
           <Icon name="chevron-back" size={28} color="#1A1A1A" />
         </TouchableOpacity>
-        <Text weight="bold" style={styles.headerTitle}>İletişim</Text>
+        <Text weight="bold" style={styles.headerTitle}>
+          İletişim
+        </Text>
         <View style={styles.headerRight} />
       </View>
 
@@ -49,21 +57,27 @@ const ContactScreen: React.FC<ContactScreenProps> = ({ navigation }) => {
           <View style={styles.logoContainer}>
             <Icon name="medical-outline" size={40} color="#FFFFFF" />
           </View>
-          <Text weight="bold" style={styles.clinicName}>Smile Hair Clinic</Text>
+          <Text weight="bold" style={styles.clinicName}>
+            Smile Hair Clinic
+          </Text>
           <Text weight="regular" style={styles.clinicSubtitle}>
             Saç Ekimi ve Saç Sağlığı Uzmanı
           </Text>
         </View>
 
         <View style={styles.section}>
-          <Text weight="semibold" style={styles.sectionTitle}>İLETİŞİM BİLGİLERİ</Text>
+          <Text weight="semibold" style={styles.sectionTitle}>
+            İLETİŞİM BİLGİLERİ
+          </Text>
 
           <TouchableOpacity style={styles.contactCard} onPress={handleCall}>
             <View style={styles.contactIconContainer}>
               <Icon name="call-outline" size={24} color="#01213D" />
             </View>
             <View style={styles.contactInfo}>
-              <Text weight="semibold" style={styles.contactLabel}>Telefon</Text>
+              <Text weight="semibold" style={styles.contactLabel}>
+                Telefon
+              </Text>
               <Text weight="regular" style={styles.contactValue}>
                 +90 549 149 24 00
               </Text>
@@ -76,7 +90,9 @@ const ContactScreen: React.FC<ContactScreenProps> = ({ navigation }) => {
               <Icon name="mail-outline" size={24} color="#01213D" />
             </View>
             <View style={styles.contactInfo}>
-              <Text weight="semibold" style={styles.contactLabel}>E-Posta</Text>
+              <Text weight="semibold" style={styles.contactLabel}>
+                E-Posta
+              </Text>
               <Text weight="regular" style={styles.contactValue}>
                 info@smilehairclinic.com
               </Text>
@@ -89,7 +105,9 @@ const ContactScreen: React.FC<ContactScreenProps> = ({ navigation }) => {
               <Icon name="logo-whatsapp" size={24} color="#25D366" />
             </View>
             <View style={styles.contactInfo}>
-              <Text weight="semibold" style={styles.contactLabel}>WhatsApp</Text>
+              <Text weight="semibold" style={styles.contactLabel}>
+                WhatsApp
+              </Text>
               <Text weight="regular" style={styles.contactValue}>
                 +90 549 149 24 00
               </Text>
@@ -102,7 +120,9 @@ const ContactScreen: React.FC<ContactScreenProps> = ({ navigation }) => {
               <Icon name="location-outline" size={24} color="#01213D" />
             </View>
             <View style={styles.contactInfo}>
-              <Text weight="semibold" style={styles.contactLabel}>Adres</Text>
+              <Text weight="semibold" style={styles.contactLabel}>
+                Adres
+              </Text>
               <Text weight="regular" style={styles.contactValue}>
                 Tatlısu, Alptekin Cd. No:15, {'\n'}
                 34774 Ümraniye/İstanbul, Türkiye
@@ -113,30 +133,46 @@ const ContactScreen: React.FC<ContactScreenProps> = ({ navigation }) => {
         </View>
 
         <View style={styles.section}>
-          <Text weight="semibold" style={styles.sectionTitle}>ÇALIŞMA SAATLERİ</Text>
+          <Text weight="semibold" style={styles.sectionTitle}>
+            ÇALIŞMA SAATLERİ
+          </Text>
           <View style={styles.infoCard}>
             <View style={styles.infoRow}>
-              <Text weight="regular" style={styles.infoLabel}>Pazartesi - Cumartesi</Text>
-              <Text weight="semibold" style={styles.infoValue}>09:00 - 18:00</Text>
+              <Text weight="regular" style={styles.infoLabel}>
+                Pazartesi - Cumartesi
+              </Text>
+              <Text weight="semibold" style={styles.infoValue}>
+                09:00 - 18:00
+              </Text>
             </View>
             <View style={styles.infoDivider} />
             <View style={styles.infoRow}>
-              <Text weight="regular" style={styles.infoLabel}>Pazar</Text>
-              <Text weight="semibold" style={styles.infoValue}>Kapalı</Text>
+              <Text weight="regular" style={styles.infoLabel}>
+                Pazar
+              </Text>
+              <Text weight="semibold" style={styles.infoValue}>
+                Kapalı
+              </Text>
             </View>
           </View>
         </View>
 
         <View style={styles.section}>
-          <Text weight="semibold" style={styles.sectionTitle}>SOSYAL MEDYA</Text>
+          <Text weight="semibold" style={styles.sectionTitle}>
+            SOSYAL MEDYA
+          </Text>
           <View style={styles.socialButtons}>
             <TouchableOpacity style={styles.socialButton}>
               <Icon name="logo-facebook" size={20} color="#1877F2" />
-              <Text weight="medium" style={styles.socialText}>Facebook</Text>
+              <Text weight="medium" style={styles.socialText}>
+                Facebook
+              </Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.socialButton}>
               <Icon name="logo-instagram" size={20} color="#E4405F" />
-              <Text weight="medium" style={styles.socialText}>Instagram</Text>
+              <Text weight="medium" style={styles.socialText}>
+                Instagram
+              </Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -161,16 +197,21 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     borderBottomWidth: 1,
     borderBottomColor: '#E5E7EB',
+    minHeight: 56,
   },
   backButton: {
     padding: 4,
+    width: 40,
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   headerTitle: {
     fontSize: 18,
     color: '#1A1A1A',
   },
   headerRight: {
-    width: 36,
+    width: 40,
   },
   heroSection: {
     backgroundColor: '#FFFFFF',
@@ -306,4 +347,3 @@ const styles = StyleSheet.create({
 });
 
 export default ContactScreen;
-

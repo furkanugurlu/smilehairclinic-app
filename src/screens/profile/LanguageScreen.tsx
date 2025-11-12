@@ -1,10 +1,5 @@
 import React, { useState } from 'react';
-import {
-  View,
-  StyleSheet,
-  ScrollView,
-  TouchableOpacity,
-} from 'react-native';
+import { View, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { Text } from '../../components';
@@ -35,10 +30,15 @@ const LanguageScreen: React.FC<LanguageScreenProps> = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          style={styles.backButton}
+        >
           <Icon name="chevron-back" size={28} color="#1A1A1A" />
         </TouchableOpacity>
-        <Text weight="bold" style={styles.headerTitle}>Dil</Text>
+        <Text weight="bold" style={styles.headerTitle}>
+          Dil
+        </Text>
         <View style={styles.headerRight} />
       </View>
 
@@ -48,7 +48,7 @@ const LanguageScreen: React.FC<LanguageScreenProps> = ({ navigation }) => {
             Uygulama dilini seçin
           </Text>
 
-          {languages.map((language) => (
+          {languages.map(language => (
             <TouchableOpacity
               key={language.id}
               style={styles.languageItem}
@@ -82,21 +82,26 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingHorizontal: 16,
+    paddingHorizontal: 20,
     paddingVertical: 16,
     backgroundColor: '#FFFFFF',
     borderBottomWidth: 1,
     borderBottomColor: '#E5E7EB',
+    minHeight: 56,
   },
   backButton: {
     padding: 4,
+    width: 40,
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   headerTitle: {
     fontSize: 18,
     color: '#1A1A1A',
   },
   headerRight: {
-    width: 36,
+    width: 40,
   },
   content: {
     padding: 24,

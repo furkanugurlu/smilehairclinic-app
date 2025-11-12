@@ -1,12 +1,12 @@
 import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import ProfileScreen from '../screens/main/ProfileScreen';
-import { 
-  ProfileEditScreen, 
-  ContactScreen, 
-  AboutScreen, 
+import {
+  ProfileEditScreen,
+  ContactScreen,
+  AboutScreen,
   HelpCenterScreen,
-  LanguageScreen 
+  LanguageScreen,
 } from '../screens/profile';
 
 export type ProfileStackParamList = {
@@ -38,4 +38,3 @@ const ProfileStack: React.FC = () => {
 };
 
 export default ProfileStack;
-

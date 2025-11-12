@@ -1,10 +1,5 @@
 import React, { useState } from 'react';
-import {
-  View,
-  StyleSheet,
-  ScrollView,
-  TouchableOpacity,
-} from 'react-native';
+import { View, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { Text } from '../../components';
@@ -26,52 +21,62 @@ const HelpCenterScreen: React.FC<HelpCenterScreenProps> = ({ navigation }) => {
     {
       category: 'Operasyon Sonrası',
       question: 'Ne kadar süre antibiyotik içeren krem kullanmam gerekir?',
-      answer: 'Operasyondan sonraki 5 gün içinde donör bölgeniz iyileştiyse antibiyotik içeren kremleri kullanmaya devam etmeniz gerekmez.',
+      answer:
+        'Operasyondan sonraki 5 gün içinde donör bölgeniz iyileştiyse antibiyotik içeren kremleri kullanmaya devam etmeniz gerekmez.',
     },
     {
       category: 'Operasyon Sonrası',
       question: 'Saç ekimi sonrasında ne kadar süre şapka kullanmalıyım?',
-      answer: 'Saç ekiminden sonra size verdiğimiz şapkayı 10 gün boyunca kullanmanızı öneririz.',
+      answer:
+        'Saç ekiminden sonra size verdiğimiz şapkayı 10 gün boyunca kullanmanızı öneririz.',
     },
     {
       category: 'Operasyon Sonrası',
       question: 'Ameliyattan sonra ne zaman spor yapabilirim?',
-      answer: 'Operasyondan sonra egzersiz yapmaya başlamak için en az 1 ay beklemelisiniz.',
+      answer:
+        'Operasyondan sonra egzersiz yapmaya başlamak için en az 1 ay beklemelisiniz.',
     },
     {
       category: 'Bakım',
       question: 'Saç ekiminden sonra her gün başımı yıkamalı mıyım?',
-      answer: 'Saç ekiminden sonra 1 ay boyunca her gün başınızı yıkamalısınız.',
+      answer:
+        'Saç ekiminden sonra 1 ay boyunca her gün başınızı yıkamalısınız.',
     },
     {
       category: 'Operasyon Sonrası',
       question: 'Saç ekimi sonrasında bandajımı ne zaman çıkarabilirim?',
-      answer: 'Operasyondan sonraki ikinci gün başınızı yıkamanız gerekir. Başınızı yıkamadan önce bandaj çıkartılır ve sonrasında tekrar kullanılması gerekmez.',
+      answer:
+        'Operasyondan sonraki ikinci gün başınızı yıkamanız gerekir. Başınızı yıkamadan önce bandaj çıkartılır ve sonrasında tekrar kullanılması gerekmez.',
     },
     {
       category: 'Bakım',
       question: 'Ne kadar süre özel şampuan kullanmam gerekir?',
-      answer: '1 ay boyunca size önerdiğimiz şampuanı kullanmalısınız. Saçlarınızın ve baş bölgenizin sağlığından emin olduktan sonra her zaman kullandığınız şampuanı kullanmaya devam edebilirsiniz.',
+      answer:
+        '1 ay boyunca size önerdiğimiz şampuanı kullanmalısınız. Saçlarınızın ve baş bölgenizin sağlığından emin olduktan sonra her zaman kullandığınız şampuanı kullanmaya devam edebilirsiniz.',
     },
     {
       category: 'Bakım',
       question: 'Ne kadar süre Panthenol sprey kullanmam gerekir?',
-      answer: 'Yaklaşık 15 gün boyunca, kabuklar deriden tamamen atılana kadar kullanmanız gerekir.',
+      answer:
+        'Yaklaşık 15 gün boyunca, kabuklar deriden tamamen atılana kadar kullanmanız gerekir.',
     },
     {
       category: 'Genel',
       question: 'Saç ekimi sonrası ne zaman cinsel ilişkiye girebilirim?',
-      answer: 'Operasyon sonrası cinsel ilişki konusunda kısıtlama getirilmez, çok efor harcamamanız önerilir.',
+      answer:
+        'Operasyon sonrası cinsel ilişki konusunda kısıtlama getirilmez, çok efor harcamamanız önerilir.',
     },
     {
       category: 'Bakım',
       question: 'Önerilen ürünler dışında farklı bir ürün kullanabilir miyim?',
-      answer: 'Kullanacağınız ürünlerin içeriğini dikkatle incelemeli, size zarar vermeyecek, paraben içermeyen, doğal ürünleri tercih etmelisiniz.',
+      answer:
+        'Kullanacağınız ürünlerin içeriğini dikkatle incelemeli, size zarar vermeyecek, paraben içermeyen, doğal ürünleri tercih etmelisiniz.',
     },
     {
       category: 'Bakım',
       question: 'Panthenol spreyi donör bölgede kullanabilir miyim?',
-      answer: 'Kullanabilirsiniz ancak bu spreyin çok hızlı tükenmesine sebep olacaktır.',
+      answer:
+        'Kullanabilirsiniz ancak bu spreyin çok hızlı tükenmesine sebep olacaktır.',
     },
   ];
 
@@ -84,16 +89,26 @@ const HelpCenterScreen: React.FC<HelpCenterScreenProps> = ({ navigation }) => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          style={styles.backButton}
+        >
           <Icon name="chevron-back" size={28} color="#1A1A1A" />
         </TouchableOpacity>
-        <Text weight="bold" style={styles.headerTitle}>Yardım Merkezi</Text>
+        <Text weight="bold" style={styles.headerTitle}>
+          Yardım Merkezi
+        </Text>
         <View style={styles.headerRight} />
       </View>
 
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.heroSection}>
-          <Icon name="help-circle-outline" size={48} color="#01213D" style={styles.heroIcon} />
+          <Icon
+            name="help-circle-outline"
+            size={48}
+            color="#01213D"
+            style={styles.heroIcon}
+          />
           <Text weight="bold" style={styles.heroTitle}>
             Sıkça Sorulan Sorular
           </Text>
@@ -104,13 +119,17 @@ const HelpCenterScreen: React.FC<HelpCenterScreenProps> = ({ navigation }) => {
 
         {categories.map((category, categoryIndex) => (
           <View key={categoryIndex} style={styles.section}>
-            <Text weight="semibold" style={styles.categoryTitle}>{category.toUpperCase()}</Text>
+            <Text weight="semibold" style={styles.categoryTitle}>
+              {category.toUpperCase()}
+            </Text>
             {faqs
               .filter(faq => faq.category === category)
               .map((faq, faqIndex) => {
-                const globalIndex = faqs.findIndex(f => f.question === faq.question);
+                const globalIndex = faqs.findIndex(
+                  f => f.question === faq.question,
+                );
                 const isExpanded = expandedId === globalIndex;
-                
+
                 return (
                   <TouchableOpacity
                     key={faqIndex}
@@ -143,7 +162,12 @@ const HelpCenterScreen: React.FC<HelpCenterScreenProps> = ({ navigation }) => {
 
         <View style={styles.section}>
           <View style={styles.contactCard}>
-            <Icon name="chatbubbles-outline" size={48} color="#FFFFFF" style={styles.contactIcon} />
+            <Icon
+              name="chatbubbles-outline"
+              size={48}
+              color="#FFFFFF"
+              style={styles.contactIcon}
+            />
             <View style={styles.contactContent}>
               <Text weight="bold" style={styles.contactTitle}>
                 Başka bir sorunuz mu var?
@@ -152,7 +176,7 @@ const HelpCenterScreen: React.FC<HelpCenterScreenProps> = ({ navigation }) => {
                 Uzman ekibimiz size yardımcı olmak için hazır
               </Text>
             </View>
-            <TouchableOpacity 
+            <TouchableOpacity
               style={styles.contactButton}
               onPress={() => navigation.navigate('Messages')}
             >
@@ -183,16 +207,21 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     borderBottomWidth: 1,
     borderBottomColor: '#E5E7EB',
+    minHeight: 56,
   },
   backButton: {
     padding: 4,
+    width: 40,
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   headerTitle: {
     fontSize: 18,
     color: '#1A1A1A',
   },
   headerRight: {
-    width: 36,
+    width: 40,
   },
   heroSection: {
     backgroundColor: '#FFFFFF',
@@ -323,4 +352,3 @@ const styles = StyleSheet.create({
 });
 
 export default HelpCenterScreen;
-

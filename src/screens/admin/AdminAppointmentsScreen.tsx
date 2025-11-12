@@ -19,9 +19,13 @@ interface AdminAppointmentsScreenProps {
   navigation: any;
 }
 
-const AdminAppointmentsScreen: React.FC<AdminAppointmentsScreenProps> = ({ navigation }) => {
+const AdminAppointmentsScreen: React.FC<AdminAppointmentsScreenProps> = ({
+  navigation,
+}) => {
   const [appointments, setAppointments] = useState<Appointment[]>([]);
-  const [filteredAppointments, setFilteredAppointments] = useState<Appointment[]>([]);
+  const [filteredAppointments, setFilteredAppointments] = useState<
+    Appointment[]
+  >([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [filter, setFilter] = useState<'all' | AppointmentStatus>('all');
@@ -30,7 +34,7 @@ const AdminAppointmentsScreen: React.FC<AdminAppointmentsScreenProps> = ({ navig
   useFocusEffect(
     useCallback(() => {
       fetchAppointments();
-    }, [])
+    }, []),
   );
 
   // Filtre değiştiğinde client-side filtreleme yap
@@ -70,10 +74,13 @@ const AdminAppointmentsScreen: React.FC<AdminAppointmentsScreenProps> = ({ navig
     setRefreshing(false);
   }, []);
 
-  const handleStatusChange = async (appointmentId: string, newStatus: AppointmentStatus) => {
+  const handleStatusChange = async (
+    appointmentId: string,
+    newStatus: AppointmentStatus,
+  ) => {
     try {
       const updateData: any = { status: newStatus };
-      
+
       if (newStatus === 'confirmed') {
         updateData.confirmed_at = new Date().toISOString();
       } else if (newStatus === 'cancelled') {
@@ -182,157 +189,185 @@ const AdminAppointmentsScreen: React.FC<AdminAppointmentsScreenProps> = ({ navig
 
   console.log('appointments', appointments);
   console.log('filteredAppointments', filteredAppointments);
-  
 
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <Text weight="bold" style={styles.title}>Randevular</Text>
+        <Text weight="bold" style={styles.title}>
+          Randevular
+        </Text>
       </View>
 
       {/* Filter Tabs Component */}
       <FilterTabs
         options={filterOptions}
         selectedFilter={filter}
-        onFilterChange={(filterId) => setFilter(filterId as 'all' | AppointmentStatus)}
+        onFilterChange={filterId =>
+          setFilter(filterId as 'all' | AppointmentStatus)
+        }
       />
 
-      {loading && !refreshing ? <View style={styles.loadingContainer}>
-        <ActivityIndicator size="small" color="#01213D" />
-      </View> : <ScrollView
-        showsVerticalScrollIndicator={false}
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }
-      >
-        {filteredAppointments.length === 0 ? (
-          <View style={styles.emptyContainer}>
-            <Icon name="calendar-outline" size={64} color="#D1D5DB" style={styles.emptyIcon} />
-            <Text weight="semibold" style={styles.emptyTitle}>
-              Randevu Bulunamadı
-            </Text>
-            <Text weight="regular" style={styles.emptyText}>
-              Bu filtrede randevu bulunmuyor
-            </Text>
-          </View>
-        ) : (
-          <View style={styles.listContainer}>
-            {filteredAppointments.map((appointment: any) => (
-              <View key={appointment.id} style={styles.appointmentCard}>
-                <View style={styles.appointmentHeader}>
-                  <View>
-                    <Text weight="semibold" style={styles.patientName}>
-                      {appointment.profiles?.full_name || 'İsimsiz Kullanıcı'}
-                    </Text>
-                    <Text weight="regular" style={styles.patientEmail}>
-                      {appointment.profiles?.email}
-                    </Text>
-                  </View>
-                  <View
-                    style={[
-                      styles.statusBadge,
-                      { backgroundColor: getStatusColor(appointment.status) + '20' },
-                    ]}
-                  >
-                    <Text
-                      weight="semibold"
+      {loading && !refreshing ? (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="small" color="#01213D" />
+        </View>
+      ) : (
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
+        >
+          {filteredAppointments.length === 0 ? (
+            <View style={styles.emptyContainer}>
+              <Icon
+                name="calendar-outline"
+                size={64}
+                color="#D1D5DB"
+                style={styles.emptyIcon}
+              />
+              <Text weight="semibold" style={styles.emptyTitle}>
+                Randevu Bulunamadı
+              </Text>
+              <Text weight="regular" style={styles.emptyText}>
+                Bu filtrede randevu bulunmuyor
+              </Text>
+            </View>
+          ) : (
+            <View style={styles.listContainer}>
+              {filteredAppointments.map((appointment: any) => (
+                <View key={appointment.id} style={styles.appointmentCard}>
+                  <View style={styles.appointmentHeader}>
+                    <View>
+                      <Text weight="semibold" style={styles.patientName}>
+                        {appointment.profiles?.full_name || 'İsimsiz Kullanıcı'}
+                      </Text>
+                      <Text weight="regular" style={styles.patientEmail}>
+                        {appointment.profiles?.email}
+                      </Text>
+                    </View>
+                    <View
                       style={[
-                        styles.statusText,
-                        { color: getStatusColor(appointment.status) },
+                        styles.statusBadge,
+                        {
+                          backgroundColor:
+                            getStatusColor(appointment.status) + '20',
+                        },
                       ]}
                     >
-                      {getStatusText(appointment.status)}
-                    </Text>
+                      <Text
+                        weight="semibold"
+                        style={[
+                          styles.statusText,
+                          { color: getStatusColor(appointment.status) },
+                        ]}
+                      >
+                        {getStatusText(appointment.status)}
+                      </Text>
+                    </View>
                   </View>
-                </View>
 
-                <View style={styles.divider} />
+                  <View style={styles.divider} />
 
-                <View style={styles.appointmentInfo}>
-                  <View style={styles.infoRow}>
-                    <Icon name="calendar-outline" size={16} color="#01213D" />
-                    <Text weight="medium" style={styles.infoLabel}>
-                      {formatDate(appointment.appointment_date)}
-                    </Text>
+                  <View style={styles.appointmentInfo}>
+                    <View style={styles.infoRow}>
+                      <Icon name="calendar-outline" size={16} color="#01213D" />
+                      <Text weight="medium" style={styles.infoLabel}>
+                        {formatDate(appointment.appointment_date)}
+                      </Text>
+                    </View>
+                    <View style={styles.infoRow}>
+                      <Icon name="time-outline" size={16} color="#01213D" />
+                      <Text weight="medium" style={styles.infoLabel}>
+                        {formatTime(appointment.appointment_time)}
+                      </Text>
+                    </View>
                   </View>
-                  <View style={styles.infoRow}>
-                    <Icon name="time-outline" size={16} color="#01213D" />
-                    <Text weight="medium" style={styles.infoLabel}>
-                      {formatTime(appointment.appointment_time)}
-                    </Text>
-                  </View>
-                </View>
 
-                {appointment.patient_notes && (
-                  <View style={styles.notesContainer}>
-                    <Text weight="regular" style={styles.notesText}>
-                      {appointment.patient_notes}
-                    </Text>
-                  </View>
-                )}
+                  {appointment.patient_notes && (
+                    <View style={styles.notesContainer}>
+                      <Text weight="regular" style={styles.notesText}>
+                        {appointment.patient_notes}
+                      </Text>
+                    </View>
+                  )}
 
-                {appointment.status === 'pending' && (
-                  <View style={styles.actionButtons}>
+                  {appointment.status === 'pending' && (
+                    <View style={styles.actionButtons}>
+                      <TouchableOpacity
+                        style={[styles.actionButton, styles.confirmButton]}
+                        onPress={() =>
+                          Alert.alert(
+                            'Randevuyu Onayla',
+                            'Bu randevuyu onaylamak istediğinize emin misiniz?',
+                            [
+                              { text: 'İptal', style: 'cancel' },
+                              {
+                                text: 'Onayla',
+                                onPress: () =>
+                                  handleStatusChange(
+                                    appointment.id,
+                                    'confirmed',
+                                  ),
+                              },
+                            ],
+                          )
+                        }
+                      >
+                        <Text
+                          weight="semibold"
+                          style={styles.confirmButtonText}
+                        >
+                          Onayla
+                        </Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                        style={[styles.actionButton, styles.cancelButton]}
+                        onPress={() =>
+                          Alert.alert(
+                            'Randevuyu İptal Et',
+                            'Bu randevuyu iptal etmek istediğinize emin misiniz?',
+                            [
+                              { text: 'Hayır', style: 'cancel' },
+                              {
+                                text: 'İptal Et',
+                                style: 'destructive',
+                                onPress: () =>
+                                  handleStatusChange(
+                                    appointment.id,
+                                    'cancelled',
+                                  ),
+                              },
+                            ],
+                          )
+                        }
+                      >
+                        <Text weight="semibold" style={styles.cancelButtonText}>
+                          İptal Et
+                        </Text>
+                      </TouchableOpacity>
+                    </View>
+                  )}
+
+                  {appointment.status === 'confirmed' && (
                     <TouchableOpacity
-                      style={[styles.actionButton, styles.confirmButton]}
+                      style={[styles.actionButton, styles.completeButton]}
                       onPress={() =>
-                        Alert.alert(
-                          'Randevuyu Onayla',
-                          'Bu randevuyu onaylamak istediğinize emin misiniz?',
-                          [
-                            { text: 'İptal', style: 'cancel' },
-                            {
-                              text: 'Onayla',
-                              onPress: () => handleStatusChange(appointment.id, 'confirmed'),
-                            },
-                          ]
-                        )
+                        handleStatusChange(appointment.id, 'completed')
                       }
                     >
-                      <Text weight="semibold" style={styles.confirmButtonText}>
-                        Onayla
+                      <Text weight="semibold" style={styles.completeButtonText}>
+                        Tamamlandı Olarak İşaretle
                       </Text>
                     </TouchableOpacity>
-                    <TouchableOpacity
-                      style={[styles.actionButton, styles.cancelButton]}
-                      onPress={() =>
-                        Alert.alert(
-                          'Randevuyu İptal Et',
-                          'Bu randevuyu iptal etmek istediğinize emin misiniz?',
-                          [
-                            { text: 'Hayır', style: 'cancel' },
-                            {
-                              text: 'İptal Et',
-                              style: 'destructive',
-                              onPress: () => handleStatusChange(appointment.id, 'cancelled'),
-                            },
-                          ]
-                        )
-                      }
-                    >
-                      <Text weight="semibold" style={styles.cancelButtonText}>
-                        İptal Et
-                      </Text>
-                    </TouchableOpacity>
-                  </View>
-                )}
-
-                {appointment.status === 'confirmed' && (
-                  <TouchableOpacity
-                    style={[styles.actionButton, styles.completeButton]}
-                    onPress={() => handleStatusChange(appointment.id, 'completed')}
-                  >
-                    <Text weight="semibold" style={styles.completeButtonText}>
-                      Tamamlandı Olarak İşaretle
-                    </Text>
-                  </TouchableOpacity>
-                )}
-              </View>
-            ))}
-          </View>
-        )}
-        <View style={{ height: 40 }} />
-      </ScrollView>}
+                  )}
+                </View>
+              ))}
+            </View>
+          )}
+          <View style={{ height: 40 }} />
+        </ScrollView>
+      )}
     </SafeAreaView>
   );
 };
@@ -348,11 +383,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     backgroundColor: '#FFFFFF',
     paddingHorizontal: 24,
-    paddingVertical: 20,
+    paddingVertical: 16,
     borderBottomWidth: 1,
     borderBottomColor: '#E5E7EB',
+    height: 68,
   },
   title: {
     fontSize: 24,
@@ -481,4 +520,3 @@ const styles = StyleSheet.create({
 });
 
 export default AdminAppointmentsScreen;
-

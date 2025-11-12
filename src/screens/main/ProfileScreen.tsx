@@ -20,21 +20,17 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
   const { user, signOut } = useAuthStore();
 
   const handleSignOut = () => {
-    Alert.alert(
-      'Çıkış Yap',
-      'Çıkış yapmak istediğinize emin misiniz?',
-      [
-        {
-          text: 'İptal',
-          style: 'cancel',
-        },
-        {
-          text: 'Çıkış Yap',
-          style: 'destructive',
-          onPress: signOut,
-        },
-      ]
-    );
+    Alert.alert('Çıkış Yap', 'Çıkış yapmak istediğinize emin misiniz?', [
+      {
+        text: 'İptal',
+        style: 'cancel',
+      },
+      {
+        text: 'Çıkış Yap',
+        style: 'destructive',
+        onPress: signOut,
+      },
+    ]);
   };
 
   return (
@@ -50,75 +46,139 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
               </Text>
             </View>
           )}
-          <Text weight="bold" style={styles.name}>{user?.full_name || 'Kullanıcı'}</Text>
-          <Text weight="regular" style={styles.email}>{user?.email}</Text>
+          <Text weight="bold" style={styles.name}>
+            {user?.full_name || 'Kullanıcı'}
+          </Text>
+          <Text weight="regular" style={styles.email}>
+            {user?.email}
+          </Text>
         </View>
 
         <View style={styles.section}>
-          <Text weight="semibold" style={styles.sectionTitle}>Hesap</Text>
-          <TouchableOpacity 
+          <Text weight="semibold" style={styles.sectionTitle}>
+            Hesap
+          </Text>
+          <TouchableOpacity
             style={styles.menuItem}
             onPress={() => navigation.navigate('ProfileEdit')}
           >
-            <Icon name="person-outline" size={24} color="#01213D" style={styles.menuIcon} />
-            <Text weight="regular" style={styles.menuText}>Profil Bilgileri</Text>
+            <Icon
+              name="person-outline"
+              size={24}
+              color="#01213D"
+              style={styles.menuIcon}
+            />
+            <Text weight="regular" style={styles.menuText}>
+              Profil Bilgileri
+            </Text>
             <Icon name="chevron-forward" size={24} color="#D1D5DB" />
           </TouchableOpacity>
           <TouchableOpacity style={styles.menuItem}>
-            <Icon name="lock-closed-outline" size={24} color="#01213D" style={styles.menuIcon} />
-            <Text weight="regular" style={styles.menuText}>Şifre Değiştir</Text>
+            <Icon
+              name="lock-closed-outline"
+              size={24}
+              color="#01213D"
+              style={styles.menuIcon}
+            />
+            <Text weight="regular" style={styles.menuText}>
+              Şifre Değiştir
+            </Text>
             <Icon name="chevron-forward" size={24} color="#D1D5DB" />
           </TouchableOpacity>
         </View>
 
         <View style={styles.section}>
-          <Text weight="semibold" style={styles.sectionTitle}>Ayarlar</Text>
+          <Text weight="semibold" style={styles.sectionTitle}>
+            Ayarlar
+          </Text>
           <TouchableOpacity style={styles.menuItem}>
-            <Icon name="notifications-outline" size={24} color="#01213D" style={styles.menuIcon} />
-            <Text weight="regular" style={styles.menuText}>Bildirimler</Text>
+            <Icon
+              name="notifications-outline"
+              size={24}
+              color="#01213D"
+              style={styles.menuIcon}
+            />
+            <Text weight="regular" style={styles.menuText}>
+              Bildirimler
+            </Text>
             <Icon name="chevron-forward" size={24} color="#D1D5DB" />
           </TouchableOpacity>
-          <TouchableOpacity 
+          <TouchableOpacity
             style={styles.menuItem}
             onPress={() => navigation.navigate('Language')}
           >
-            <Icon name="language-outline" size={24} color="#01213D" style={styles.menuIcon} />
-            <Text weight="regular" style={styles.menuText}>Dil</Text>
+            <Icon
+              name="language-outline"
+              size={24}
+              color="#01213D"
+              style={styles.menuIcon}
+            />
+            <Text weight="regular" style={styles.menuText}>
+              Dil
+            </Text>
             <Icon name="chevron-forward" size={24} color="#D1D5DB" />
           </TouchableOpacity>
         </View>
 
         <View style={styles.section}>
-          <Text weight="semibold" style={styles.sectionTitle}>Destek</Text>
-          <TouchableOpacity 
+          <Text weight="semibold" style={styles.sectionTitle}>
+            Destek
+          </Text>
+          <TouchableOpacity
             style={styles.menuItem}
             onPress={() => navigation.navigate('HelpCenter')}
           >
-            <Icon name="help-circle-outline" size={24} color="#01213D" style={styles.menuIcon} />
-            <Text weight="regular" style={styles.menuText}>Yardım Merkezi</Text>
+            <Icon
+              name="help-circle-outline"
+              size={24}
+              color="#01213D"
+              style={styles.menuIcon}
+            />
+            <Text weight="regular" style={styles.menuText}>
+              Yardım Merkezi
+            </Text>
             <Icon name="chevron-forward" size={24} color="#D1D5DB" />
           </TouchableOpacity>
-          <TouchableOpacity 
+          <TouchableOpacity
             style={styles.menuItem}
             onPress={() => navigation.navigate('Contact')}
           >
-            <Icon name="mail-outline" size={24} color="#01213D" style={styles.menuIcon} />
-            <Text weight="regular" style={styles.menuText}>İletişim</Text>
+            <Icon
+              name="mail-outline"
+              size={24}
+              color="#01213D"
+              style={styles.menuIcon}
+            />
+            <Text weight="regular" style={styles.menuText}>
+              İletişim
+            </Text>
             <Icon name="chevron-forward" size={24} color="#D1D5DB" />
           </TouchableOpacity>
-          <TouchableOpacity 
+          <TouchableOpacity
             style={styles.menuItem}
             onPress={() => navigation.navigate('About')}
           >
-            <Icon name="information-circle-outline" size={24} color="#01213D" style={styles.menuIcon} />
-            <Text weight="regular" style={styles.menuText}>Hakkında</Text>
+            <Icon
+              name="information-circle-outline"
+              size={24}
+              color="#01213D"
+              style={styles.menuIcon}
+            />
+            <Text weight="regular" style={styles.menuText}>
+              Hakkında
+            </Text>
             <Icon name="chevron-forward" size={24} color="#D1D5DB" />
           </TouchableOpacity>
         </View>
 
         <View style={styles.section}>
-          <TouchableOpacity style={styles.signOutButton} onPress={handleSignOut}>
-            <Text weight="semibold" style={styles.signOutText}>Çıkış Yap</Text>
+          <TouchableOpacity
+            style={styles.signOutButton}
+            onPress={handleSignOut}
+          >
+            <Text weight="semibold" style={styles.signOutText}>
+              Çıkış Yap
+            </Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
@@ -202,4 +262,3 @@ const styles = StyleSheet.create({
 });
 
 export default ProfileScreen;
-

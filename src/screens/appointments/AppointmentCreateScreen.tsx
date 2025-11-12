@@ -62,9 +62,13 @@ const serviceOptions: ServiceOption[] = [
   },
 ];
 
-const AppointmentCreateScreen: React.FC<AppointmentCreateScreenProps> = ({ navigation }) => {
+const AppointmentCreateScreen: React.FC<AppointmentCreateScreenProps> = ({
+  navigation,
+}) => {
   const { user } = useAuthStore();
-  const [selectedService, setSelectedService] = useState<ServiceType | null>(null);
+  const [selectedService, setSelectedService] = useState<ServiceType | null>(
+    null,
+  );
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [selectedTime, setSelectedTime] = useState(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
@@ -129,11 +133,23 @@ const AppointmentCreateScreen: React.FC<AppointmentCreateScreenProps> = ({ navig
 
       // Tarih ve saat formatla
       const appointmentDate = selectedDate.toISOString().split('T')[0]; // YYYY-MM-DD
-      const appointmentTime = selectedTime.toTimeString().split(' ')[0].substring(0, 5); // HH:MM
+      const appointmentTime = selectedTime
+        .toTimeString()
+        .split(' ')[0]
+        .substring(0, 5); // HH:MM
 
-      const selectedServiceOption = serviceOptions.find(s => s.id === selectedService);
-      const estimatedPrice = selectedServiceOption?.estimatedPrice?.includes('₺') 
-        ? parseFloat(selectedServiceOption.estimatedPrice.replace('₺', '').replace(',', '').trim())
+      const selectedServiceOption = serviceOptions.find(
+        s => s.id === selectedService,
+      );
+      const estimatedPrice = selectedServiceOption?.estimatedPrice?.includes(
+        '₺',
+      )
+        ? parseFloat(
+            selectedServiceOption.estimatedPrice
+              .replace('₺', '')
+              .replace(',', '')
+              .trim(),
+          )
         : null;
 
       const { data, error } = await supabase
@@ -158,7 +174,7 @@ const AppointmentCreateScreen: React.FC<AppointmentCreateScreenProps> = ({ navig
       }
 
       console.log('✅ Randevu oluşturuldu:', data);
-      
+
       Alert.alert(
         'Başarılı',
         'Randevunuz başarıyla oluşturuldu. En kısa sürede onaylanacaktır.',
@@ -167,13 +183,13 @@ const AppointmentCreateScreen: React.FC<AppointmentCreateScreenProps> = ({ navig
             text: 'Tamam',
             onPress: () => navigation.goBack(),
           },
-        ]
+        ],
       );
     } catch (error: any) {
       console.error('❌ Create appointment error:', error);
       Alert.alert(
         'Hata',
-        'Randevu oluşturulurken bir hata oluştu. Lütfen tekrar deneyin.'
+        'Randevu oluşturulurken bir hata oluştu. Lütfen tekrar deneyin.',
       );
     } finally {
       setLoading(false);
@@ -183,20 +199,27 @@ const AppointmentCreateScreen: React.FC<AppointmentCreateScreenProps> = ({ navig
   return (
     <SafeAreaView style={styles.container}>
       <LoadingModal visible={loading} message="Randevu oluşturuluyor..." />
-      
+
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          style={styles.backButton}
+        >
           <Icon name="chevron-back" size={28} color="#1A1A1A" />
         </TouchableOpacity>
-        <Text weight="bold" style={styles.headerTitle}>Yeni Randevu</Text>
+        <Text weight="bold" style={styles.headerTitle}>
+          Yeni Randevu
+        </Text>
         <View style={{ width: 40 }} />
       </View>
 
       <ScrollView showsVerticalScrollIndicator={false}>
         {/* Hizmet Seçimi */}
         <View style={styles.section}>
-          <Text weight="bold" style={styles.sectionTitle}>Hizmet Seçin</Text>
-          {serviceOptions.map((service) => (
+          <Text weight="bold" style={styles.sectionTitle}>
+            Hizmet Seçin
+          </Text>
+          {serviceOptions.map(service => (
             <TouchableOpacity
               key={service.id}
               style={[
@@ -207,39 +230,48 @@ const AppointmentCreateScreen: React.FC<AppointmentCreateScreenProps> = ({ navig
             >
               <View style={styles.serviceCardLeft}>
                 <View style={styles.serviceIconContainer}>
-                  <Icon name={service.icon} size={28} color={selectedService === service.id ? '#01213D' : '#666'} />
+                  <Icon
+                    name={service.icon}
+                    size={28}
+                    color={selectedService === service.id ? '#01213D' : '#666'}
+                  />
                 </View>
                 <View style={styles.serviceInfo}>
-                  <Text 
-                    weight="semibold" 
+                  <Text
+                    weight="semibold"
                     style={[
                       styles.serviceTitle,
-                      selectedService === service.id && styles.serviceTextSelected,
+                      selectedService === service.id &&
+                        styles.serviceTextSelected,
                     ]}
                   >
                     {service.title}
                   </Text>
-                  <Text 
-                    weight="regular" 
+                  <Text
+                    weight="regular"
                     style={[
                       styles.serviceDescription,
-                      selectedService === service.id && styles.serviceTextSelected,
+                      selectedService === service.id &&
+                        styles.serviceTextSelected,
                     ]}
                   >
                     {service.description}
                   </Text>
                   <View style={styles.serviceDetails}>
                     <View style={styles.serviceDetailRow}>
-                      <Icon 
-                        name="time-outline" 
-                        size={14} 
-                        color={selectedService === service.id ? '#01213D' : '#666'} 
+                      <Icon
+                        name="time-outline"
+                        size={14}
+                        color={
+                          selectedService === service.id ? '#01213D' : '#666'
+                        }
                       />
-                      <Text 
-                        weight="regular" 
+                      <Text
+                        weight="regular"
                         style={[
                           styles.serviceDetailText,
-                          selectedService === service.id && styles.serviceTextSelected,
+                          selectedService === service.id &&
+                            styles.serviceTextSelected,
                         ]}
                       >
                         {service.estimatedDuration}
@@ -247,16 +279,19 @@ const AppointmentCreateScreen: React.FC<AppointmentCreateScreenProps> = ({ navig
                     </View>
                     {service.estimatedPrice && (
                       <View style={styles.serviceDetailRow}>
-                        <Icon 
-                          name="cash-outline" 
-                          size={14} 
-                          color={selectedService === service.id ? '#01213D' : '#666'} 
+                        <Icon
+                          name="cash-outline"
+                          size={14}
+                          color={
+                            selectedService === service.id ? '#01213D' : '#666'
+                          }
                         />
-                        <Text 
-                          weight="regular" 
+                        <Text
+                          weight="regular"
                           style={[
                             styles.serviceDetailText,
-                            selectedService === service.id && styles.serviceTextSelected,
+                            selectedService === service.id &&
+                              styles.serviceTextSelected,
                           ]}
                         >
                           {service.estimatedPrice}
@@ -277,16 +312,25 @@ const AppointmentCreateScreen: React.FC<AppointmentCreateScreenProps> = ({ navig
 
         {/* Tarih ve Saat Seçimi */}
         <View style={styles.section}>
-          <Text weight="bold" style={styles.sectionTitle}>Tarih ve Saat</Text>
-          
+          <Text weight="bold" style={styles.sectionTitle}>
+            Tarih ve Saat
+          </Text>
+
           <View style={styles.dateTimeContainer}>
             <TouchableOpacity
               style={styles.dateTimeCard}
               onPress={() => setShowDatePicker(true)}
             >
-              <Icon name="calendar" size={28} color="#01213D" style={styles.dateTimeIcon} />
+              <Icon
+                name="calendar"
+                size={28}
+                color="#01213D"
+                style={styles.dateTimeIcon}
+              />
               <View style={styles.dateTimeInfo}>
-                <Text weight="regular" style={styles.dateTimeLabel}>Tarih</Text>
+                <Text weight="regular" style={styles.dateTimeLabel}>
+                  Tarih
+                </Text>
                 <Text weight="semibold" style={styles.dateTimeValue}>
                   {formatDate(selectedDate)}
                 </Text>
@@ -297,9 +341,16 @@ const AppointmentCreateScreen: React.FC<AppointmentCreateScreenProps> = ({ navig
               style={styles.dateTimeCard}
               onPress={() => setShowTimePicker(true)}
             >
-              <Icon name="time" size={28} color="#01213D" style={styles.dateTimeIcon} />
+              <Icon
+                name="time"
+                size={28}
+                color="#01213D"
+                style={styles.dateTimeIcon}
+              />
               <View style={styles.dateTimeInfo}>
-                <Text weight="regular" style={styles.dateTimeLabel}>Saat</Text>
+                <Text weight="regular" style={styles.dateTimeLabel}>
+                  Saat
+                </Text>
                 <Text weight="semibold" style={styles.dateTimeValue}>
                   {formatTime(selectedTime)}
                 </Text>
@@ -365,7 +416,9 @@ const AppointmentCreateScreen: React.FC<AppointmentCreateScreenProps> = ({ navig
 
         {/* Notlar */}
         <View style={styles.section}>
-          <Text weight="bold" style={styles.sectionTitle}>Notlarınız (Opsiyonel)</Text>
+          <Text weight="bold" style={styles.sectionTitle}>
+            Notlarınız (Opsiyonel)
+          </Text>
           <TextInput
             style={styles.notesInput}
             placeholder="Belirtmek istediğiniz özel bir durum varsa yazabilirsiniz..."
@@ -380,13 +433,18 @@ const AppointmentCreateScreen: React.FC<AppointmentCreateScreenProps> = ({ navig
 
         {/* Bilgilendirme */}
         <View style={styles.infoCard}>
-          <Icon name="information-circle" size={24} color="#92400E" style={styles.infoIcon} />
+          <Icon
+            name="information-circle"
+            size={24}
+            color="#92400E"
+            style={styles.infoIcon}
+          />
           <View style={styles.infoContent}>
             <Text weight="semibold" style={styles.infoTitle}>
               Önemli Bilgi
             </Text>
             <Text weight="regular" style={styles.infoText}>
-              Randevunuz oluşturulduktan sonra klinik tarafından onaylanacaktır. 
+              Randevunuz oluşturulduktan sonra klinik tarafından onaylanacaktır.
               Onay durumu hakkında bilgilendirileceksiniz.
             </Text>
           </View>
@@ -421,11 +479,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingHorizontal: 24,
+    paddingHorizontal: 20,
     paddingVertical: 16,
     backgroundColor: '#FFFFFF',
     borderBottomWidth: 1,
     borderBottomColor: '#E5E7EB',
+    minHeight: 56,
   },
   backButton: {
     width: 40,
@@ -609,4 +668,3 @@ const styles = StyleSheet.create({
 });
 
 export default AppointmentCreateScreen;
-

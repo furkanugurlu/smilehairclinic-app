@@ -20,7 +20,9 @@ interface AdminHairChecksScreenProps {
   navigation: any;
 }
 
-const AdminHairChecksScreen: React.FC<AdminHairChecksScreenProps> = ({ navigation }) => {
+const AdminHairChecksScreen: React.FC<AdminHairChecksScreenProps> = ({
+  navigation,
+}) => {
   const [hairChecks, setHairChecks] = useState<HairCheck[]>([]);
   const [filteredHairChecks, setFilteredHairChecks] = useState<HairCheck[]>([]);
   const [loading, setLoading] = useState(true);
@@ -31,7 +33,7 @@ const AdminHairChecksScreen: React.FC<AdminHairChecksScreenProps> = ({ navigatio
   useFocusEffect(
     useCallback(() => {
       fetchHairChecks();
-    }, [])
+    }, []),
   );
 
   // Filtre değiştiğinde client-side filtreleme yap
@@ -158,140 +160,174 @@ const AdminHairChecksScreen: React.FC<AdminHairChecksScreenProps> = ({ navigatio
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <Text weight="bold" style={styles.title}>Saç Kontrolleri</Text>
+        <Text weight="bold" style={styles.title}>
+          Saç Kontrolleri
+        </Text>
       </View>
 
       {/* Filter Tabs Component */}
       <FilterTabs
         options={filterOptions}
         selectedFilter={filter}
-        onFilterChange={(filterId) => setFilter(filterId as 'all' | HairCheckStatus)}
+        onFilterChange={filterId =>
+          setFilter(filterId as 'all' | HairCheckStatus)
+        }
       />
 
-     {loading && !refreshing ? <View style={styles.loadingContainer}>
-        <ActivityIndicator size="small" color="#01213D" />
-      </View> : <ScrollView
-        showsVerticalScrollIndicator={false}
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }
-      >
-        {filteredHairChecks.length === 0 ? (
-          <View style={styles.emptyContainer}>
-            <Icon name="analytics-outline" size={64} color="#D1D5DB" style={styles.emptyIcon} />
-            <Text weight="semibold" style={styles.emptyTitle}>
-              Kontrol Bulunamadı
-            </Text>
-            <Text weight="regular" style={styles.emptyText}>
-              Bu filtrede kontrol bulunmuyor
-            </Text>
-          </View>
-        ) : (
-          <View style={styles.listContainer}>
-            {filteredHairChecks.map((check: any) => (
-              <TouchableOpacity
-                key={check.id}
-                style={styles.checkCard}
-                onPress={() => handleViewDetail(check)}
-              >
-                {/* Header: Kullanıcı Bilgisi + Durum */}
-                <View style={styles.checkHeader}>
-                  <View style={styles.checkLeft}>
-                    <Image
-                      source={{ uri: check.photo_front }}
-                      style={styles.thumbnail}
-                    />
-                    <View style={styles.userInfo}>
-                      <Text weight="semibold" style={styles.patientName}>
-                        {check.profiles?.full_name || 'İsimsiz Kullanıcı'}
-                      </Text>
-                      <Text weight="regular" style={styles.patientEmail}>
-                        {check.profiles?.email}
-                      </Text>
-                      <Text weight="regular" style={styles.checkDate}>
-                        {formatDate(check.created_at)}
+      {loading && !refreshing ? (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="small" color="#01213D" />
+        </View>
+      ) : (
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
+        >
+          {filteredHairChecks.length === 0 ? (
+            <View style={styles.emptyContainer}>
+              <Icon
+                name="analytics-outline"
+                size={64}
+                color="#D1D5DB"
+                style={styles.emptyIcon}
+              />
+              <Text weight="semibold" style={styles.emptyTitle}>
+                Kontrol Bulunamadı
+              </Text>
+              <Text weight="regular" style={styles.emptyText}>
+                Bu filtrede kontrol bulunmuyor
+              </Text>
+            </View>
+          ) : (
+            <View style={styles.listContainer}>
+              {filteredHairChecks.map((check: any) => (
+                <TouchableOpacity
+                  key={check.id}
+                  style={styles.checkCard}
+                  onPress={() => handleViewDetail(check)}
+                >
+                  {/* Header: Kullanıcı Bilgisi + Durum */}
+                  <View style={styles.checkHeader}>
+                    <View style={styles.checkLeft}>
+                      <Image
+                        source={{ uri: check.photo_front }}
+                        style={styles.thumbnail}
+                      />
+                      <View style={styles.userInfo}>
+                        <Text weight="semibold" style={styles.patientName}>
+                          {check.profiles?.full_name || 'İsimsiz Kullanıcı'}
+                        </Text>
+                        <Text weight="regular" style={styles.patientEmail}>
+                          {check.profiles?.email}
+                        </Text>
+                        <Text weight="regular" style={styles.checkDate}>
+                          {formatDate(check.created_at)}
+                        </Text>
+                      </View>
+                    </View>
+                    <View
+                      style={[
+                        styles.statusBadge,
+                        {
+                          backgroundColor: getStatusColor(check.status) + '20',
+                        },
+                      ]}
+                    >
+                      <Text
+                        weight="semibold"
+                        style={[
+                          styles.statusText,
+                          { color: getStatusColor(check.status) },
+                        ]}
+                      >
+                        {getStatusText(check.status)}
                       </Text>
                     </View>
                   </View>
-                  <View
-                    style={[
-                      styles.statusBadge,
-                      { backgroundColor: getStatusColor(check.status) + '20' },
-                    ]}
-                  >
-                    <Text
-                      weight="semibold"
-                      style={[
-                        styles.statusText,
-                        { color: getStatusColor(check.status) },
-                      ]}
-                    >
-                      {getStatusText(check.status)}
-                    </Text>
-                  </View>
-                </View>
 
-                {/* Analiz Detayları: Skor + Durum */}
-                {check.status === 'completed' && (check.analysis_score || check.analysis_status) && (
-                  <View style={styles.analysisSection}>
-                    {check.analysis_score && (
-                      <View style={styles.scoreRow}>
-                        <View style={styles.scoreCircle}>
-                          <Text weight="bold" style={styles.scoreNumber}>
-                            {check.analysis_score}
+                  {/* Analiz Detayları: Skor + Durum */}
+                  {check.status === 'completed' &&
+                    (check.analysis_score || check.analysis_status) && (
+                      <View style={styles.analysisSection}>
+                        {check.analysis_score && (
+                          <View style={styles.scoreRow}>
+                            <View style={styles.scoreCircle}>
+                              <Text weight="bold" style={styles.scoreNumber}>
+                                {check.analysis_score}
+                              </Text>
+                              <Text weight="regular" style={styles.scoreLabel}>
+                                /100
+                              </Text>
+                            </View>
+                            {check.analysis_status && (
+                              <View style={styles.statusRow}>
+                                <Icon
+                                  name="analytics"
+                                  size={14}
+                                  color="#8B5CF6"
+                                />
+                                <Text
+                                  weight="medium"
+                                  style={styles.statusLabel}
+                                >
+                                  {check.analysis_status === 'good' && 'İyi'}
+                                  {check.analysis_status === 'warning' &&
+                                    'Uyarı'}
+                                  {check.analysis_status === 'critical' &&
+                                    'Kritik'}
+                                </Text>
+                              </View>
+                            )}
+                          </View>
+                        )}
+
+                        {/* Notlar */}
+                        {check.analysis_notes && (
+                          <Text
+                            weight="regular"
+                            style={styles.notesText}
+                            numberOfLines={2}
+                          >
+                            {check.analysis_notes}
                           </Text>
-                          <Text weight="regular" style={styles.scoreLabel}>
-                            /100
-                          </Text>
-                        </View>
-                        {check.analysis_status && (
-                          <View style={styles.statusRow}>
-                            <Icon name="analytics" size={14} color="#8B5CF6" />
-                            <Text weight="medium" style={styles.statusLabel}>
-                              {check.analysis_status === 'good' && 'İyi'}
-                              {check.analysis_status === 'warning' && 'Uyarı'}
-                              {check.analysis_status === 'critical' && 'Kritik'}
+                        )}
+
+                        {/* Öneriler */}
+                        {check.recommendations && (
+                          <View style={styles.recommendationsBadge}>
+                            <Icon
+                              name="bulb-outline"
+                              size={12}
+                              color="#F59E0B"
+                            />
+                            <Text
+                              weight="regular"
+                              style={styles.recommendationsBadgeText}
+                              numberOfLines={2}
+                            >
+                              {check.recommendations}
                             </Text>
                           </View>
                         )}
                       </View>
                     )}
-                    
-                    {/* Notlar */}
-                    {check.analysis_notes && (
-                      <Text
-                        weight="regular"
-                        style={styles.notesText}
-                        numberOfLines={2}
-                      >
-                        {check.analysis_notes}
-                      </Text>
-                    )}
 
-                    {/* Öneriler */}
-                    {check.recommendations && (
-                      <View style={styles.recommendationsBadge}>
-                        <Icon name="bulb-outline" size={12} color="#F59E0B" />
-                        <Text
-                          weight="regular"
-                          style={styles.recommendationsBadgeText}
-                          numberOfLines={2}
-                        >
-                          {check.recommendations}
-                        </Text>
-                      </View>
-                    )}
-                  </View>
-                )}
-
-                {/* Arrow Icon */}
-                <Icon name="chevron-forward" size={20} color="#9CA3AF" style={styles.arrowIcon} />
-              </TouchableOpacity>
-            ))}
-          </View>
-        )}
-        <View style={{ height: 40 }} />
-      </ScrollView>}
+                  {/* Arrow Icon */}
+                  <Icon
+                    name="chevron-forward"
+                    size={20}
+                    color="#9CA3AF"
+                    style={styles.arrowIcon}
+                  />
+                </TouchableOpacity>
+              ))}
+            </View>
+          )}
+          <View style={{ height: 40 }} />
+        </ScrollView>
+      )}
     </SafeAreaView>
   );
 };
@@ -307,11 +343,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     backgroundColor: '#FFFFFF',
     paddingHorizontal: 24,
-    paddingVertical: 20,
+    paddingVertical: 16,
     borderBottomWidth: 1,
     borderBottomColor: '#E5E7EB',
+    height: 68,
   },
   title: {
     fontSize: 24,
@@ -467,4 +507,3 @@ const styles = StyleSheet.create({
 });
 
 export default AdminHairChecksScreen;
-

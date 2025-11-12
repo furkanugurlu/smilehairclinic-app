@@ -520,7 +520,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation, route }) => {
               <Icon
                 name="bulb-outline"
                 size={32}
-                color="#F59E0B"
+                color="#01213D"
                 style={styles.tipIcon}
               />
               <View style={styles.tipContent}>
@@ -537,7 +537,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation, route }) => {
               <Icon
                 name="sunny-outline"
                 size={32}
-                color="#F59E0B"
+                color="#01213D"
                 style={styles.tipIcon}
               />
               <View style={styles.tipContent}>

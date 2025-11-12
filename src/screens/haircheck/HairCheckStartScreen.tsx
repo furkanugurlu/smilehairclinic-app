@@ -1,10 +1,5 @@
 import React from 'react';
-import {
-  View,
-  StyleSheet,
-  TouchableOpacity,
-  Image,
-} from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { Text } from '../../components';
@@ -20,13 +15,40 @@ interface HairCheckStartScreenProps {
   navigation: any;
 }
 
-const HairCheckStartScreen: React.FC<HairCheckStartScreenProps> = ({ navigation }) => {
+const HairCheckStartScreen: React.FC<HairCheckStartScreenProps> = ({
+  navigation,
+}) => {
   const photoSteps: PhotoStep[] = [
-    { id: 'front', label: 'Ön Görünüm', icon: 'happy-outline', iconColor: '#01213D' },
-    { id: 'right45', label: 'Sağ 45°', icon: 'arrow-redo-outline', iconColor: '#10B981' },
-    { id: 'left45', label: 'Sol 45°', icon: 'arrow-undo-outline', iconColor: '#10B981' },
-    { id: 'top', label: 'Üst Görünüm', icon: 'arrow-up-outline', iconColor: '#F59E0B' },
-    { id: 'back', label: 'Arka Görünüm', icon: 'person-outline', iconColor: '#8B5CF6' },
+    {
+      id: 'front',
+      label: 'Ön Görünüm',
+      icon: 'happy-outline',
+      iconColor: '#01213D',
+    },
+    {
+      id: 'right45',
+      label: 'Sağ 45°',
+      icon: 'arrow-redo-outline',
+      iconColor: '#10B981',
+    },
+    {
+      id: 'left45',
+      label: 'Sol 45°',
+      icon: 'arrow-undo-outline',
+      iconColor: '#10B981',
+    },
+    {
+      id: 'top',
+      label: 'Üst Görünüm',
+      icon: 'arrow-up-outline',
+      iconColor: '#F59E0B',
+    },
+    {
+      id: 'back',
+      label: 'Arka Görünüm',
+      icon: 'person-outline',
+      iconColor: '#8B5CF6',
+    },
   ];
 
   const handleStartCapture = () => {
@@ -66,7 +88,12 @@ const HairCheckStartScreen: React.FC<HairCheckStartScreenProps> = ({ navigation 
             <View style={styles.photoRow}>
               {photoSteps.slice(0, 2).map(photo => (
                 <View key={photo.id} style={styles.photoCard}>
-                  <Icon name={photo.icon} size={32} color={photo.iconColor} style={styles.photoIcon} />
+                  <Icon
+                    name={photo.icon}
+                    size={32}
+                    color={photo.iconColor}
+                    style={styles.photoIcon}
+                  />
                   <Text weight="semibold" style={styles.photoLabel}>
                     {photo.label}
                   </Text>
@@ -77,7 +104,12 @@ const HairCheckStartScreen: React.FC<HairCheckStartScreenProps> = ({ navigation 
             <View style={styles.photoRow}>
               {photoSteps.slice(2, 4).map(photo => (
                 <View key={photo.id} style={styles.photoCard}>
-                  <Icon name={photo.icon} size={32} color={photo.iconColor} style={styles.photoIcon} />
+                  <Icon
+                    name={photo.icon}
+                    size={32}
+                    color={photo.iconColor}
+                    style={styles.photoIcon}
+                  />
                   <Text weight="semibold" style={styles.photoLabel}>
                     {photo.label}
                   </Text>
@@ -87,7 +119,12 @@ const HairCheckStartScreen: React.FC<HairCheckStartScreenProps> = ({ navigation 
 
             <View style={styles.photoRowCenter}>
               <View style={styles.photoCard}>
-                <Icon name={photoSteps[4].icon} size={32} color={photoSteps[4].iconColor} style={styles.photoIcon} />
+                <Icon
+                  name={photoSteps[4].icon}
+                  size={32}
+                  color={photoSteps[4].iconColor}
+                  style={styles.photoIcon}
+                />
                 <Text weight="semibold" style={styles.photoLabel}>
                   {photoSteps[4].label}
                 </Text>
@@ -98,7 +135,10 @@ const HairCheckStartScreen: React.FC<HairCheckStartScreenProps> = ({ navigation 
 
         {/* Start Scan Button */}
         <View style={styles.buttonSection}>
-          <TouchableOpacity style={styles.scanButton} onPress={handleStartCapture}>
+          <TouchableOpacity
+            style={styles.scanButton}
+            onPress={handleStartCapture}
+          >
             <Text weight="bold" style={styles.scanButtonText}>
               Taramayı Başlat
             </Text>
@@ -217,4 +257,3 @@ const styles = StyleSheet.create({
 });
 
 export default HairCheckStartScreen;
-

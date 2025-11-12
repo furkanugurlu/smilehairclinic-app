@@ -27,21 +27,62 @@ interface AdminHairCheckDetailScreenProps {
   };
 }
 
-const AdminHairCheckDetailScreen: React.FC<AdminHairCheckDetailScreenProps> = ({ navigation, route }) => {
+const AdminHairCheckDetailScreen: React.FC<AdminHairCheckDetailScreenProps> = ({
+  navigation,
+  route,
+}) => {
   const { check } = route.params;
   const [selectedPhoto, setSelectedPhoto] = useState<string | null>(null);
-  const [analysisScore, setAnalysisScore] = useState(check.analysis_score?.toString() || '');
-  const [analysisStatus, setAnalysisStatus] = useState<AnalysisStatus | undefined>(check.analysis_status);
-  const [analysisNotes, setAnalysisNotes] = useState(check.analysis_notes || '');
-  const [recommendations, setRecommendations] = useState(check.recommendations || '');
+  const [analysisScore, setAnalysisScore] = useState(
+    check.analysis_score?.toString() || '',
+  );
+  const [analysisStatus, setAnalysisStatus] = useState<
+    AnalysisStatus | undefined
+  >(check.analysis_status);
+  const [analysisNotes, setAnalysisNotes] = useState(
+    check.analysis_notes || '',
+  );
+  const [recommendations, setRecommendations] = useState(
+    check.recommendations || '',
+  );
   const [loading, setLoading] = useState(false);
 
   const photos = [
-    { id: 'front', label: 'Ön Görünüm', icon: 'happy-outline', iconColor: '#01213D', url: check.photo_front },
-    { id: 'right45', label: 'Sağ 45°', icon: 'arrow-redo-outline', iconColor: '#10B981', url: check.photo_right45 },
-    { id: 'left45', label: 'Sol 45°', icon: 'arrow-undo-outline', iconColor: '#10B981', url: check.photo_left45 },
-    { id: 'top', label: 'Üst Görünüm', icon: 'arrow-up-outline', iconColor: '#F59E0B', url: check.photo_top },
-    { id: 'back', label: 'Arka Görünüm', icon: 'person-outline', iconColor: '#8B5CF6', url: check.photo_back },
+    {
+      id: 'front',
+      label: 'Ön Görünüm',
+      icon: 'happy-outline',
+      iconColor: '#01213D',
+      url: check.photo_front,
+    },
+    {
+      id: 'right45',
+      label: 'Sağ 45°',
+      icon: 'arrow-redo-outline',
+      iconColor: '#10B981',
+      url: check.photo_right45,
+    },
+    {
+      id: 'left45',
+      label: 'Sol 45°',
+      icon: 'arrow-undo-outline',
+      iconColor: '#10B981',
+      url: check.photo_left45,
+    },
+    {
+      id: 'top',
+      label: 'Üst Görünüm',
+      icon: 'arrow-up-outline',
+      iconColor: '#F59E0B',
+      url: check.photo_top,
+    },
+    {
+      id: 'back',
+      label: 'Arka Görünüm',
+      icon: 'person-outline',
+      iconColor: '#8B5CF6',
+      url: check.photo_back,
+    },
   ];
 
   const formatDate = (dateString: string) => {
@@ -57,7 +98,11 @@ const AdminHairCheckDetailScreen: React.FC<AdminHairCheckDetailScreenProps> = ({
 
   const handleSaveAnalysis = async () => {
     // Validasyon
-    if (!analysisScore || parseFloat(analysisScore) < 0 || parseFloat(analysisScore) > 100) {
+    if (
+      !analysisScore ||
+      parseFloat(analysisScore) < 0 ||
+      parseFloat(analysisScore) > 100
+    ) {
       Alert.alert('Hata', 'Lütfen 0-100 arasında geçerli bir skor giriniz');
       return;
     }
@@ -89,16 +134,12 @@ const AdminHairCheckDetailScreen: React.FC<AdminHairCheckDetailScreenProps> = ({
 
       if (error) throw error;
 
-      Alert.alert(
-        'Başarılı',
-        'Analiz sonucu başarıyla kaydedildi',
-        [
-          {
-            text: 'Tamam',
-            onPress: () => navigation.goBack(),
-          },
-        ]
-      );
+      Alert.alert('Başarılı', 'Analiz sonucu başarıyla kaydedildi', [
+        {
+          text: 'Tamam',
+          onPress: () => navigation.goBack(),
+        },
+      ]);
     } catch (error: any) {
       console.error('❌ Save analysis error:', error);
       Alert.alert('Hata', 'Analiz kaydedilirken bir hata oluştu');
@@ -113,7 +154,10 @@ const AdminHairCheckDetailScreen: React.FC<AdminHairCheckDetailScreenProps> = ({
 
       {/* Header */}
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          style={styles.backButton}
+        >
           <Icon name="chevron-back" size={28} color="#1A1A1A" />
         </TouchableOpacity>
         <Text weight="bold" style={styles.headerTitle}>
@@ -122,11 +166,19 @@ const AdminHairCheckDetailScreen: React.FC<AdminHairCheckDetailScreenProps> = ({
         <View style={{ width: 40 }} />
       </View>
 
-      <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
+      <ScrollView
+        style={styles.scrollView}
+        showsVerticalScrollIndicator={false}
+      >
         {/* Hasta Bilgileri */}
         <View style={styles.section}>
           <View style={styles.patientCard}>
-            <Icon name="person-circle" size={48} color="#01213D" style={styles.patientIcon} />
+            <Icon
+              name="person-circle"
+              size={48}
+              color="#01213D"
+              style={styles.patientIcon}
+            />
             <View style={styles.patientInfo}>
               <Text weight="semibold" style={styles.patientName}>
                 {check.profiles?.full_name || 'İsimsiz Kullanıcı'}
@@ -143,9 +195,11 @@ const AdminHairCheckDetailScreen: React.FC<AdminHairCheckDetailScreenProps> = ({
 
         {/* Fotoğraflar */}
         <View style={styles.section}>
-          <Text weight="bold" style={styles.sectionTitle}>Fotoğraflar</Text>
+          <Text weight="bold" style={styles.sectionTitle}>
+            Fotoğraflar
+          </Text>
           <View style={styles.photosGrid}>
-            {photos.map((photo) => (
+            {photos.map(photo => (
               <TouchableOpacity
                 key={photo.id}
                 style={styles.photoCard}
@@ -153,7 +207,12 @@ const AdminHairCheckDetailScreen: React.FC<AdminHairCheckDetailScreenProps> = ({
               >
                 <Image source={{ uri: photo.url }} style={styles.photoImage} />
                 <View style={styles.photoOverlay}>
-                  <Icon name={photo.icon} size={20} color="#FFFFFF" style={styles.photoIcon} />
+                  <Icon
+                    name={photo.icon}
+                    size={20}
+                    color="#FFFFFF"
+                    style={styles.photoIcon}
+                  />
                   <Text weight="semibold" style={styles.photoLabel}>
                     {photo.label}
                   </Text>
@@ -165,7 +224,9 @@ const AdminHairCheckDetailScreen: React.FC<AdminHairCheckDetailScreenProps> = ({
 
         {/* Analiz Formu */}
         <View style={styles.section}>
-          <Text weight="bold" style={styles.sectionTitle}>Analiz Sonucu</Text>
+          <Text weight="bold" style={styles.sectionTitle}>
+            Analiz Sonucu
+          </Text>
 
           {/* Skor */}
           <View style={styles.formGroup}>
@@ -308,7 +369,12 @@ const AdminHairCheckDetailScreen: React.FC<AdminHairCheckDetailScreenProps> = ({
           onPress={handleSaveAnalysis}
           disabled={loading}
         >
-          <Icon name="checkmark-circle" size={20} color="#FFFFFF" style={styles.saveButtonIcon} />
+          <Icon
+            name="checkmark-circle"
+            size={20}
+            color="#FFFFFF"
+            style={styles.saveButtonIcon}
+          />
           <Text weight="bold" style={styles.saveButtonText}>
             Analizi Kaydet ve Gönder
           </Text>
@@ -364,6 +430,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     borderBottomWidth: 1,
     borderBottomColor: '#E5E7EB',
+  },
+  backButton: {
+    padding: 4,
   },
   headerTitle: {
     fontSize: 18,
@@ -566,4 +635,3 @@ const styles = StyleSheet.create({
 });
 
 export default AdminHairCheckDetailScreen;
-

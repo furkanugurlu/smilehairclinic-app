@@ -224,7 +224,10 @@ const HairCheckCaptureScreen: React.FC<HairCheckCaptureScreenProps> = ({
     <SafeAreaView style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          style={styles.backButton}
+        >
           <Icon name="chevron-back" size={28} color="#1A1A1A" />
         </TouchableOpacity>
         <Text weight="bold" style={styles.headerTitle}>
@@ -308,6 +311,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     borderBottomWidth: 1,
     borderBottomColor: '#E5E7EB',
+  },
+  backButton: {
+    padding: 4,
   },
   headerTitle: {
     fontSize: 18,

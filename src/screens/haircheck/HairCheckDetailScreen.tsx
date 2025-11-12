@@ -20,11 +20,41 @@ const HairCheckDetailScreen = ({ navigation, route }: any) => {
   const [selectedPhoto, setSelectedPhoto] = useState<string | null>(null);
 
   const photos = [
-    { id: 'front', label: 'Ön Görünüm', icon: 'happy-outline', iconColor: '#01213D', url: check.photo_front },
-    { id: 'right45', label: 'Sağ 45°', icon: 'arrow-redo-outline', iconColor: '#10B981', url: check.photo_right45 },
-    { id: 'left45', label: 'Sol 45°', icon: 'arrow-undo-outline', iconColor: '#10B981', url: check.photo_left45 },
-    { id: 'top', label: 'Üst Görünüm', icon: 'arrow-up-outline', iconColor: '#F59E0B', url: check.photo_top },
-    { id: 'back', label: 'Arka Görünüm', icon: 'person-outline', iconColor: '#8B5CF6', url: check.photo_back },
+    {
+      id: 'front',
+      label: 'Ön Görünüm',
+      icon: 'happy-outline',
+      iconColor: '#01213D',
+      url: check.photo_front,
+    },
+    {
+      id: 'right45',
+      label: 'Sağ 45°',
+      icon: 'arrow-redo-outline',
+      iconColor: '#10B981',
+      url: check.photo_right45,
+    },
+    {
+      id: 'left45',
+      label: 'Sol 45°',
+      icon: 'arrow-undo-outline',
+      iconColor: '#10B981',
+      url: check.photo_left45,
+    },
+    {
+      id: 'top',
+      label: 'Üst Görünüm',
+      icon: 'arrow-up-outline',
+      iconColor: '#F59E0B',
+      url: check.photo_top,
+    },
+    {
+      id: 'back',
+      label: 'Arka Görünüm',
+      icon: 'person-outline',
+      iconColor: '#8B5CF6',
+      url: check.photo_back,
+    },
   ];
 
   const formatDate = (dateString: string) => {
@@ -108,7 +138,10 @@ const HairCheckDetailScreen = ({ navigation, route }: any) => {
     <SafeAreaView style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
+        <TouchableOpacity
+          onPress={() => navigation.goBack()}
+          style={styles.backButton}
+        >
           <Icon name="chevron-back" size={28} color="#1A1A1A" />
         </TouchableOpacity>
         <Text weight="bold" style={styles.headerTitle}>
@@ -117,12 +150,20 @@ const HairCheckDetailScreen = ({ navigation, route }: any) => {
         <View style={{ width: 40 }} />
       </View>
 
-      <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
+      <ScrollView
+        style={styles.scrollView}
+        showsVerticalScrollIndicator={false}
+      >
         {/* Tarih ve Durum */}
         <View style={styles.section}>
           <View style={styles.dateCard}>
             <View style={styles.dateLeft}>
-              <Icon name="calendar" size={32} color="#01213D" style={styles.dateIcon} />
+              <Icon
+                name="calendar"
+                size={32}
+                color="#01213D"
+                style={styles.dateIcon}
+              />
               <View>
                 <Text weight="regular" style={styles.dateLabel}>
                   Kontrol Tarihi
@@ -133,17 +174,27 @@ const HairCheckDetailScreen = ({ navigation, route }: any) => {
               </View>
             </View>
             <View style={styles.statusBadge}>
-              <Icon name={getStatusIconName()} size={16} color={getStatusIconColor()} style={styles.statusIcon} />
+              <Icon
+                name={getStatusIconName()}
+                size={16}
+                color={getStatusIconColor()}
+                style={styles.statusIcon}
+              />
               {check.status === 'completed' ? (
-                <Text 
-                  weight="semibold" 
-                  style={[styles.statusText, { color: getStatusColor(check.analysis_status) }]}
+                <Text
+                  weight="semibold"
+                  style={[
+                    styles.statusText,
+                    { color: getStatusColor(check.analysis_status) },
+                  ]}
                 >
                   {getStatusText(check.analysis_status)}
                 </Text>
               ) : (
                 <Text weight="semibold" style={styles.statusText}>
-                  {check.status === 'pending' ? 'İnceleniyor' : 'Analiz Ediliyor'}
+                  {check.status === 'pending'
+                    ? 'İnceleniyor'
+                    : 'Analiz Ediliyor'}
                 </Text>
               )}
             </View>
@@ -153,7 +204,9 @@ const HairCheckDetailScreen = ({ navigation, route }: any) => {
         {/* Analiz Sonucu */}
         {check.status === 'completed' && check.analysis_score && (
           <View style={styles.section}>
-            <Text weight="bold" style={styles.sectionTitle}>Analiz Sonucu</Text>
+            <Text weight="bold" style={styles.sectionTitle}>
+              Analiz Sonucu
+            </Text>
             <View style={styles.scoreCard}>
               <View style={styles.scoreCircle}>
                 <Text weight="bold" style={styles.scoreNumber}>
@@ -179,10 +232,17 @@ const HairCheckDetailScreen = ({ navigation, route }: any) => {
         {check.status !== 'completed' && (
           <View style={styles.section}>
             <View style={styles.infoCard}>
-              <Icon name={getStatusIconName()} size={32} color="#92400E" style={styles.infoIcon} />
+              <Icon
+                name={getStatusIconName()}
+                size={32}
+                color="#92400E"
+                style={styles.infoIcon}
+              />
               <View style={styles.infoContent}>
                 <Text weight="semibold" style={styles.infoTitle}>
-                  {check.status === 'pending' ? 'İnceleme Aşamasında' : 'Analiz Ediliyor'}
+                  {check.status === 'pending'
+                    ? 'İnceleme Aşamasında'
+                    : 'Analiz Ediliyor'}
                 </Text>
                 <Text weight="regular" style={styles.infoText}>
                   {getStatusDescription()}
@@ -194,7 +254,9 @@ const HairCheckDetailScreen = ({ navigation, route }: any) => {
 
         {/* Fotoğraflar */}
         <View style={styles.section}>
-          <Text weight="bold" style={styles.sectionTitle}>Fotoğraflar</Text>
+          <Text weight="bold" style={styles.sectionTitle}>
+            Fotoğraflar
+          </Text>
           <View style={styles.photosGrid}>
             {photos.map((photo, index) => (
               <TouchableOpacity
@@ -204,7 +266,12 @@ const HairCheckDetailScreen = ({ navigation, route }: any) => {
               >
                 <Image source={{ uri: photo.url }} style={styles.photoImage} />
                 <View style={styles.photoOverlay}>
-                  <Icon name={photo.icon} size={20} color="#FFFFFF" style={styles.photoIcon} />
+                  <Icon
+                    name={photo.icon}
+                    size={20}
+                    color="#FFFFFF"
+                    style={styles.photoIcon}
+                  />
                   <Text weight="semibold" style={styles.photoLabel}>
                     {photo.label}
                   </Text>
@@ -217,9 +284,16 @@ const HairCheckDetailScreen = ({ navigation, route }: any) => {
         {/* Öneriler */}
         {check.status === 'completed' && check.recommendations && (
           <View style={styles.section}>
-            <Text weight="bold" style={styles.sectionTitle}>Öneriler</Text>
+            <Text weight="bold" style={styles.sectionTitle}>
+              Öneriler
+            </Text>
             <View style={styles.recommendationsCard}>
-              <Icon name="bulb" size={32} color="#1E40AF" style={styles.recommendationsIcon} />
+              <Icon
+                name="bulb"
+                size={32}
+                color="#1E40AF"
+                style={styles.recommendationsIcon}
+              />
               <Text weight="regular" style={styles.recommendationsText}>
                 {check.recommendations}
               </Text>
@@ -230,9 +304,16 @@ const HairCheckDetailScreen = ({ navigation, route }: any) => {
         {/* Varsayılan Öneriler (eğer analiz tamamlanmadıysa) */}
         {check.status !== 'completed' && (
           <View style={styles.section}>
-            <Text weight="bold" style={styles.sectionTitle}>Genel Öneriler</Text>
+            <Text weight="bold" style={styles.sectionTitle}>
+              Genel Öneriler
+            </Text>
             <View style={styles.tipCard}>
-              <Icon name="water" size={32} color="#01213D" style={styles.tipIcon} />
+              <Icon
+                name="water"
+                size={32}
+                color="#01213D"
+                style={styles.tipIcon}
+              />
               <View style={styles.tipContent}>
                 <Text weight="semibold" style={styles.tipTitle}>
                   Yeterli Su Tüketimi
@@ -243,18 +324,29 @@ const HairCheckDetailScreen = ({ navigation, route }: any) => {
               </View>
             </View>
             <View style={styles.tipCard}>
-              <Icon name="nutrition" size={32} color="#10B981" style={styles.tipIcon} />
+              <Icon
+                name="nutrition"
+                size={32}
+                color="#10B981"
+                style={styles.tipIcon}
+              />
               <View style={styles.tipContent}>
                 <Text weight="semibold" style={styles.tipTitle}>
                   Dengeli Beslenme
                 </Text>
                 <Text weight="regular" style={styles.tipDescription}>
-                  Protein, vitamin ve mineral açısından zengin beslenerek saçlarınızı güçlendirin
+                  Protein, vitamin ve mineral açısından zengin beslenerek
+                  saçlarınızı güçlendirin
                 </Text>
               </View>
             </View>
             <View style={styles.tipCard}>
-              <Icon name="sunny" size={32} color="#F59E0B" style={styles.tipIcon} />
+              <Icon
+                name="sunny"
+                size={32}
+                color="#F59E0B"
+                style={styles.tipIcon}
+              />
               <View style={styles.tipContent}>
                 <Text weight="semibold" style={styles.tipTitle}>
                   Güneş Koruması
@@ -278,21 +370,21 @@ const HairCheckDetailScreen = ({ navigation, route }: any) => {
         onRequestClose={() => setSelectedPhoto(null)}
       >
         <View style={styles.modalContainer}>
-          <TouchableOpacity 
+          <TouchableOpacity
             style={styles.modalOverlay}
             activeOpacity={1}
             onPress={() => setSelectedPhoto(null)}
           >
             <View style={styles.modalContent}>
-              <TouchableOpacity 
+              <TouchableOpacity
                 style={styles.closeButton}
                 onPress={() => setSelectedPhoto(null)}
               >
                 <Icon name="close" size={24} color="#FFFFFF" />
               </TouchableOpacity>
               {selectedPhoto && (
-                <Image 
-                  source={{ uri: selectedPhoto }} 
+                <Image
+                  source={{ uri: selectedPhoto }}
                   style={styles.fullImage}
                   resizeMode="contain"
                 />
@@ -319,6 +411,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     borderBottomWidth: 1,
     borderBottomColor: '#E5E7EB',
+  },
+  backButton: {
+    padding: 4,
   },
   headerTitle: {
     fontSize: 18,
@@ -572,5 +667,3 @@ const styles = StyleSheet.create({
 });
 
 export default HairCheckDetailScreen;
-
-

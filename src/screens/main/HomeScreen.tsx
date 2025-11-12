@@ -40,7 +40,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation, route }) => {
   useFocusEffect(
     useCallback(() => {
       fetchHairChecks();
-    }, [user?.id])
+    }, [user?.id]),
   );
 
   const fetchHairChecks = async () => {
@@ -48,7 +48,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation, route }) => {
 
     try {
       setLoading(true);
-      
+
       const { data, error } = await supabase
         .from('hair_checks')
         .select('*')
@@ -77,21 +77,26 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation, route }) => {
   }, [user?.id]);
 
   const calculateStats = (checks: HairCheck[]) => {
-    const completedChecks = checks.filter(c => c.status === 'completed' && c.analysis_score);
+    const completedChecks = checks.filter(
+      c => c.status === 'completed' && c.analysis_score,
+    );
     const totalChecks = checks.length;
-    
+
     let averageScore = 0;
     if (completedChecks.length > 0) {
-      const sum = completedChecks.reduce((acc, check) => acc + (check.analysis_score || 0), 0);
+      const sum = completedChecks.reduce(
+        (acc, check) => acc + (check.analysis_score || 0),
+        0,
+      );
       averageScore = Math.round(sum / completedChecks.length);
     }
 
     let lastCheckDate = '';
     if (checks.length > 0) {
       const lastDate = new Date(checks[0].created_at);
-      lastCheckDate = lastDate.toLocaleDateString('tr-TR', { 
-        day: 'numeric', 
-        month: 'long' 
+      lastCheckDate = lastDate.toLocaleDateString('tr-TR', {
+        day: 'numeric',
+        month: 'long',
       });
     }
 
@@ -163,308 +168,445 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation, route }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      {loading && !refreshing ? <View style={styles.loadingContainer}>
-        <ActivityIndicator size="small" color="#01213D" />
-      </View> : <ScrollView 
-        showsVerticalScrollIndicator={false}
-        refreshControl={
-          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-        }
-      >
-        {/* Header */}
-        <View style={styles.header}>
-          <View>
-            <Text weight="regular" style={styles.greeting}>Merhaba,</Text>
-            <Text weight="bold" style={styles.userName}>{user?.full_name || 'Kullanıcı'}</Text>
-          </View>
-          <TouchableOpacity onPress={handleProfilePress} activeOpacity={0.7}>
-            {user?.avatar_url ? (
-              <Image source={{ uri: user.avatar_url }} style={styles.avatar} />
-            ) : (
-              <View style={styles.avatar}>
-                <Text weight="bold" style={styles.avatarText}>
-                  {user?.full_name?.charAt(0).toUpperCase() || 'U'}
-                </Text>
-              </View>
-            )}
-          </TouchableOpacity>
+      {loading && !refreshing ? (
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="small" color="#01213D" />
         </View>
-
-        {/* Hero Section - Saç Durumu Kontrolü */}
-        <View style={styles.heroSection}>
-          <View style={styles.heroCard}>
-            <View style={styles.heroIconContainer}>
-              <Icon name="analytics-outline" size={40} color="#FFFFFF" />
-            </View>
-            <Text weight="bold" style={styles.heroTitle}>
-              Saç Durumu Kontrolü
-            </Text>
-            <Text weight="regular" style={styles.heroDescription}>
-              Yapay zeka destekli saç analizi ile saç sağlığınızı hemen kontrol edin
-            </Text>
-            <TouchableOpacity 
-              style={styles.heroButton}
-              onPress={handleStartCheck}
-            >
-              <Text weight="bold" style={styles.heroButtonText}>
-                Kontrol Başlat
+      ) : (
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          refreshControl={
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          }
+        >
+          {/* Header */}
+          <View style={styles.header}>
+            <View>
+              <Text weight="regular" style={styles.greeting}>
+                Merhaba,
               </Text>
-              <Icon name="arrow-forward" size={18} color="#01213D" />
+              <Text weight="bold" style={styles.userName}>
+                {user?.full_name || 'Kullanıcı'}
+              </Text>
+            </View>
+            <TouchableOpacity onPress={handleProfilePress} activeOpacity={0.7}>
+              {user?.avatar_url ? (
+                <Image
+                  source={{ uri: user.avatar_url }}
+                  style={styles.avatar}
+                />
+              ) : (
+                <View style={styles.avatar}>
+                  <Text weight="bold" style={styles.avatarText}>
+                    {user?.full_name?.charAt(0).toUpperCase() || 'U'}
+                  </Text>
+                </View>
+              )}
             </TouchableOpacity>
           </View>
-        </View>
 
-        {/* Son Kontrol Sonucu veya Kontrol Listesi */}
-        {lastCheck && lastCheck.status === 'completed' ? (
-          <View style={styles.section}>
-            <Text weight="bold" style={styles.sectionTitle}>Son Kontrol Sonucu</Text>
-            <View style={styles.resultCard}>
-              <View style={styles.resultHeader}>
-                <View>
-                  <Text weight="semibold" style={styles.resultDate}>
-                    {formatDate(lastCheck.created_at)}
-                  </Text>
-                  <View style={styles.resultStatus}>
-                    <View 
-                      style={[
-                        styles.statusDot, 
-                        { backgroundColor: getStatusColor(lastCheck.analysis_status) }
-                      ]} 
-                    />
-                    <Text 
-                      weight="semibold" 
-                      style={[
-                        styles.statusText,
-                        { color: getStatusColor(lastCheck.analysis_status) }
-                      ]}
-                    >
-                      {getStatusText(lastCheck.analysis_status)}
-                    </Text>
-                  </View>
-                </View>
-                <View style={styles.scoreContainer}>
-                  <Text weight="bold" style={styles.scoreNumber}>
-                    {lastCheck.analysis_score || '-'}
-                  </Text>
-                  <Text weight="regular" style={styles.scoreLabel}>
-                    /100
-                  </Text>
-                </View>
+          {/* Hero Section - Saç Durumu Kontrolü */}
+          <View style={styles.heroSection}>
+            <View style={styles.heroCard}>
+              <View style={styles.heroIconContainer}>
+                <Icon name="analytics-outline" size={40} color="#FFFFFF" />
               </View>
-              <Text weight="regular" style={styles.resultNotes}>
-                {lastCheck.analysis_notes || 'Analiz notları bekleniyor...'}
+              <Text weight="bold" style={styles.heroTitle}>
+                Saç Durumu Kontrolü
               </Text>
-              <TouchableOpacity 
-                style={styles.resultButton}
-                onPress={() => handleViewCheckDetail(lastCheck)}
+              <Text weight="regular" style={styles.heroDescription}>
+                Yapay zeka destekli saç analizi ile saç sağlığınızı hemen
+                kontrol edin
+              </Text>
+              <TouchableOpacity
+                style={styles.heroButton}
+                onPress={handleStartCheck}
               >
-                <Text weight="semibold" style={styles.resultButtonText}>
-                  Detayları Gör
+                <Text weight="bold" style={styles.heroButtonText}>
+                  Kontrol Başlat
                 </Text>
+                <Icon name="arrow-forward" size={18} color="#01213D" />
               </TouchableOpacity>
             </View>
           </View>
-        ) : hairChecks.length > 0 ? (
-          <View style={styles.section}>
-            <Text weight="bold" style={styles.sectionTitle}>Kontrollerim</Text>
-            {hairChecks.map((check) => (
-              <TouchableOpacity 
-                key={check.id}
-                style={styles.checkCard}
-                onPress={() => handleViewCheckDetail(check)}
-              >
-                <View style={styles.checkCardLeft}>
-                  <Image 
-                    source={{ uri: check.photo_front }} 
-                    style={styles.checkThumbnail}
-                  />
-                  <View style={styles.checkInfo}>
-                    <Text weight="semibold" style={styles.checkDate}>
-                      {formatDate(check.created_at)}
+
+          {/* Son Kontrol Sonucu veya Kontrol Listesi */}
+          {lastCheck && lastCheck.status === 'completed' ? (
+            <View style={styles.section}>
+              <Text weight="bold" style={styles.sectionTitle}>
+                Son Kontrol Sonucu
+              </Text>
+              <View style={styles.resultCard}>
+                <View style={styles.resultHeader}>
+                  <View>
+                    <Text weight="semibold" style={styles.resultDate}>
+                      {formatDate(lastCheck.created_at)}
                     </Text>
-                    <View style={styles.checkStatusBadge}>
-                      {check.status === 'pending' && (
-                        <>
-                          <Icon name="time-outline" size={14} color="#F59E0B" style={styles.checkStatusIcon} />
-                          <Text weight="medium" style={styles.checkStatusText}>
-                            İnceleniyor
-                          </Text>
-                        </>
-                      )}
-                      {check.status === 'analyzing' && (
-                        <>
-                          <Icon name="analytics-outline" size={14} color="#01213D" style={styles.checkStatusIcon} />
-                          <Text weight="medium" style={styles.checkStatusText}>
-                            Analiz Ediliyor
-                          </Text>
-                        </>
-                      )}
-                      {check.status === 'completed' && (
-                        <>
-                          <View 
-                            style={[
-                              styles.statusDot, 
-                              { backgroundColor: getStatusColor(check.analysis_status) }
-                            ]} 
-                          />
-                          <Text 
-                            weight="medium" 
-                            style={[
-                              styles.checkStatusText,
-                              { color: getStatusColor(check.analysis_status) }
-                            ]}
-                          >
-                            {getStatusText(check.analysis_status)}
-                          </Text>
-                        </>
-                      )}
+                    <View style={styles.resultStatus}>
+                      <View
+                        style={[
+                          styles.statusDot,
+                          {
+                            backgroundColor: getStatusColor(
+                              lastCheck.analysis_status,
+                            ),
+                          },
+                        ]}
+                      />
+                      <Text
+                        weight="semibold"
+                        style={[
+                          styles.statusText,
+                          { color: getStatusColor(lastCheck.analysis_status) },
+                        ]}
+                      >
+                        {getStatusText(lastCheck.analysis_status)}
+                      </Text>
                     </View>
                   </View>
+                  <View style={styles.scoreContainer}>
+                    <Text weight="bold" style={styles.scoreNumber}>
+                      {lastCheck.analysis_score || '-'}
+                    </Text>
+                    <Text weight="regular" style={styles.scoreLabel}>
+                      /100
+                    </Text>
+                  </View>
                 </View>
-                {check.analysis_score && (
-                  <View style={styles.checkScore}>
-                    <Text weight="bold" style={styles.checkScoreNumber}>
-                      {check.analysis_score}
-                    </Text>
-                  </View>
-                )}
-                {check.recommendations && (
-                  <View style={styles.checkRecommendations}>
-                    <Icon name="bulb" size={14} color="#F59E0B" style={styles.checkRecommendationsIcon} />
-                    <Text 
-                      weight="regular" 
-                      style={styles.checkRecommendationsText}
-                      numberOfLines={2}
-                    >
-                      {check.recommendations}
-                    </Text>
-                  </View>
-                )}
-              </TouchableOpacity>
-            ))}
-          </View>
-        ) : (
-          <View style={styles.section}>
-            <Text weight="bold" style={styles.sectionTitle}>Kontrol Geçmişi</Text>
-            <View style={styles.emptyCard}>
-              <Icon name="bar-chart-outline" size={64} color="#D1D5DB" style={styles.emptyIcon} />
-              <Text weight="medium" style={styles.emptyTitle}>
-                Henüz kontrol yapılmadı
-              </Text>
-              <Text weight="regular" style={styles.emptyDescription}>
-                İlk saç durumu kontrolünüzü yaparak saç sağlığınızı takip etmeye başlayın
-              </Text>
-            </View>
-          </View>
-        )}
-
-        {/* İstatistikler */}
-        {hairChecks.length > 0 && (
-          <View style={styles.section}>
-            <Text weight="bold" style={styles.sectionTitle}>İstatistikler</Text>
-            <View style={styles.statsGrid}>
-              <View style={styles.statCard}>
-                <Icon name="bar-chart-outline" size={28} color="#01213D" style={styles.statIcon} />
-                <Text weight="bold" style={styles.statNumber}>{stats.totalChecks}</Text>
-                <Text weight="regular" style={styles.statLabel}>Toplam Kontrol</Text>
-              </View>
-              <View style={styles.statCard}>
-                <Icon 
-                  name={stats.improvement > 0 ? 'trending-up-outline' : stats.improvement < 0 ? 'trending-down-outline' : 'remove-outline'} 
-                  size={28} 
-                  color={stats.improvement > 0 ? '#10B981' : stats.improvement < 0 ? '#EF4444' : '#666'}
-                  style={styles.statIcon}
-                />
-                <Text 
-                  weight="bold" 
-                  style={[
-                    styles.statNumber,
-                    { color: stats.improvement > 0 ? '#10B981' : stats.improvement < 0 ? '#EF4444' : '#666' }
-                  ]}
+                <Text weight="regular" style={styles.resultNotes}>
+                  {lastCheck.analysis_notes || 'Analiz notları bekleniyor...'}
+                </Text>
+                <TouchableOpacity
+                  style={styles.resultButton}
+                  onPress={() => handleViewCheckDetail(lastCheck)}
                 >
-                  {stats.improvement !== 0 ? (stats.improvement > 0 ? '+' : '') + stats.improvement : '-'}
-                </Text>
-                <Text weight="regular" style={styles.statLabel}>İyileşme</Text>
-              </View>
-              <View style={styles.statCard}>
-                <Icon name="calendar-outline" size={28} color="#01213D" style={styles.statIcon} />
-                <Text weight="bold" style={styles.statNumber}>
-                  {stats.lastCheckDate || '-'}
-                </Text>
-                <Text weight="regular" style={styles.statLabel}>Son Kontrol</Text>
-              </View>
-              <View style={styles.statCard}>
-                <Icon name="star-outline" size={28} color="#01213D" style={styles.statIcon} />
-                <Text weight="bold" style={styles.statNumber}>
-                  {stats.averageScore || '-'}
-                </Text>
-                <Text weight="regular" style={styles.statLabel}>Ortalama Skor</Text>
+                  <Text weight="semibold" style={styles.resultButtonText}>
+                    Detayları Gör
+                  </Text>
+                </TouchableOpacity>
               </View>
             </View>
-          </View>
-        )}
+          ) : hairChecks.length > 0 ? (
+            <View style={styles.section}>
+              <Text weight="bold" style={styles.sectionTitle}>
+                Kontrollerim
+              </Text>
+              {hairChecks.map(check => (
+                <TouchableOpacity
+                  key={check.id}
+                  style={styles.checkCard}
+                  onPress={() => handleViewCheckDetail(check)}
+                >
+                  <View style={styles.checkCardLeft}>
+                    <Image
+                      source={{ uri: check.photo_front }}
+                      style={styles.checkThumbnail}
+                    />
+                    <View style={styles.checkInfo}>
+                      <Text weight="semibold" style={styles.checkDate}>
+                        {formatDate(check.created_at)}
+                      </Text>
+                      <View style={styles.checkStatusBadge}>
+                        {check.status === 'pending' && (
+                          <>
+                            <Icon
+                              name="time-outline"
+                              size={14}
+                              color="#F59E0B"
+                              style={styles.checkStatusIcon}
+                            />
+                            <Text
+                              weight="medium"
+                              style={styles.checkStatusText}
+                            >
+                              İnceleniyor
+                            </Text>
+                          </>
+                        )}
+                        {check.status === 'analyzing' && (
+                          <>
+                            <Icon
+                              name="analytics-outline"
+                              size={14}
+                              color="#01213D"
+                              style={styles.checkStatusIcon}
+                            />
+                            <Text
+                              weight="medium"
+                              style={styles.checkStatusText}
+                            >
+                              Analiz Ediliyor
+                            </Text>
+                          </>
+                        )}
+                        {check.status === 'completed' && (
+                          <>
+                            <View
+                              style={[
+                                styles.statusDot,
+                                {
+                                  backgroundColor: getStatusColor(
+                                    check.analysis_status,
+                                  ),
+                                },
+                              ]}
+                            />
+                            <Text
+                              weight="medium"
+                              style={[
+                                styles.checkStatusText,
+                                {
+                                  color: getStatusColor(check.analysis_status),
+                                },
+                              ]}
+                            >
+                              {getStatusText(check.analysis_status)}
+                            </Text>
+                          </>
+                        )}
+                      </View>
+                    </View>
+                  </View>
+                  {check.analysis_score && (
+                    <View style={styles.checkScore}>
+                      <Text weight="bold" style={styles.checkScoreNumber}>
+                        {check.analysis_score}
+                      </Text>
+                    </View>
+                  )}
+                  {check.recommendations && (
+                    <View style={styles.checkRecommendations}>
+                      <Icon
+                        name="bulb"
+                        size={14}
+                        color="#F59E0B"
+                        style={styles.checkRecommendationsIcon}
+                      />
+                      <Text
+                        weight="regular"
+                        style={styles.checkRecommendationsText}
+                        numberOfLines={2}
+                      >
+                        {check.recommendations}
+                      </Text>
+                    </View>
+                  )}
+                </TouchableOpacity>
+              ))}
+            </View>
+          ) : (
+            <View style={styles.section}>
+              <Text weight="bold" style={styles.sectionTitle}>
+                Kontrol Geçmişi
+              </Text>
+              <View style={styles.emptyCard}>
+                <Icon
+                  name="bar-chart-outline"
+                  size={64}
+                  color="#D1D5DB"
+                  style={styles.emptyIcon}
+                />
+                <Text weight="medium" style={styles.emptyTitle}>
+                  Henüz kontrol yapılmadı
+                </Text>
+                <Text weight="regular" style={styles.emptyDescription}>
+                  İlk saç durumu kontrolünüzü yaparak saç sağlığınızı takip
+                  etmeye başlayın
+                </Text>
+              </View>
+            </View>
+          )}
 
-        {/* Öneriler */}
-        <View style={styles.section}>
-          <Text weight="bold" style={styles.sectionTitle}>Öneriler</Text>
-          <View style={styles.tipCard}>
-            <Icon name="bulb-outline" size={32} color="#F59E0B" style={styles.tipIcon} />
-            <View style={styles.tipContent}>
-              <Text weight="semibold" style={styles.tipTitle}>
-                Düzenli Kontrol
+          {/* İstatistikler */}
+          {hairChecks.length > 0 && (
+            <View style={styles.section}>
+              <Text weight="bold" style={styles.sectionTitle}>
+                İstatistikler
               </Text>
-              <Text weight="regular" style={styles.tipDescription}>
-                Saç sağlığınızı ayda bir kez kontrol ederek değişimleri takip edin
-              </Text>
+              <View style={styles.statsGrid}>
+                <View style={styles.statCard}>
+                  <Icon
+                    name="bar-chart-outline"
+                    size={28}
+                    color="#01213D"
+                    style={styles.statIcon}
+                  />
+                  <Text weight="bold" style={styles.statNumber}>
+                    {stats.totalChecks}
+                  </Text>
+                  <Text weight="regular" style={styles.statLabel}>
+                    Toplam Kontrol
+                  </Text>
+                </View>
+                <View style={styles.statCard}>
+                  <Icon
+                    name={
+                      stats.improvement > 0
+                        ? 'trending-up-outline'
+                        : stats.improvement < 0
+                        ? 'trending-down-outline'
+                        : 'remove-outline'
+                    }
+                    size={28}
+                    color={
+                      stats.improvement > 0
+                        ? '#10B981'
+                        : stats.improvement < 0
+                        ? '#EF4444'
+                        : '#666'
+                    }
+                    style={styles.statIcon}
+                  />
+                  <Text
+                    weight="bold"
+                    style={[
+                      styles.statNumber,
+                      {
+                        color:
+                          stats.improvement > 0
+                            ? '#10B981'
+                            : stats.improvement < 0
+                            ? '#EF4444'
+                            : '#666',
+                      },
+                    ]}
+                  >
+                    {stats.improvement !== 0
+                      ? (stats.improvement > 0 ? '+' : '') + stats.improvement
+                      : '-'}
+                  </Text>
+                  <Text weight="regular" style={styles.statLabel}>
+                    İyileşme
+                  </Text>
+                </View>
+                <View style={styles.statCard}>
+                  <Icon
+                    name="calendar-outline"
+                    size={28}
+                    color="#01213D"
+                    style={styles.statIcon}
+                  />
+                  <Text weight="bold" style={styles.statNumber}>
+                    {stats.lastCheckDate || '-'}
+                  </Text>
+                  <Text weight="regular" style={styles.statLabel}>
+                    Son Kontrol
+                  </Text>
+                </View>
+                <View style={styles.statCard}>
+                  <Icon
+                    name="star-outline"
+                    size={28}
+                    color="#01213D"
+                    style={styles.statIcon}
+                  />
+                  <Text weight="bold" style={styles.statNumber}>
+                    {stats.averageScore || '-'}
+                  </Text>
+                  <Text weight="regular" style={styles.statLabel}>
+                    Ortalama Skor
+                  </Text>
+                </View>
+              </View>
+            </View>
+          )}
+
+          {/* Öneriler */}
+          <View style={styles.section}>
+            <Text weight="bold" style={styles.sectionTitle}>
+              Öneriler
+            </Text>
+            <View style={styles.tipCard}>
+              <Icon
+                name="bulb-outline"
+                size={32}
+                color="#F59E0B"
+                style={styles.tipIcon}
+              />
+              <View style={styles.tipContent}>
+                <Text weight="semibold" style={styles.tipTitle}>
+                  Düzenli Kontrol
+                </Text>
+                <Text weight="regular" style={styles.tipDescription}>
+                  Saç sağlığınızı ayda bir kez kontrol ederek değişimleri takip
+                  edin
+                </Text>
+              </View>
+            </View>
+            <View style={styles.tipCard}>
+              <Icon
+                name="sunny-outline"
+                size={32}
+                color="#F59E0B"
+                style={styles.tipIcon}
+              />
+              <View style={styles.tipContent}>
+                <Text weight="semibold" style={styles.tipTitle}>
+                  Güneş Koruması
+                </Text>
+                <Text weight="regular" style={styles.tipDescription}>
+                  Saç derinizi güneşin zararlı etkilerinden koruyun
+                </Text>
+              </View>
+            </View>
+            <View style={styles.tipCard}>
+              <Icon
+                name="water-outline"
+                size={32}
+                color="#01213D"
+                style={styles.tipIcon}
+              />
+              <View style={styles.tipContent}>
+                <Text weight="semibold" style={styles.tipTitle}>
+                  Yeterli Su Tüketimi
+                </Text>
+                <Text weight="regular" style={styles.tipDescription}>
+                  Günde en az 2 litre su tüketerek saç sağlığınızı destekleyin
+                </Text>
+              </View>
             </View>
           </View>
-          <View style={styles.tipCard}>
-            <Icon name="sunny-outline" size={32} color="#F59E0B" style={styles.tipIcon} />
-            <View style={styles.tipContent}>
-              <Text weight="semibold" style={styles.tipTitle}>
-                Güneş Koruması
-              </Text>
-              <Text weight="regular" style={styles.tipDescription}>
-                Saç derinizi güneşin zararlı etkilerinden koruyun
-              </Text>
+
+          {/* Quick Actions */}
+          <View style={styles.section}>
+            <Text weight="bold" style={styles.sectionTitle}>
+              Hızlı İşlemler
+            </Text>
+            <View style={styles.quickActions}>
+              <TouchableOpacity
+                style={styles.actionCard}
+                onPress={() => navigation.navigate('AppointmentCreate')}
+              >
+                <Icon
+                  name="calendar-outline"
+                  size={32}
+                  color="#01213D"
+                  style={styles.actionIcon}
+                />
+                <Text weight="semibold" style={styles.actionText}>
+                  Randevu Al
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.actionCard}
+                onPress={() => navigation.navigate('Messages')}
+              >
+                <Icon
+                  name="chatbubbles-outline"
+                  size={32}
+                  color="#01213D"
+                  style={styles.actionIcon}
+                />
+                <Text weight="semibold" style={styles.actionText}>
+                  Uzman Desteği
+                </Text>
+              </TouchableOpacity>
             </View>
           </View>
-          <View style={styles.tipCard}>
-            <Icon name="water-outline" size={32} color="#01213D" style={styles.tipIcon} />
-            <View style={styles.tipContent}>
-              <Text weight="semibold" style={styles.tipTitle}>
-                Yeterli Su Tüketimi
-              </Text>
-              <Text weight="regular" style={styles.tipDescription}>
-                Günde en az 2 litre su tüketerek saç sağlığınızı destekleyin
-              </Text>
-            </View>
-          </View>
-        </View>
 
-        {/* Quick Actions */}
-        <View style={styles.section}>
-          <Text weight="bold" style={styles.sectionTitle}>Hızlı İşlemler</Text>
-          <View style={styles.quickActions}>
-            <TouchableOpacity 
-              style={styles.actionCard}
-              onPress={() => navigation.navigate('AppointmentCreate')}
-            >
-              <Icon name="calendar-outline" size={32} color="#01213D" style={styles.actionIcon} />
-              <Text weight="semibold" style={styles.actionText}>Randevu Al</Text>
-            </TouchableOpacity>
-            <TouchableOpacity 
-              style={styles.actionCard}
-              onPress={() => navigation.navigate('Messages')}
-            >
-              <Icon name="chatbubbles-outline" size={32} color="#01213D" style={styles.actionIcon} />
-              <Text weight="semibold" style={styles.actionText}>Uzman Desteği</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-
-        <View style={{ height: 40 }} />
-      </ScrollView>}
+          <View style={{ height: 40 }} />
+        </ScrollView>
+      )}
     </SafeAreaView>
   );
 };
@@ -831,4 +973,3 @@ const styles = StyleSheet.create({
 });
 
 export default HomeScreen;
-

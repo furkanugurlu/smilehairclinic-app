@@ -85,14 +85,16 @@ const MainTabs: React.FC = () => {
             tabBarLabel: '',
             tabBarIcon: ({ focused }) => (
               <View style={styles.fabContainer}>
-                <View style={[
-                  styles.fab,
-                  focused ? styles.fabActive : styles.fabInactive
-                ]}>
-                  <Icon 
-                    name={focused ? "flask" : "flask-outline"} 
-                    size={focused ? 32 : 28} 
-                    color="#FFFFFF" 
+                <View
+                  style={[
+                    styles.fab,
+                    focused ? styles.fabActive : styles.fabInactive,
+                  ]}
+                >
+                  <Icon
+                    name={focused ? 'flask' : 'flask-outline'}
+                    size={focused ? 32 : 28}
+                    color="#FFFFFF"
                   />
                 </View>
               </View>
@@ -107,14 +109,16 @@ const MainTabs: React.FC = () => {
             tabBarLabel: '',
             tabBarIcon: ({ focused }) => (
               <View style={styles.fabContainer}>
-                <View style={[
-                  styles.fab,
-                  focused ? styles.fabActive : styles.fabInactive
-                ]}>
-                  <Icon 
-                    name={focused ? "camera" : "camera-outline"} 
-                    size={focused ? 32 : 28} 
-                    color="#FFFFFF" 
+                <View
+                  style={[
+                    styles.fab,
+                    focused ? styles.fabActive : styles.fabInactive,
+                  ]}
+                >
+                  <Icon
+                    name={focused ? 'camera' : 'camera-outline'}
+                    size={focused ? 32 : 28}
+                    color="#FFFFFF"
                   />
                 </View>
               </View>

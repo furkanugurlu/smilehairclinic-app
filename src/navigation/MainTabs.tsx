@@ -37,11 +37,11 @@ const MainTabs: React.FC = () => {
           borderTopColor: '#E5E7EB',
           height: 60 + insets.bottom,
           paddingBottom: insets.bottom,
-          paddingTop: 8,
         },
         tabBarActiveTintColor: '#01213D',
         tabBarInactiveTintColor: '#9CA3AF',
         tabBarLabelStyle: styles.tabBarLabel,
+        tabBarIconStyle: styles.tabBarIcon,
       }}
     >
       {/* Tab 1: Ana Sayfa / Dashboard */}
@@ -163,6 +163,9 @@ const styles = StyleSheet.create({
     fontSize: 11,
     fontWeight: '600',
     marginBottom: 4,
+  },
+  tabBarIcon: {
+    marginTop: 4,
   },
   fabContainer: {
     position: 'absolute',

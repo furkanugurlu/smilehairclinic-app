@@ -39,7 +39,7 @@ const MainTabs: React.FC = () => {
           paddingBottom: insets.bottom,
         },
         tabBarActiveTintColor: '#01213D',
-        tabBarInactiveTintColor: '#9CA3AF',
+        tabBarInactiveTintColor: '#6B7280',
         tabBarLabelStyle: styles.tabBarLabel,
         tabBarIconStyle: styles.tabBarIcon,
       }}

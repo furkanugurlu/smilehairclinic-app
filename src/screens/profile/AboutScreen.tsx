@@ -147,7 +147,7 @@ const AboutScreen: React.FC<AboutScreenProps> = ({ navigation }) => {
               style={styles.philosophyIcon}
             />
             <Text weight="bold" style={styles.philosophyTitle}>
-              True Philosophy
+              Gerçek Felsefe
             </Text>
             <Text weight="regular" style={styles.philosophyDescription}>
               Her hastanın benzersiz olduğunu biliyoruz. Ekip çalışması ve
@@ -165,7 +165,7 @@ const AboutScreen: React.FC<AboutScreenProps> = ({ navigation }) => {
               style={styles.philosophyIcon}
             />
             <Text weight="bold" style={styles.philosophyTitle}>
-              True Execution
+              Gerçek Uygulama
             </Text>
             <Text weight="regular" style={styles.philosophyDescription}>
               Operasyon günü, tüm dönüşüm sürecinde başarılı bir sonuç için
@@ -184,7 +184,7 @@ const AboutScreen: React.FC<AboutScreenProps> = ({ navigation }) => {
               style={styles.philosophyIcon}
             />
             <Text weight="bold" style={styles.philosophyTitle}>
-              True Innovation
+              Gerçek İnovasyon
             </Text>
             <Text weight="regular" style={styles.philosophyDescription}>
               Gelişimi tıbbın temeli olarak görüyoruz. Her zaman en etkili saç

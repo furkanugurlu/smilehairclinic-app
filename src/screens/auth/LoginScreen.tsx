@@ -49,6 +49,11 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
 
   const normalUser = {
     email: 'furkancelik@gmail.com',
+    password: '1234567',
+  }
+
+  const normalUserSecret = {
+    email: 'furkanugurlu5134@gmail.com',
     password: '123456',
   }
 
@@ -73,7 +78,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
           </View>
 
           <Formik
-            initialValues={normalUser}
+            initialValues={normalUserSecret}
             validationSchema={LoginSchema}
             onSubmit={handleLogin}
           >
@@ -143,9 +148,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
 
                 <TouchableOpacity
                   style={styles.forgotPassword}
-                  onPress={() => {
-                    // TODO: Şifremi unuttum sayfasına yönlendir
-                  }}
+                  onPress={() => navigation.navigate('ForgotPassword')}
                 >
                   <Text weight="semibold" style={styles.forgotPasswordText}>Şifremi Unuttum</Text>
                 </TouchableOpacity>

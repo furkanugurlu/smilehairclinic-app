@@ -12,14 +12,14 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
-import { Text } from '../../components';
-import { useAuthStore } from '../../store/authStore';
-import { supabase } from '../../config/supabase';
+import { Text } from '../../../components';
+import { useAuthStore } from '../../../store/authStore';
+import { supabase } from '../../../config/supabase';
 import {
   pickImageFromGallery,
   uploadAvatarToSupabase,
   deleteAvatarFromSupabase,
-} from '../../utils/imageUpload';
+} from '../../../utils/imageUpload';
 
 interface ProfileEditScreenProps {
   navigation: any;

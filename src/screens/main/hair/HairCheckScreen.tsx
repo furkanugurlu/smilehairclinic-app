@@ -2,7 +2,7 @@ import React from 'react';
 import { View, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { Text } from '../../components';
+import { Text } from '../../../components';
 
 interface PhotoStep {
   id: string;
@@ -11,11 +11,11 @@ interface PhotoStep {
   iconColor: string;
 }
 
-interface HairCheckStartScreenProps {
+interface HairCheckScreenProps {
   navigation: any;
 }
 
-const HairCheckStartScreen: React.FC<HairCheckStartScreenProps> = ({
+const HairCheckScreen: React.FC<HairCheckScreenProps> = ({
   navigation,
 }) => {
   const photoSteps: PhotoStep[] = [
@@ -67,7 +67,7 @@ const HairCheckStartScreen: React.FC<HairCheckStartScreenProps> = ({
         <View style={styles.header}>
           <View style={styles.logoContainer}>
             <Image
-              source={require('../../assets/images/app-icon-wb.jpeg')}
+              source={require('../../../assets/images/app-icon-wb.jpeg')}
               style={styles.logo}
               resizeMode="contain"
             />
@@ -256,4 +256,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default HairCheckStartScreen;
+export default HairCheckScreen;

@@ -67,6 +67,16 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
           contentContainerStyle={styles.scrollContent}
           showsVerticalScrollIndicator={false}
         >
+          {/* Header with Back Button */}
+          <View style={styles.topBar}>
+            <TouchableOpacity
+              onPress={() => navigation.goBack()}
+              style={styles.backButton}
+            >
+              <Icon name="arrow-back" size={24} color="#01213D" />
+            </TouchableOpacity>
+          </View>
+
           <View style={styles.header}>
             <Image
               source={require('../../assets/images/app-icon-wb.jpeg')}
@@ -79,9 +89,9 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
 
           <Formik
             initialValues={{
-              fullName: 'Furkan Çelik',
-              phone: '5321234567',
-              email: 'furkancelik@gmail.com',
+              fullName:'Temel Ülgen',
+              phone: '5412345678',
+              email: 'temel1231@gmail.com',
               password: '123456',
               confirmPassword: '123456',
             }}
@@ -243,12 +253,15 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
                   )}
                 </TouchableOpacity>
 
-                <View style={styles.footer}>
-                  <Text weight="regular" style={styles.footerText}>Zaten hesabınız var mı? </Text>
-                  <TouchableOpacity onPress={() => navigation.navigate('Login')}>
-                    <Text weight="semibold" style={styles.footerLink}>Giriş Yap</Text>
-                  </TouchableOpacity>
-                </View>
+                <TouchableOpacity
+                  style={styles.backToLoginButton}
+                  onPress={() => navigation.navigate('Login')}
+                >
+                  <Icon name="arrow-back" size={18} color="#01213D" />
+                  <Text weight="semibold" style={styles.backToLoginText}>
+                    Giriş Ekranına Dön
+                  </Text>
+                </TouchableOpacity>
               </View>
             )}
           </Formik>
@@ -270,9 +283,19 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     paddingHorizontal: 24,
   },
+  topBar: {
+    paddingTop: 8,
+    paddingBottom: 16,
+  },
+  backButton: {
+    width: 40,
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'flex-start',
+  },
   header: {
     alignItems: 'center',
-    marginTop: 40,
+    marginTop: 20,
     marginBottom: 40,
   },
   logo: {
@@ -351,20 +374,18 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontSize: 16,
   },
-  footer: {
+  backToLoginButton: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: 24,
     marginBottom: 24,
+    paddingVertical: 12,
   },
-  footerText: {
-    fontSize: 14,
-    color: '#666',
-  },
-  footerLink: {
+  backToLoginText: {
     fontSize: 14,
     color: '#01213D',
+    marginLeft: 8,
   },
 });
 

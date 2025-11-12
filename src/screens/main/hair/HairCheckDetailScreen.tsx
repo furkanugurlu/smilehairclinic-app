@@ -10,8 +10,8 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { Text } from '../../components';
-import { HairCheck, AnalysisStatus } from '../../types';
+import { Text } from '../../../components';
+import { HairCheck, AnalysisStatus } from '../../../types';
 
 const { width } = Dimensions.get('window');
 

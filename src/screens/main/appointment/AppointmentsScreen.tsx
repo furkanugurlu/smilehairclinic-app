@@ -11,10 +11,10 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useFocusEffect } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { Text, LoadingModal } from '../../components';
-import { supabase } from '../../config/supabase';
-import { useAuthStore } from '../../store/authStore';
-import { Appointment, AppointmentStatus } from '../../types';
+import { Text, LoadingModal } from '../../../components';
+import { supabase } from '../../../config/supabase';
+import { useAuthStore } from '../../../store/authStore';
+import { Appointment, AppointmentStatus } from '../../../types';
 
 interface AppointmentsScreenProps {
   navigation: any;

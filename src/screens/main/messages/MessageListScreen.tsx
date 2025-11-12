@@ -11,10 +11,10 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useFocusEffect } from '@react-navigation/native';
-import { Text, LoadingModal } from '../../components';
-import { supabase } from '../../config/supabase';
-import { useAuthStore } from '../../store/authStore';
-import { ChatUser } from '../../types';
+import { Text, LoadingModal } from '../../../components';
+import { supabase } from '../../../config/supabase';
+import { useAuthStore } from '../../../store/authStore';
+import { ChatUser } from '../../../types';
 
 interface MessageListScreenProps {
   navigation: any;

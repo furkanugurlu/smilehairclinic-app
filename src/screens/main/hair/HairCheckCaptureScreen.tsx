@@ -10,15 +10,15 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { Text, LoadingModal } from '../../components';
-import { PhotoStep, HairCheckPhotos } from '../../types';
+import { Text, LoadingModal } from '../../../components';
+import { PhotoStep, HairCheckPhotos } from '../../../types';
 import {
   pickImageFromGallery,
   uploadMultipleHairCheckPhotos,
   ImagePickerResult,
-} from '../../utils/imageUpload';
-import { useAuthStore } from '../../store/authStore';
-import { supabase } from '../../config/supabase';
+} from '../../../utils/imageUpload';
+import { useAuthStore } from '../../../store/authStore';
+import { supabase } from '../../../config/supabase';
 
 interface HairCheckCaptureScreenProps {
   navigation: any;

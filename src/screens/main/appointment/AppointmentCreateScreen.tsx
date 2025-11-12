@@ -11,10 +11,10 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Ionicons';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { Text, LoadingModal, BottomSheet } from '../../components';
-import { supabase } from '../../config/supabase';
-import { useAuthStore } from '../../store/authStore';
-import { ServiceType, ServiceOption } from '../../types';
+import { Text, LoadingModal, BottomSheet } from '../../../components';
+import { supabase } from '../../../config/supabase';
+import { useAuthStore } from '../../../store/authStore';
+import { ServiceType, ServiceOption } from '../../../types';
 
 interface AppointmentCreateScreenProps {
   navigation: any;

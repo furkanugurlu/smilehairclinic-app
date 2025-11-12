@@ -5,19 +5,16 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useAuthStore } from '../store/authStore';
 
-// Admin Screens
-import AdminDashboardScreen from '../screens/admin/AdminDashboardScreen';
-import AdminAppointmentsScreen from '../screens/admin/AdminAppointmentsScreen';
-import AdminHairChecksScreen from '../screens/admin/AdminHairChecksScreen';
-
-// User Screens
-import HomeScreen from '../screens/main/HomeScreen';
-import HairCheckStartScreen from '../screens/haircheck/HairCheckStartScreen';
-import AppointmentsScreen from '../screens/main/AppointmentsScreen';
-import ProfileScreen from '../screens/main/ProfileScreen';
-
-// Shared Screens
-import MessageListScreen from '../screens/messages/MessageListScreen';
+import {
+  HomeScreen,
+  AppointmentsScreen,
+  MessageListScreen,
+  HairCheckScreen,
+  // admin screens
+  AdminDashboardScreen,
+  AdminAppointmentsScreen,
+  AdminHairChecksScreen,
+} from '../screens/main';
 import ProfileStack from './ProfileStack';
 
 const Tab = createBottomTabNavigator();
@@ -104,7 +101,7 @@ const MainTabs: React.FC = () => {
       ) : (
         <Tab.Screen
           name="HairCheck"
-          component={HairCheckStartScreen}
+          component={HairCheckScreen}
           options={{
             tabBarLabel: '',
             tabBarIcon: ({ focused }) => (

@@ -16,10 +16,10 @@ import {
   useSafeAreaInsets,
 } from 'react-native-safe-area-context';
 import { useFocusEffect } from '@react-navigation/native';
-import { Text } from '../../components';
-import { supabase } from '../../config/supabase';
-import { useAuthStore } from '../../store/authStore';
-import { Message, ChatUser } from '../../types';
+import { Text } from '../../../components';
+import { supabase } from '../../../config/supabase';
+import { useAuthStore } from '../../../store/authStore';
+import { Message, ChatUser } from '../../../types';
 
 interface ChatScreenProps {
   navigation?: any;

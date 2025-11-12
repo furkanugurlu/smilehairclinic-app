@@ -9,8 +9,8 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { Text } from '../../components';
-import { useAuthStore } from '../../store/authStore';
+import { Text } from '../../../components';
+import { useAuthStore } from '../../../store/authStore';
 
 interface ProfileScreenProps {
   navigation: any;
@@ -75,7 +75,10 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
             </Text>
             <Icon name="chevron-forward" size={24} color="#D1D5DB" />
           </TouchableOpacity>
-          <TouchableOpacity style={styles.menuItem}>
+          <TouchableOpacity
+            style={styles.menuItem}
+            onPress={() => navigation.navigate('ChangePassword')}
+          >
             <Icon
               name="lock-closed-outline"
               size={24}
@@ -93,7 +96,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
           <Text weight="semibold" style={styles.sectionTitle}>
             Ayarlar
           </Text>
-          <TouchableOpacity style={styles.menuItem}>
+          {/* <TouchableOpacity style={styles.menuItem}>
             <Icon
               name="notifications-outline"
               size={24}
@@ -104,7 +107,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
               Bildirimler
             </Text>
             <Icon name="chevron-forward" size={24} color="#D1D5DB" />
-          </TouchableOpacity>
+          </TouchableOpacity> */}
           <TouchableOpacity
             style={styles.menuItem}
             onPress={() => navigation.navigate('Language')}

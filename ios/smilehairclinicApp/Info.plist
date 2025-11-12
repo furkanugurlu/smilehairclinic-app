@@ -61,5 +61,14 @@
 	<array>
 		<string>Ionicons.ttf</string>
 	</array>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>smilehairclinic</string>
+			</array>
+		</dict>
+	</array>
 </dict>
 </plist>

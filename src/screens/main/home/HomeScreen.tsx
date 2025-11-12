@@ -12,10 +12,10 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useFocusEffect } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { useAuthStore } from '../../store/authStore';
-import { Text, LoadingModal } from '../../components';
-import { supabase } from '../../config/supabase';
-import { HairCheck, AnalysisStatus } from '../../types';
+import { useAuthStore } from '../../../store/authStore';
+import { Text, LoadingModal } from '../../../components';
+import { supabase } from '../../../config/supabase';
+import { HairCheck, AnalysisStatus } from '../../../types';
 
 const { width } = Dimensions.get('window');
 

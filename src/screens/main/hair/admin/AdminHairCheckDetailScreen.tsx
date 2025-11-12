@@ -12,25 +12,13 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Ionicons';
-import { Text, LoadingModal } from '../../components';
-import { HairCheck, AnalysisStatus } from '../../types';
-import { supabase } from '../../config/supabase';
+import { Text, LoadingModal } from '../../../../components';
+import { HairCheck, AnalysisStatus } from '../../../../types';
+import { supabase } from '../../../../config/supabase';
 
 const { width } = Dimensions.get('window');
 
-interface AdminHairCheckDetailScreenProps {
-  navigation: any;
-  route: {
-    params: {
-      check: HairCheck;
-    };
-  };
-}
-
-const AdminHairCheckDetailScreen: React.FC<AdminHairCheckDetailScreenProps> = ({
-  navigation,
-  route,
-}) => {
+const AdminHairCheckDetailScreen = ({ navigation, route }: any) => {
   const { check } = route.params;
   const [selectedPhoto, setSelectedPhoto] = useState<string | null>(null);
   const [analysisScore, setAnalysisScore] = useState(

@@ -207,7 +207,7 @@ const AppointmentCreateScreen: React.FC<AppointmentCreateScreenProps> = ({ navig
             >
               <View style={styles.serviceCardLeft}>
                 <View style={styles.serviceIconContainer}>
-                  <Icon name={service.icon} size={28} color={selectedService === service.id ? '#3B82F6' : '#666'} />
+                  <Icon name={service.icon} size={28} color={selectedService === service.id ? '#01213D' : '#666'} />
                 </View>
                 <View style={styles.serviceInfo}>
                   <Text 
@@ -233,7 +233,7 @@ const AppointmentCreateScreen: React.FC<AppointmentCreateScreenProps> = ({ navig
                       <Icon 
                         name="time-outline" 
                         size={14} 
-                        color={selectedService === service.id ? '#3B82F6' : '#666'} 
+                        color={selectedService === service.id ? '#01213D' : '#666'} 
                       />
                       <Text 
                         weight="regular" 
@@ -250,7 +250,7 @@ const AppointmentCreateScreen: React.FC<AppointmentCreateScreenProps> = ({ navig
                         <Icon 
                           name="cash-outline" 
                           size={14} 
-                          color={selectedService === service.id ? '#3B82F6' : '#666'} 
+                          color={selectedService === service.id ? '#01213D' : '#666'} 
                         />
                         <Text 
                           weight="regular" 
@@ -284,7 +284,7 @@ const AppointmentCreateScreen: React.FC<AppointmentCreateScreenProps> = ({ navig
               style={styles.dateTimeCard}
               onPress={() => setShowDatePicker(true)}
             >
-              <Icon name="calendar" size={28} color="#3B82F6" style={styles.dateTimeIcon} />
+              <Icon name="calendar" size={28} color="#01213D" style={styles.dateTimeIcon} />
               <View style={styles.dateTimeInfo}>
                 <Text weight="regular" style={styles.dateTimeLabel}>Tarih</Text>
                 <Text weight="semibold" style={styles.dateTimeValue}>
@@ -297,7 +297,7 @@ const AppointmentCreateScreen: React.FC<AppointmentCreateScreenProps> = ({ navig
               style={styles.dateTimeCard}
               onPress={() => setShowTimePicker(true)}
             >
-              <Icon name="time" size={28} color="#3B82F6" style={styles.dateTimeIcon} />
+              <Icon name="time" size={28} color="#01213D" style={styles.dateTimeIcon} />
               <View style={styles.dateTimeInfo}>
                 <Text weight="regular" style={styles.dateTimeLabel}>Saat</Text>
                 <Text weight="semibold" style={styles.dateTimeValue}>
@@ -458,7 +458,7 @@ const styles = StyleSheet.create({
     borderColor: '#E5E7EB',
   },
   serviceCardSelected: {
-    borderColor: '#3B82F6',
+    borderColor: '#01213D',
     backgroundColor: '#EFF6FF',
   },
   serviceCardLeft: {
@@ -502,13 +502,13 @@ const styles = StyleSheet.create({
     color: '#666',
   },
   serviceTextSelected: {
-    color: '#3B82F6',
+    color: '#01213D',
   },
   checkmark: {
     width: 28,
     height: 28,
     borderRadius: 14,
-    backgroundColor: '#3B82F6',
+    backgroundColor: '#01213D',
     justifyContent: 'center',
     alignItems: 'center',
     marginLeft: 12,
@@ -579,13 +579,13 @@ const styles = StyleSheet.create({
     lineHeight: 18,
   },
   createButton: {
-    backgroundColor: '#3B82F6',
+    backgroundColor: '#01213D',
     marginHorizontal: 24,
     marginTop: 24,
     paddingVertical: 16,
     borderRadius: 12,
     alignItems: 'center',
-    shadowColor: '#3B82F6',
+    shadowColor: '#01213D',
     shadowOffset: {
       width: 0,
       height: 4,

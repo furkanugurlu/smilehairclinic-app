@@ -105,9 +105,9 @@ const styles = StyleSheet.create({
     elevation: 1,
   },
   filterTabActive: {
-    backgroundColor: '#3B82F6',
-    borderColor: '#3B82F6',
-    shadowColor: '#3B82F6',
+    backgroundColor: '#01213D',
+    borderColor: '#01213D',
+    shadowColor: '#01213D',
     shadowOffset: {
       width: 0,
       height: 2,

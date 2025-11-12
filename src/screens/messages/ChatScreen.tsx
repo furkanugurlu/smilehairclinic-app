@@ -298,7 +298,7 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ navigation, route }) => {
       >
         {loading ? (
           <View style={styles.loadingContainer}>
-            <ActivityIndicator size="large" color="#3B82F6" />
+            <ActivityIndicator size="large" color="#01213D" />
           </View>
         ) : (
           <ScrollView
@@ -428,7 +428,7 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: '#3B82F6',
+    backgroundColor: '#01213D',
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 12,
@@ -502,7 +502,7 @@ const styles = StyleSheet.create({
   },
   myMessage: {
     alignSelf: 'flex-end',
-    backgroundColor: '#3B82F6',
+    backgroundColor: '#01213D',
     borderBottomRightRadius: 4,
   },
   senderName: {
@@ -551,7 +551,7 @@ const styles = StyleSheet.create({
     width: 44,
     height: 44,
     borderRadius: 22,
-    backgroundColor: '#3B82F6',
+    backgroundColor: '#01213D',
     justifyContent: 'center',
     alignItems: 'center',
   },

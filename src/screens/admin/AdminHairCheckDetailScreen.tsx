@@ -37,7 +37,7 @@ const AdminHairCheckDetailScreen: React.FC<AdminHairCheckDetailScreenProps> = ({
   const [loading, setLoading] = useState(false);
 
   const photos = [
-    { id: 'front', label: 'Ön Görünüm', icon: 'happy-outline', iconColor: '#3B82F6', url: check.photo_front },
+    { id: 'front', label: 'Ön Görünüm', icon: 'happy-outline', iconColor: '#01213D', url: check.photo_front },
     { id: 'right45', label: 'Sağ 45°', icon: 'arrow-redo-outline', iconColor: '#10B981', url: check.photo_right45 },
     { id: 'left45', label: 'Sol 45°', icon: 'arrow-undo-outline', iconColor: '#10B981', url: check.photo_left45 },
     { id: 'top', label: 'Üst Görünüm', icon: 'arrow-up-outline', iconColor: '#F59E0B', url: check.photo_top },
@@ -126,7 +126,7 @@ const AdminHairCheckDetailScreen: React.FC<AdminHairCheckDetailScreenProps> = ({
         {/* Hasta Bilgileri */}
         <View style={styles.section}>
           <View style={styles.patientCard}>
-            <Icon name="person-circle" size={48} color="#3B82F6" style={styles.patientIcon} />
+            <Icon name="person-circle" size={48} color="#01213D" style={styles.patientIcon} />
             <View style={styles.patientInfo}>
               <Text weight="semibold" style={styles.patientName}>
                 {check.profiles?.full_name || 'İsimsiz Kullanıcı'}

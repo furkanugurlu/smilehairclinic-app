@@ -20,7 +20,7 @@ const HairCheckDetailScreen = ({ navigation, route }: any) => {
   const [selectedPhoto, setSelectedPhoto] = useState<string | null>(null);
 
   const photos = [
-    { id: 'front', label: 'Ön Görünüm', icon: 'happy-outline', iconColor: '#3B82F6', url: check.photo_front },
+    { id: 'front', label: 'Ön Görünüm', icon: 'happy-outline', iconColor: '#01213D', url: check.photo_front },
     { id: 'right45', label: 'Sağ 45°', icon: 'arrow-redo-outline', iconColor: '#10B981', url: check.photo_right45 },
     { id: 'left45', label: 'Sol 45°', icon: 'arrow-undo-outline', iconColor: '#10B981', url: check.photo_left45 },
     { id: 'top', label: 'Üst Görünüm', icon: 'arrow-up-outline', iconColor: '#F59E0B', url: check.photo_top },
@@ -84,7 +84,7 @@ const HairCheckDetailScreen = ({ navigation, route }: any) => {
 
   const getStatusIconColor = () => {
     if (check.status === 'pending') return '#F59E0B';
-    if (check.status === 'analyzing') return '#3B82F6';
+    if (check.status === 'analyzing') return '#01213D';
     if (check.status === 'completed') {
       return getStatusColor(check.analysis_status);
     }
@@ -122,7 +122,7 @@ const HairCheckDetailScreen = ({ navigation, route }: any) => {
         <View style={styles.section}>
           <View style={styles.dateCard}>
             <View style={styles.dateLeft}>
-              <Icon name="calendar" size={32} color="#3B82F6" style={styles.dateIcon} />
+              <Icon name="calendar" size={32} color="#01213D" style={styles.dateIcon} />
               <View>
                 <Text weight="regular" style={styles.dateLabel}>
                   Kontrol Tarihi
@@ -232,7 +232,7 @@ const HairCheckDetailScreen = ({ navigation, route }: any) => {
           <View style={styles.section}>
             <Text weight="bold" style={styles.sectionTitle}>Genel Öneriler</Text>
             <View style={styles.tipCard}>
-              <Icon name="water" size={32} color="#3B82F6" style={styles.tipIcon} />
+              <Icon name="water" size={32} color="#01213D" style={styles.tipIcon} />
               <View style={styles.tipContent}>
                 <Text weight="semibold" style={styles.tipTitle}>
                   Yeterli Su Tüketimi
@@ -409,7 +409,7 @@ const styles = StyleSheet.create({
   },
   scoreNumber: {
     fontSize: 36,
-    color: '#3B82F6',
+    color: '#01213D',
   },
   scoreLabel: {
     fontSize: 14,

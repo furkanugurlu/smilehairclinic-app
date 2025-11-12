@@ -60,12 +60,12 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
             style={styles.menuItem}
             onPress={() => navigation.navigate('ProfileEdit')}
           >
-            <Icon name="person-outline" size={24} color="#3B82F6" style={styles.menuIcon} />
+            <Icon name="person-outline" size={24} color="#01213D" style={styles.menuIcon} />
             <Text weight="regular" style={styles.menuText}>Profil Bilgileri</Text>
             <Icon name="chevron-forward" size={24} color="#D1D5DB" />
           </TouchableOpacity>
           <TouchableOpacity style={styles.menuItem}>
-            <Icon name="lock-closed-outline" size={24} color="#3B82F6" style={styles.menuIcon} />
+            <Icon name="lock-closed-outline" size={24} color="#01213D" style={styles.menuIcon} />
             <Text weight="regular" style={styles.menuText}>Şifre Değiştir</Text>
             <Icon name="chevron-forward" size={24} color="#D1D5DB" />
           </TouchableOpacity>
@@ -74,12 +74,12 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
         <View style={styles.section}>
           <Text weight="semibold" style={styles.sectionTitle}>Ayarlar</Text>
           <TouchableOpacity style={styles.menuItem}>
-            <Icon name="notifications-outline" size={24} color="#3B82F6" style={styles.menuIcon} />
+            <Icon name="notifications-outline" size={24} color="#01213D" style={styles.menuIcon} />
             <Text weight="regular" style={styles.menuText}>Bildirimler</Text>
             <Icon name="chevron-forward" size={24} color="#D1D5DB" />
           </TouchableOpacity>
           <TouchableOpacity style={styles.menuItem}>
-            <Icon name="language-outline" size={24} color="#3B82F6" style={styles.menuIcon} />
+            <Icon name="language-outline" size={24} color="#01213D" style={styles.menuIcon} />
             <Text weight="regular" style={styles.menuText}>Dil</Text>
             <Icon name="chevron-forward" size={24} color="#D1D5DB" />
           </TouchableOpacity>
@@ -91,7 +91,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
             style={styles.menuItem}
             onPress={() => navigation.navigate('HelpCenter')}
           >
-            <Icon name="help-circle-outline" size={24} color="#3B82F6" style={styles.menuIcon} />
+            <Icon name="help-circle-outline" size={24} color="#01213D" style={styles.menuIcon} />
             <Text weight="regular" style={styles.menuText}>Yardım Merkezi</Text>
             <Icon name="chevron-forward" size={24} color="#D1D5DB" />
           </TouchableOpacity>
@@ -99,7 +99,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
             style={styles.menuItem}
             onPress={() => navigation.navigate('Contact')}
           >
-            <Icon name="mail-outline" size={24} color="#3B82F6" style={styles.menuIcon} />
+            <Icon name="mail-outline" size={24} color="#01213D" style={styles.menuIcon} />
             <Text weight="regular" style={styles.menuText}>İletişim</Text>
             <Icon name="chevron-forward" size={24} color="#D1D5DB" />
           </TouchableOpacity>
@@ -107,7 +107,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
             style={styles.menuItem}
             onPress={() => navigation.navigate('About')}
           >
-            <Icon name="information-circle-outline" size={24} color="#3B82F6" style={styles.menuIcon} />
+            <Icon name="information-circle-outline" size={24} color="#01213D" style={styles.menuIcon} />
             <Text weight="regular" style={styles.menuText}>Hakkında</Text>
             <Icon name="chevron-forward" size={24} color="#D1D5DB" />
           </TouchableOpacity>
@@ -139,7 +139,7 @@ const styles = StyleSheet.create({
     width: 80,
     height: 80,
     borderRadius: 40,
-    backgroundColor: '#3B82F6',
+    backgroundColor: '#01213D',
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 16,

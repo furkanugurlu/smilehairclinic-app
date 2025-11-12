@@ -319,7 +319,7 @@ const styles = StyleSheet.create({
   },
   progressFill: {
     height: '100%',
-    backgroundColor: '#3B82F6',
+    backgroundColor: '#01213D',
     borderRadius: 4,
   },
   progressText: {
@@ -403,7 +403,7 @@ const styles = StyleSheet.create({
   },
   photoButtonFilled: {
     borderStyle: 'solid',
-    borderColor: '#3B82F6',
+    borderColor: '#01213D',
     backgroundColor: '#FFFFFF',
   },
   photoPreview: {
@@ -426,11 +426,11 @@ const styles = StyleSheet.create({
     borderTopColor: '#E5E7EB',
   },
   submitButton: {
-    backgroundColor: '#3B82F6',
+    backgroundColor: '#01213D',
     paddingVertical: 16,
     borderRadius: 12,
     alignItems: 'center',
-    shadowColor: '#3B82F6',
+    shadowColor: '#01213D',
     shadowOffset: {
       width: 0,
       height: 4,

@@ -81,7 +81,7 @@ const AdminHairChecksScreen: React.FC<AdminHairChecksScreenProps> = ({ navigatio
       case 'pending':
         return '#F59E0B';
       case 'analyzing':
-        return '#3B82F6';
+        return '#01213D';
       case 'failed':
         return '#EF4444';
       default:
@@ -136,7 +136,7 @@ const AdminHairChecksScreen: React.FC<AdminHairChecksScreenProps> = ({ navigatio
       id: 'analyzing',
       label: 'Analiz Ediliyor',
       icon: 'analytics',
-      color: '#3B82F6',
+      color: '#01213D',
       count: hairChecks.filter(h => h.status === 'analyzing').length,
     },
     {
@@ -417,11 +417,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 2,
-    borderColor: '#3B82F6',
+    borderColor: '#01213D',
   },
   scoreNumber: {
     fontSize: 18,
-    color: '#3B82F6',
+    color: '#01213D',
   },
   scoreLabel: {
     fontSize: 10,

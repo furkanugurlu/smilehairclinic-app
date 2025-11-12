@@ -22,7 +22,7 @@ interface HairCheckStartScreenProps {
 
 const HairCheckStartScreen: React.FC<HairCheckStartScreenProps> = ({ navigation }) => {
   const photoSteps: PhotoStep[] = [
-    { id: 'front', label: 'Ön Görünüm', icon: 'happy-outline', iconColor: '#3B82F6' },
+    { id: 'front', label: 'Ön Görünüm', icon: 'happy-outline', iconColor: '#01213D' },
     { id: 'right45', label: 'Sağ 45°', icon: 'arrow-redo-outline', iconColor: '#10B981' },
     { id: 'left45', label: 'Sol 45°', icon: 'arrow-undo-outline', iconColor: '#10B981' },
     { id: 'top', label: 'Üst Görünüm', icon: 'arrow-up-outline', iconColor: '#F59E0B' },

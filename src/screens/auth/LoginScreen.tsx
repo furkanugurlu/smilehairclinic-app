@@ -251,15 +251,15 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   forgotPasswordText: {
-    color: '#3B82F6',
+    color: '#01213D',
     fontSize: 14,
   },
   button: {
-    backgroundColor: '#3B82F6',
+    backgroundColor: '#01213D',
     paddingVertical: 16,
     borderRadius: 12,
     alignItems: 'center',
-    shadowColor: '#3B82F6',
+    shadowColor: '#01213D',
     shadowOffset: {
       width: 0,
       height: 4,
@@ -288,7 +288,7 @@ const styles = StyleSheet.create({
   },
   footerLink: {
     fontSize: 14,
-    color: '#3B82F6',
+    color: '#01213D',
   },
 });
 

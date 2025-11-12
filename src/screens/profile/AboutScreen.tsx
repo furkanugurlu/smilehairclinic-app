@@ -107,7 +107,7 @@ const AboutScreen: React.FC<AboutScreenProps> = ({ navigation }) => {
           <Text weight="semibold" style={styles.sectionTitle}>FELSEFEMİZ</Text>
           
           <View style={styles.philosophyCard}>
-            <Icon name="target-outline" size={32} color="#3B82F6" style={styles.philosophyIcon} />
+            <Icon name="target-outline" size={32} color="#01213D" style={styles.philosophyIcon} />
             <Text weight="bold" style={styles.philosophyTitle}>True Philosophy</Text>
             <Text weight="regular" style={styles.philosophyDescription}>
               Her hastanın benzersiz olduğunu biliyoruz. Ekip çalışması ve detaylı planlama ile kişiye özel çözümler sunuyoruz. Saç çizgisi tasarımımız doğal görünüm ve estetik mükemmellik için her zaman açıları dikkate alır.
@@ -115,7 +115,7 @@ const AboutScreen: React.FC<AboutScreenProps> = ({ navigation }) => {
           </View>
 
           <View style={styles.philosophyCard}>
-            <Icon name="flash-outline" size={32} color="#3B82F6" style={styles.philosophyIcon} />
+            <Icon name="flash-outline" size={32} color="#01213D" style={styles.philosophyIcon} />
             <Text weight="bold" style={styles.philosophyTitle}>True Execution</Text>
             <Text weight="regular" style={styles.philosophyDescription}>
               Operasyon günü, tüm dönüşüm sürecinde başarılı bir sonuç için kilit kilometre taşıdır. Yüksek seviyeli önlemlerimiz sayesinde hiçbir şeyin ters gitmesine izin vermeyiz. Başarılı operasyonlar ve sonuçlar elde etmek için tüm çabamızı ve kaynaklarımızı kullanırız.
@@ -123,7 +123,7 @@ const AboutScreen: React.FC<AboutScreenProps> = ({ navigation }) => {
           </View>
 
           <View style={styles.philosophyCard}>
-            <Icon name="rocket-outline" size={32} color="#3B82F6" style={styles.philosophyIcon} />
+            <Icon name="rocket-outline" size={32} color="#01213D" style={styles.philosophyIcon} />
             <Text weight="bold" style={styles.philosophyTitle}>True Innovation</Text>
             <Text weight="regular" style={styles.philosophyDescription}>
               Gelişimi tıbbın temeli olarak görüyoruz. Her zaman en etkili saç ekimi operasyonlarını gerçekleştirmenin daha iyi yollarını arıyoruz. Safir Nakil tekniği, inovasyon tutkumuzun en parlak örneklerinden biridir.
@@ -190,7 +190,7 @@ const styles = StyleSheet.create({
     width: 80,
     height: 80,
     borderRadius: 40,
-    backgroundColor: '#3B82F6',
+    backgroundColor: '#01213D',
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 16,
@@ -260,7 +260,7 @@ const styles = StyleSheet.create({
     width: 56,
     height: 56,
     borderRadius: 28,
-    backgroundColor: '#3B82F6',
+    backgroundColor: '#01213D',
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 16,

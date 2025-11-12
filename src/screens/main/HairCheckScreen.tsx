@@ -201,7 +201,7 @@ const HairCheckScreen: React.FC<HairCheckScreenProps> = ({ navigation }) => {
                           style={styles.retakeButton}
                           onPress={() => handleRetake(index)}
                         >
-                          <Icon name="camera-outline" size={16} color="#3B82F6" />
+                          <Icon name="camera-outline" size={16} color="#01213D" />
                         </TouchableOpacity>
                       </>
                     ) : (
@@ -257,7 +257,7 @@ const HairCheckScreen: React.FC<HairCheckScreenProps> = ({ navigation }) => {
     return (
       <SafeAreaView style={styles.container}>
         <View style={styles.loadingContainer}>
-          <ActivityIndicator size="large" color="#3B82F6" />
+          <ActivityIndicator size="large" color="#01213D" />
           <Text weight="regular" style={styles.loadingText}>
             {!hasPermission ? 'Kamera izni bekleniyor...' : 'Kamera hazırlanıyor...'}
           </Text>
@@ -441,7 +441,7 @@ const styles = StyleSheet.create({
     borderRadius: 2,
   },
   progressBarSegmentActive: {
-    backgroundColor: '#3B82F6',
+    backgroundColor: '#01213D',
   },
   cameraPreview: {
     flex: 1,
@@ -487,12 +487,12 @@ const styles = StyleSheet.create({
     width: 80,
     height: 80,
     borderRadius: 40,
-    backgroundColor: '#3B82F6',
+    backgroundColor: '#01213D',
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 4,
     borderColor: '#FFFFFF',
-    shadowColor: '#3B82F6',
+    shadowColor: '#01213D',
     shadowOffset: {
       width: 0,
       height: 4,
@@ -526,7 +526,7 @@ const styles = StyleSheet.create({
   },
   nextButton: {
     flexDirection: 'row',
-    backgroundColor: '#3B82F6',
+    backgroundColor: '#01213D',
     paddingVertical: 14,
     paddingHorizontal: 32,
     borderRadius: 12,
@@ -543,7 +543,7 @@ const styles = StyleSheet.create({
     marginTop: 12,
   },
   retakeTextButtonText: {
-    color: '#3B82F6',
+    color: '#01213D',
     fontSize: 14,
   },
   // Review Screen Styles
@@ -589,7 +589,7 @@ const styles = StyleSheet.create({
     width: 32,
     height: 32,
     borderRadius: 16,
-    backgroundColor: '#3B82F6',
+    backgroundColor: '#01213D',
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 12,
@@ -630,7 +630,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 2,
-    borderColor: '#3B82F6',
+    borderColor: '#01213D',
   },
   captureButton: {
     width: 60,

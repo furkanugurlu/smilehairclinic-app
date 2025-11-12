@@ -175,7 +175,7 @@ const ProfileEditScreen: React.FC<ProfileEditScreenProps> = ({ navigation }) => 
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-          <Icon name="chevron-back" size={28} color="#3B82F6" />
+          <Icon name="chevron-back" size={28} color="#01213D" />
         </TouchableOpacity>
         <Text weight="bold" style={styles.title}>Profil Bilgileri</Text>
         <View style={styles.placeholder} />
@@ -352,7 +352,7 @@ const styles = StyleSheet.create({
     width: 120,
     height: 120,
     borderRadius: 60,
-    backgroundColor: '#3B82F6',
+    backgroundColor: '#01213D',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -376,10 +376,10 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: '#3B82F6',
+    borderColor: '#01213D',
   },
   changeAvatarText: {
-    color: '#3B82F6',
+    color: '#01213D',
     fontSize: 14,
   },
   form: {
@@ -431,7 +431,7 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
   button: {
-    backgroundColor: '#3B82F6',
+    backgroundColor: '#01213D',
     paddingVertical: 16,
     borderRadius: 12,
     alignItems: 'center',

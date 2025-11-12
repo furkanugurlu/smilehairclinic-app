@@ -60,7 +60,7 @@ const ContactScreen: React.FC<ContactScreenProps> = ({ navigation }) => {
 
           <TouchableOpacity style={styles.contactCard} onPress={handleCall}>
             <View style={styles.contactIconContainer}>
-              <Icon name="call-outline" size={24} color="#3B82F6" />
+              <Icon name="call-outline" size={24} color="#01213D" />
             </View>
             <View style={styles.contactInfo}>
               <Text weight="semibold" style={styles.contactLabel}>Telefon</Text>
@@ -73,7 +73,7 @@ const ContactScreen: React.FC<ContactScreenProps> = ({ navigation }) => {
 
           <TouchableOpacity style={styles.contactCard} onPress={handleEmail}>
             <View style={styles.contactIconContainer}>
-              <Icon name="mail-outline" size={24} color="#3B82F6" />
+              <Icon name="mail-outline" size={24} color="#01213D" />
             </View>
             <View style={styles.contactInfo}>
               <Text weight="semibold" style={styles.contactLabel}>E-Posta</Text>
@@ -99,7 +99,7 @@ const ContactScreen: React.FC<ContactScreenProps> = ({ navigation }) => {
 
           <TouchableOpacity style={styles.contactCard} onPress={handleAddress}>
             <View style={styles.contactIconContainer}>
-              <Icon name="location-outline" size={24} color="#3B82F6" />
+              <Icon name="location-outline" size={24} color="#01213D" />
             </View>
             <View style={styles.contactInfo}>
               <Text weight="semibold" style={styles.contactLabel}>Adres</Text>
@@ -183,7 +183,7 @@ const styles = StyleSheet.create({
     width: 80,
     height: 80,
     borderRadius: 40,
-    backgroundColor: '#3B82F6',
+    backgroundColor: '#01213D',
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 16,

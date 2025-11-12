@@ -135,7 +135,7 @@ const styles = StyleSheet.create({
   },
   confirmText: {
     fontSize: 16,
-    color: '#3B82F6',
+    color: '#01213D',
     minWidth: 60,
     textAlign: 'right',
   },

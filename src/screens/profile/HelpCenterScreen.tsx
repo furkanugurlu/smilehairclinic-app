@@ -93,7 +93,7 @@ const HelpCenterScreen: React.FC<HelpCenterScreenProps> = ({ navigation }) => {
 
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.heroSection}>
-          <Icon name="help-circle-outline" size={48} color="#3B82F6" style={styles.heroIcon} />
+          <Icon name="help-circle-outline" size={48} color="#01213D" style={styles.heroIcon} />
           <Text weight="bold" style={styles.heroTitle}>
             Sıkça Sorulan Sorular
           </Text>
@@ -249,7 +249,7 @@ const styles = StyleSheet.create({
     width: 24,
     height: 24,
     borderRadius: 12,
-    backgroundColor: '#3B82F6',
+    backgroundColor: '#01213D',
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 12,
@@ -279,11 +279,11 @@ const styles = StyleSheet.create({
     lineHeight: 22,
   },
   contactCard: {
-    backgroundColor: '#3B82F6',
+    backgroundColor: '#01213D',
     borderRadius: 16,
     padding: 24,
     alignItems: 'center',
-    shadowColor: '#3B82F6',
+    shadowColor: '#01213D',
     shadowOffset: {
       width: 0,
       height: 8,
@@ -318,7 +318,7 @@ const styles = StyleSheet.create({
   },
   contactButtonText: {
     fontSize: 16,
-    color: '#3B82F6',
+    color: '#01213D',
   },
 });
 

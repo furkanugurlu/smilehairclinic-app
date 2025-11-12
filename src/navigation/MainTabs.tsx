@@ -39,7 +39,7 @@ const MainTabs: React.FC = () => {
           paddingBottom: insets.bottom,
           paddingTop: 8,
         },
-        tabBarActiveTintColor: '#3B82F6',
+        tabBarActiveTintColor: '#01213D',
         tabBarInactiveTintColor: '#9CA3AF',
         tabBarLabelStyle: styles.tabBarLabel,
       }}
@@ -180,8 +180,8 @@ const styles = StyleSheet.create({
     borderColor: '#FFFFFF',
   },
   fabActive: {
-    backgroundColor: '#3B82F6',
-    shadowColor: '#3B82F6',
+    backgroundColor: '#01213D',
+    shadowColor: '#01213D',
     shadowOffset: {
       width: 0,
       height: 6,

@@ -250,13 +250,13 @@ const AdminAppointmentsScreen: React.FC<AdminAppointmentsScreenProps> = ({ navig
 
                 <View style={styles.appointmentInfo}>
                   <View style={styles.infoRow}>
-                    <Icon name="calendar-outline" size={16} color="#3B82F6" />
+                    <Icon name="calendar-outline" size={16} color="#01213D" />
                     <Text weight="medium" style={styles.infoLabel}>
                       {formatDate(appointment.appointment_date)}
                     </Text>
                   </View>
                   <View style={styles.infoRow}>
-                    <Icon name="time-outline" size={16} color="#3B82F6" />
+                    <Icon name="time-outline" size={16} color="#01213D" />
                     <Text weight="medium" style={styles.infoLabel}>
                       {formatTime(appointment.appointment_time)}
                     </Text>

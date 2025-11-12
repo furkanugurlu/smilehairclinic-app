@@ -27,7 +27,7 @@ const onboardingData: OnboardingItem[] = [
     title: 'Smile Hair Clinic\'e Hoş Geldiniz',
     description: 'Profesyonel saç ekimi ve tedavi hizmetleri ile yeni bir başlangıç yapın.',
     icon: 'cut',
-    iconColor: '#3B82F6',
+    iconColor: '#01213D',
   },
   {
     id: '2',
@@ -182,7 +182,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 4,
   },
   activeDot: {
-    backgroundColor: '#3B82F6',
+    backgroundColor: '#01213D',
     width: 24,
   },
   buttonContainer: {
@@ -190,11 +190,11 @@ const styles = StyleSheet.create({
     paddingBottom: 40,
   },
   button: {
-    backgroundColor: '#3B82F6',
+    backgroundColor: '#01213D',
     paddingVertical: 16,
     borderRadius: 12,
     alignItems: 'center',
-    shadowColor: '#3B82F6',
+    shadowColor: '#01213D',
     shadowOffset: {
       width: 0,
       height: 4,

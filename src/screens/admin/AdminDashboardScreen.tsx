@@ -155,7 +155,7 @@ const AdminDashboardScreen: React.FC<AdminDashboardScreenProps> = ({ navigation 
               onPress={() => navigation.navigate('AdminAppointments')}
             >
               <View style={[styles.statIconContainer, { backgroundColor: '#DBEAFE' }]}>
-                <Icon name="calendar-outline" size={24} color="#3B82F6" />
+                <Icon name="calendar-outline" size={24} color="#01213D" />
               </View>
               <Text weight="bold" style={styles.statNumber}>
                 {stats.pendingAppointments}
@@ -325,7 +325,7 @@ const AdminDashboardScreen: React.FC<AdminDashboardScreenProps> = ({ navigation 
               style={styles.actionButton}
               onPress={() => navigation.navigate('AdminAppointments')}
             >
-              <Icon name="calendar-outline" size={32} color="#3B82F6" style={styles.actionIcon} />
+              <Icon name="calendar-outline" size={32} color="#01213D" style={styles.actionIcon} />
               <Text weight="semibold" style={styles.actionText}>
                 Randevular
               </Text>
@@ -335,7 +335,7 @@ const AdminDashboardScreen: React.FC<AdminDashboardScreenProps> = ({ navigation 
               style={styles.actionButton}
               onPress={() => navigation.navigate('AdminHairChecks')}
             >
-              <Icon name="analytics-outline" size={32} color="#3B82F6" style={styles.actionIcon} />
+              <Icon name="analytics-outline" size={32} color="#01213D" style={styles.actionIcon} />
               <Text weight="semibold" style={styles.actionText}>
                 Kontroller
               </Text>
@@ -345,7 +345,7 @@ const AdminDashboardScreen: React.FC<AdminDashboardScreenProps> = ({ navigation 
               style={styles.actionButton}
               onPress={() => navigation.navigate('AdminMessages')}
             >
-              <Icon name="chatbubbles-outline" size={32} color="#3B82F6" style={styles.actionIcon} />
+              <Icon name="chatbubbles-outline" size={32} color="#01213D" style={styles.actionIcon} />
               <Text weight="semibold" style={styles.actionText}>
                 Mesajlar
               </Text>
@@ -402,7 +402,7 @@ const styles = StyleSheet.create({
   },
   seeAllText: {
     fontSize: 14,
-    color: '#3B82F6',
+    color: '#01213D',
   },
   statsGrid: {
     flexDirection: 'row',

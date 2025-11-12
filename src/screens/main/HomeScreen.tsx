@@ -210,7 +210,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation, route }) => {
               <Text weight="bold" style={styles.heroButtonText}>
                 Kontrol Başlat
               </Text>
-              <Icon name="arrow-forward" size={18} color="#3B82F6" />
+              <Icon name="arrow-forward" size={18} color="#01213D" />
             </TouchableOpacity>
           </View>
         </View>
@@ -294,7 +294,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation, route }) => {
                       )}
                       {check.status === 'analyzing' && (
                         <>
-                          <Icon name="analytics-outline" size={14} color="#3B82F6" style={styles.checkStatusIcon} />
+                          <Icon name="analytics-outline" size={14} color="#01213D" style={styles.checkStatusIcon} />
                           <Text weight="medium" style={styles.checkStatusText}>
                             Analiz Ediliyor
                           </Text>
@@ -365,7 +365,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation, route }) => {
             <Text weight="bold" style={styles.sectionTitle}>İstatistikler</Text>
             <View style={styles.statsGrid}>
               <View style={styles.statCard}>
-                <Icon name="bar-chart-outline" size={28} color="#3B82F6" style={styles.statIcon} />
+                <Icon name="bar-chart-outline" size={28} color="#01213D" style={styles.statIcon} />
                 <Text weight="bold" style={styles.statNumber}>{stats.totalChecks}</Text>
                 <Text weight="regular" style={styles.statLabel}>Toplam Kontrol</Text>
               </View>
@@ -388,14 +388,14 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation, route }) => {
                 <Text weight="regular" style={styles.statLabel}>İyileşme</Text>
               </View>
               <View style={styles.statCard}>
-                <Icon name="calendar-outline" size={28} color="#3B82F6" style={styles.statIcon} />
+                <Icon name="calendar-outline" size={28} color="#01213D" style={styles.statIcon} />
                 <Text weight="bold" style={styles.statNumber}>
                   {stats.lastCheckDate || '-'}
                 </Text>
                 <Text weight="regular" style={styles.statLabel}>Son Kontrol</Text>
               </View>
               <View style={styles.statCard}>
-                <Icon name="star-outline" size={28} color="#3B82F6" style={styles.statIcon} />
+                <Icon name="star-outline" size={28} color="#01213D" style={styles.statIcon} />
                 <Text weight="bold" style={styles.statNumber}>
                   {stats.averageScore || '-'}
                 </Text>
@@ -431,7 +431,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation, route }) => {
             </View>
           </View>
           <View style={styles.tipCard}>
-            <Icon name="water-outline" size={32} color="#3B82F6" style={styles.tipIcon} />
+            <Icon name="water-outline" size={32} color="#01213D" style={styles.tipIcon} />
             <View style={styles.tipContent}>
               <Text weight="semibold" style={styles.tipTitle}>
                 Yeterli Su Tüketimi
@@ -451,14 +451,14 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation, route }) => {
               style={styles.actionCard}
               onPress={() => navigation.navigate('AppointmentCreate')}
             >
-              <Icon name="calendar-outline" size={32} color="#3B82F6" style={styles.actionIcon} />
+              <Icon name="calendar-outline" size={32} color="#01213D" style={styles.actionIcon} />
               <Text weight="semibold" style={styles.actionText}>Randevu Al</Text>
             </TouchableOpacity>
             <TouchableOpacity 
               style={styles.actionCard}
               onPress={() => navigation.navigate('Messages')}
             >
-              <Icon name="chatbubbles-outline" size={32} color="#3B82F6" style={styles.actionIcon} />
+              <Icon name="chatbubbles-outline" size={32} color="#01213D" style={styles.actionIcon} />
               <Text weight="semibold" style={styles.actionText}>Uzman Desteği</Text>
             </TouchableOpacity>
           </View>
@@ -501,7 +501,7 @@ const styles = StyleSheet.create({
     width: 50,
     height: 50,
     borderRadius: 25,
-    backgroundColor: '#3B82F6',
+    backgroundColor: '#01213D',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -514,11 +514,11 @@ const styles = StyleSheet.create({
     paddingTop: 24,
   },
   heroCard: {
-    backgroundColor: '#3B82F6',
+    backgroundColor: '#01213D',
     borderRadius: 20,
     padding: 28,
     alignItems: 'center',
-    shadowColor: '#3B82F6',
+    shadowColor: '#01213D',
     shadowOffset: {
       width: 0,
       height: 8,
@@ -559,7 +559,7 @@ const styles = StyleSheet.create({
     gap: 8,
   },
   heroButtonText: {
-    color: '#3B82F6',
+    color: '#01213D',
     fontSize: 16,
   },
   section: {
@@ -635,7 +635,7 @@ const styles = StyleSheet.create({
   },
   resultButtonText: {
     fontSize: 14,
-    color: '#3B82F6',
+    color: '#01213D',
   },
   emptyCard: {
     backgroundColor: '#FFFFFF',
@@ -809,7 +809,7 @@ const styles = StyleSheet.create({
   },
   checkScoreNumber: {
     fontSize: 18,
-    color: '#3B82F6',
+    color: '#01213D',
   },
   checkRecommendations: {
     flexDirection: 'row',

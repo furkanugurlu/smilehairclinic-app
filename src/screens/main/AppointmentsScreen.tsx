@@ -238,7 +238,7 @@ const AppointmentsScreen: React.FC<AppointmentsScreenProps> = ({ navigation }) =
                   <View key={appointment.id} style={styles.appointmentCard}>
                     <View style={styles.appointmentHeader}>
                       <View style={styles.appointmentDateContainer}>
-                        <Icon name="calendar" size={24} color="#3B82F6" style={styles.appointmentDateIcon} />
+                        <Icon name="calendar" size={24} color="#01213D" style={styles.appointmentDateIcon} />
                         <View>
                           <Text weight="semibold" style={styles.appointmentDate}>
                             {formatDate(appointment.appointment_date)}
@@ -433,7 +433,7 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: '#3B82F6',
+    backgroundColor: '#01213D',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -464,7 +464,7 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   button: {
-    backgroundColor: '#3B82F6',
+    backgroundColor: '#01213D',
     paddingHorizontal: 24,
     paddingVertical: 12,
     borderRadius: 8,
@@ -610,13 +610,13 @@ const styles = StyleSheet.create({
     color: '#DC2626',
   },
   floatingButton: {
-    backgroundColor: '#3B82F6',
+    backgroundColor: '#01213D',
     marginHorizontal: 24,
     marginTop: 24,
     paddingVertical: 16,
     borderRadius: 12,
     alignItems: 'center',
-    shadowColor: '#3B82F6',
+    shadowColor: '#01213D',
     shadowOffset: {
       width: 0,
       height: 4,

@@ -163,23 +163,6 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation, route }) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
-        <View>
-          <Text weight="regular" style={styles.greeting}>Merhaba,</Text>
-          <Text weight="bold" style={styles.userName}>{user?.full_name || 'Kullanıcı'}</Text>
-        </View>
-        <TouchableOpacity onPress={handleProfilePress} activeOpacity={0.7}>
-          {user?.avatar_url ? (
-            <Image source={{ uri: user.avatar_url }} style={styles.avatar} />
-          ) : (
-            <View style={styles.avatar}>
-              <Text weight="bold" style={styles.avatarText}>
-                {user?.full_name?.charAt(0).toUpperCase() || 'U'}
-              </Text>
-            </View>
-          )}
-        </TouchableOpacity>
-      </View>
       {loading && !refreshing ? <View style={styles.loadingContainer}>
         <ActivityIndicator size="small" color="#01213D" />
       </View> : <ScrollView 
@@ -189,7 +172,23 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation, route }) => {
         }
       >
         {/* Header */}
-       
+        <View style={styles.header}>
+          <View>
+            <Text weight="regular" style={styles.greeting}>Merhaba,</Text>
+            <Text weight="bold" style={styles.userName}>{user?.full_name || 'Kullanıcı'}</Text>
+          </View>
+          <TouchableOpacity onPress={handleProfilePress} activeOpacity={0.7}>
+            {user?.avatar_url ? (
+              <Image source={{ uri: user.avatar_url }} style={styles.avatar} />
+            ) : (
+              <View style={styles.avatar}>
+                <Text weight="bold" style={styles.avatarText}>
+                  {user?.full_name?.charAt(0).toUpperCase() || 'U'}
+                </Text>
+              </View>
+            )}
+          </TouchableOpacity>
+        </View>
 
         {/* Hero Section - Saç Durumu Kontrolü */}
         <View style={styles.heroSection}>

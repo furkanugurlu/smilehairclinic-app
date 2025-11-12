@@ -5,7 +5,8 @@ import {
   ProfileEditScreen, 
   ContactScreen, 
   AboutScreen, 
-  HelpCenterScreen 
+  HelpCenterScreen,
+  LanguageScreen 
 } from '../screens/profile';
 
 export type ProfileStackParamList = {
@@ -14,6 +15,7 @@ export type ProfileStackParamList = {
   Contact: undefined;
   About: undefined;
   HelpCenter: undefined;
+  Language: undefined;
 };
 
 const Stack = createNativeStackNavigator<ProfileStackParamList>();
@@ -30,6 +32,7 @@ const ProfileStack: React.FC = () => {
       <Stack.Screen name="Contact" component={ContactScreen} />
       <Stack.Screen name="About" component={AboutScreen} />
       <Stack.Screen name="HelpCenter" component={HelpCenterScreen} />
+      <Stack.Screen name="Language" component={LanguageScreen} />
     </Stack.Navigator>
   );
 };

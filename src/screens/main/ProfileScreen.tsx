@@ -78,7 +78,10 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
             <Text weight="regular" style={styles.menuText}>Bildirimler</Text>
             <Icon name="chevron-forward" size={24} color="#D1D5DB" />
           </TouchableOpacity>
-          <TouchableOpacity style={styles.menuItem}>
+          <TouchableOpacity 
+            style={styles.menuItem}
+            onPress={() => navigation.navigate('Language')}
+          >
             <Icon name="language-outline" size={24} color="#01213D" style={styles.menuIcon} />
             <Text weight="regular" style={styles.menuText}>Dil</Text>
             <Icon name="chevron-forward" size={24} color="#D1D5DB" />

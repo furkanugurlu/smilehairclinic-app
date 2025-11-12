@@ -10,6 +10,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useFocusEffect } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useAuthStore } from '../../store/authStore';
 import { Text, LoadingModal } from '../../components';
@@ -35,15 +36,12 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation, route }) => {
     improvement: 0,
   });
 
-  useEffect(() => {
-    fetchHairChecks();
-  }, []);
-
-  useEffect(() => {
-    if (route?.params?.refresh) {
+  // Sayfa focus olduğunda (geri dönüldüğünde veya refresh parametresi ile) verileri yenile
+  useFocusEffect(
+    useCallback(() => {
       fetchHairChecks();
-    }
-  }, [route?.params?.refresh]);
+    }, [user?.id])
+  );
 
   const fetchHairChecks = async () => {
     if (!user?.id) return;
@@ -328,6 +326,18 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation, route }) => {
                   <View style={styles.checkScore}>
                     <Text weight="bold" style={styles.checkScoreNumber}>
                       {check.analysis_score}
+                    </Text>
+                  </View>
+                )}
+                {check.recommendations && (
+                  <View style={styles.checkRecommendations}>
+                    <Icon name="bulb" size={14} color="#F59E0B" style={styles.checkRecommendationsIcon} />
+                    <Text 
+                      weight="regular" 
+                      style={styles.checkRecommendationsText}
+                      numberOfLines={2}
+                    >
+                      {check.recommendations}
                     </Text>
                   </View>
                 )}
@@ -800,6 +810,24 @@ const styles = StyleSheet.create({
   checkScoreNumber: {
     fontSize: 18,
     color: '#3B82F6',
+  },
+  checkRecommendations: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    backgroundColor: '#FFFBEB',
+    borderRadius: 8,
+    padding: 10,
+    marginTop: 12,
+    gap: 8,
+  },
+  checkRecommendationsIcon: {
+    marginTop: 2,
+  },
+  checkRecommendationsText: {
+    flex: 1,
+    fontSize: 12,
+    color: '#78350F',
+    lineHeight: 16,
   },
 });
 

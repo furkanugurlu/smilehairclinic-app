@@ -10,6 +10,7 @@ import AuthStack from './AuthStack';
 import MainTabs from './MainTabs';
 import HairCheckCaptureScreen from '../screens/haircheck/HairCheckCaptureScreen';
 import HairCheckDetailScreen from '../screens/haircheck/HairCheckDetailScreen';
+import AdminHairCheckDetailScreen from '../screens/admin/AdminHairCheckDetailScreen';
 import AppointmentCreateScreen from '../screens/appointments/AppointmentCreateScreen';
 import ChatScreen from '../screens/messages/ChatScreen';
 
@@ -83,6 +84,10 @@ const RootNavigator: React.FC = () => {
               <Stack.Screen 
                 name="HairCheckDetail" 
                 component={HairCheckDetailScreen}
+              />
+              <Stack.Screen 
+                name="AdminHairCheckDetail" 
+                component={AdminHairCheckDetailScreen}
               />
               <Stack.Screen 
                 name="AppointmentCreate" 

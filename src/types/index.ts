@@ -47,6 +47,10 @@ export interface HairCheck {
   created_at: string;
   updated_at: string;
   analyzed_at?: string;
+  profiles?: {
+    full_name?: string;
+    email?: string;
+  };
 }
 
 export interface PhotoStep {

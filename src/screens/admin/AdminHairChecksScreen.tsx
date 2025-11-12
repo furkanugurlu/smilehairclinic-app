@@ -10,6 +10,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useFocusEffect } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { Text, LoadingModal, FilterTabs, FilterOption } from '../../components';
 import { supabase } from '../../config/supabase';
@@ -26,9 +27,12 @@ const AdminHairChecksScreen: React.FC<AdminHairChecksScreenProps> = ({ navigatio
   const [refreshing, setRefreshing] = useState(false);
   const [filter, setFilter] = useState<'all' | HairCheckStatus>('all');
 
-  useEffect(() => {
-    fetchHairChecks();
-  }, []);
+  // Sayfa focus olduğunda (geri dönüldüğünde) verileri yenile
+  useFocusEffect(
+    useCallback(() => {
+      fetchHairChecks();
+    }, [])
+  );
 
   // Filtre değiştiğinde client-side filtreleme yap
   useEffect(() => {
@@ -67,7 +71,7 @@ const AdminHairChecksScreen: React.FC<AdminHairChecksScreenProps> = ({ navigatio
   }, []);
 
   const handleViewDetail = (check: HairCheck) => {
-    navigation.navigate('HairCheckDetail', { check });
+    navigation.navigate('AdminHairCheckDetail', { check });
   };
 
   const getStatusColor = (status: HairCheckStatus) => {
@@ -190,13 +194,14 @@ const AdminHairChecksScreen: React.FC<AdminHairChecksScreenProps> = ({ navigatio
                 style={styles.checkCard}
                 onPress={() => handleViewDetail(check)}
               >
+                {/* Header: Kullanıcı Bilgisi + Durum */}
                 <View style={styles.checkHeader}>
                   <View style={styles.checkLeft}>
                     <Image
                       source={{ uri: check.photo_front }}
                       style={styles.thumbnail}
                     />
-                    <View>
+                    <View style={styles.userInfo}>
                       <Text weight="semibold" style={styles.patientName}>
                         {check.profiles?.full_name || 'İsimsiz Kullanıcı'}
                       </Text>
@@ -226,34 +231,61 @@ const AdminHairChecksScreen: React.FC<AdminHairChecksScreenProps> = ({ navigatio
                   </View>
                 </View>
 
-                {check.status === 'completed' && check.analysis_score && (
-                  <View style={styles.scoreContainer}>
-                    <View style={styles.scoreCircle}>
-                      <Text weight="bold" style={styles.scoreNumber}>
-                        {check.analysis_score}
-                      </Text>
-                      <Text weight="regular" style={styles.scoreLabel}>
-                        /100
-                      </Text>
-                    </View>
+                {/* Analiz Detayları: Skor + Durum */}
+                {check.status === 'completed' && (check.analysis_score || check.analysis_status) && (
+                  <View style={styles.analysisSection}>
+                    {check.analysis_score && (
+                      <View style={styles.scoreRow}>
+                        <View style={styles.scoreCircle}>
+                          <Text weight="bold" style={styles.scoreNumber}>
+                            {check.analysis_score}
+                          </Text>
+                          <Text weight="regular" style={styles.scoreLabel}>
+                            /100
+                          </Text>
+                        </View>
+                        {check.analysis_status && (
+                          <View style={styles.statusRow}>
+                            <Icon name="analytics" size={14} color="#8B5CF6" />
+                            <Text weight="medium" style={styles.statusLabel}>
+                              {check.analysis_status === 'good' && 'İyi'}
+                              {check.analysis_status === 'warning' && 'Uyarı'}
+                              {check.analysis_status === 'critical' && 'Kritik'}
+                            </Text>
+                          </View>
+                        )}
+                      </View>
+                    )}
+                    
+                    {/* Notlar */}
                     {check.analysis_notes && (
                       <Text
                         weight="regular"
-                        style={styles.analysisNotes}
+                        style={styles.notesText}
                         numberOfLines={2}
                       >
                         {check.analysis_notes}
                       </Text>
                     )}
+
+                    {/* Öneriler */}
+                    {check.recommendations && (
+                      <View style={styles.recommendationsBadge}>
+                        <Icon name="bulb-outline" size={12} color="#F59E0B" />
+                        <Text
+                          weight="regular"
+                          style={styles.recommendationsBadgeText}
+                          numberOfLines={2}
+                        >
+                          {check.recommendations}
+                        </Text>
+                      </View>
+                    )}
                   </View>
                 )}
 
-                <View style={styles.viewButton}>
-                  <Text weight="semibold" style={styles.viewButtonText}>
-                    Detayları Görüntüle
-                  </Text>
-                  <Icon name="arrow-forward" size={16} color="#3B82F6" />
-                </View>
+                {/* Arrow Icon */}
+                <Icon name="chevron-forward" size={20} color="#9CA3AF" style={styles.arrowIcon} />
               </TouchableOpacity>
             ))}
           </View>
@@ -310,8 +342,8 @@ const styles = StyleSheet.create({
   checkCard: {
     backgroundColor: '#FFFFFF',
     borderRadius: 12,
-    padding: 16,
-    marginBottom: 16,
+    padding: 14,
+    marginBottom: 12,
     shadowColor: '#000',
     shadowOffset: {
       width: 0,
@@ -320,92 +352,117 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.05,
     shadowRadius: 8,
     elevation: 2,
+    position: 'relative',
   },
   checkHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'flex-start',
-    marginBottom: 12,
+    marginBottom: 10,
   },
   checkLeft: {
     flexDirection: 'row',
     alignItems: 'center',
     flex: 1,
+    marginRight: 8,
   },
   thumbnail: {
-    width: 60,
-    height: 60,
+    width: 50,
+    height: 50,
     borderRadius: 8,
     backgroundColor: '#F3F4F6',
-    marginRight: 12,
+    marginRight: 10,
+  },
+  userInfo: {
+    flex: 1,
   },
   patientName: {
-    fontSize: 16,
+    fontSize: 15,
     color: '#1A1A1A',
-    marginBottom: 4,
+    marginBottom: 2,
   },
   patientEmail: {
-    fontSize: 13,
+    fontSize: 12,
     color: '#666',
-    marginBottom: 4,
+    marginBottom: 2,
   },
   checkDate: {
-    fontSize: 12,
+    fontSize: 11,
     color: '#999',
   },
   statusBadge: {
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 8,
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 6,
   },
   statusText: {
-    fontSize: 12,
+    fontSize: 11,
   },
-  scoreContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+  analysisSection: {
     backgroundColor: '#F9FAFB',
     borderRadius: 8,
-    padding: 12,
-    marginBottom: 12,
+    padding: 10,
+    gap: 8,
+  },
+  scoreRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
   },
   scoreCircle: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
+    width: 50,
+    height: 50,
+    borderRadius: 25,
     backgroundColor: '#FFFFFF',
     justifyContent: 'center',
     alignItems: 'center',
-    marginRight: 12,
     borderWidth: 2,
     borderColor: '#3B82F6',
   },
   scoreNumber: {
-    fontSize: 20,
+    fontSize: 18,
     color: '#3B82F6',
   },
   scoreLabel: {
-    fontSize: 12,
+    fontSize: 10,
     color: '#666',
   },
-  analysisNotes: {
-    flex: 1,
-    fontSize: 13,
-    color: '#666',
-    lineHeight: 18,
-  },
-  viewButton: {
+  statusRow: {
     flexDirection: 'row',
-    backgroundColor: '#F3F4F6',
-    paddingVertical: 12,
-    borderRadius: 8,
     alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: '#F5F3FF',
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+    borderRadius: 6,
     gap: 6,
   },
-  viewButtonText: {
-    fontSize: 14,
-    color: '#3B82F6',
+  statusLabel: {
+    fontSize: 12,
+    color: '#8B5CF6',
+  },
+  notesText: {
+    fontSize: 12,
+    color: '#666',
+    lineHeight: 16,
+  },
+  recommendationsBadge: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    backgroundColor: '#FFFBEB',
+    padding: 8,
+    borderRadius: 6,
+    gap: 6,
+  },
+  recommendationsBadgeText: {
+    flex: 1,
+    fontSize: 11,
+    color: '#92400E',
+    lineHeight: 14,
+  },
+  arrowIcon: {
+    position: 'absolute',
+    right: 14,
+    bottom: 14,
   },
 });
 

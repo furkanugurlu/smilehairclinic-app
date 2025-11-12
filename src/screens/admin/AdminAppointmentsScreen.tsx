@@ -9,6 +9,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useFocusEffect } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { Text, LoadingModal, FilterTabs, FilterOption } from '../../components';
 import { supabase } from '../../config/supabase';
@@ -25,9 +26,12 @@ const AdminAppointmentsScreen: React.FC<AdminAppointmentsScreenProps> = ({ navig
   const [refreshing, setRefreshing] = useState(false);
   const [filter, setFilter] = useState<'all' | AppointmentStatus>('all');
 
-  useEffect(() => {
-    fetchAppointments();
-  }, []);
+  // Sayfa focus olduğunda (geri dönüldüğünde) verileri yenile
+  useFocusEffect(
+    useCallback(() => {
+      fetchAppointments();
+    }, [])
+  );
 
   // Filtre değiştiğinde client-side filtreleme yap
   useEffect(() => {

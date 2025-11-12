@@ -46,12 +46,14 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
               </Text>
             </View>
           )}
-          <Text weight="bold" style={styles.name}>
-            {user?.full_name || 'Kullanıcı'}
-          </Text>
-          <Text weight="regular" style={styles.email}>
-            {user?.email}
-          </Text>
+          <View style={styles.userInfo}>
+            <Text weight="bold" style={styles.name}>
+              {user?.full_name || 'Kullanıcı'}
+            </Text>
+            <Text weight="regular" style={styles.email}>
+              {user?.email}
+            </Text>
+          </View>
         </View>
 
         <View style={styles.section}>
@@ -193,8 +195,10 @@ const styles = StyleSheet.create({
   },
   header: {
     backgroundColor: '#FFFFFF',
+    flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 40,
+    paddingVertical: 24,
+    paddingHorizontal: 24,
     borderBottomWidth: 1,
     borderBottomColor: '#E5E7EB',
   },
@@ -205,14 +209,18 @@ const styles = StyleSheet.create({
     backgroundColor: '#01213D',
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 16,
+    marginRight: 16,
   },
   avatarText: {
     fontSize: 32,
     color: '#FFFFFF',
   },
+  userInfo: {
+    flex: 1,
+    justifyContent: 'center',
+  },
   name: {
-    fontSize: 24,
+    fontSize: 20,
     color: '#1A1A1A',
     marginBottom: 4,
   },

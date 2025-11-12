@@ -50,48 +50,48 @@ const HairCheckStartScreen: React.FC<HairCheckStartScreenProps> = ({ navigation 
               resizeMode="contain"
             />
           </View>
-          <Text weight="bold" style={styles.clinicName}>
-            Smile Hair Clinic
-          </Text>
         </View>
 
-        {/* Title */}
-        <View style={styles.titleSection}>
-          <Text weight="bold" style={styles.title}>
-            Uzman değerlendirmesi{'\n'}için fotoğraflarınızı{'\n'}çekelim.
-          </Text>
-        </View>
-
-        {/* Photo Grid */}
-        <View style={styles.photoGrid}>
-          <View style={styles.photoRow}>
-            {photoSteps.slice(0, 2).map(photo => (
-              <View key={photo.id} style={styles.photoCard}>
-                <Icon name={photo.icon} size={32} color={photo.iconColor} style={styles.photoIcon} />
-                <Text weight="semibold" style={styles.photoLabel}>
-                  {photo.label}
-                </Text>
-              </View>
-            ))}
+        {/* Centered Main Content */}
+        <View style={styles.mainContent}>
+          {/* Title */}
+          <View style={styles.titleSection}>
+            <Text weight="bold" style={styles.title}>
+              Uzman değerlendirmesi{'\n'}için fotoğraflarınızı{'\n'}çekelim.
+            </Text>
           </View>
 
-          <View style={styles.photoRow}>
-            {photoSteps.slice(2, 4).map(photo => (
-              <View key={photo.id} style={styles.photoCard}>
-                <Icon name={photo.icon} size={32} color={photo.iconColor} style={styles.photoIcon} />
+          {/* Photo Grid */}
+          <View style={styles.photoGrid}>
+            <View style={styles.photoRow}>
+              {photoSteps.slice(0, 2).map(photo => (
+                <View key={photo.id} style={styles.photoCard}>
+                  <Icon name={photo.icon} size={32} color={photo.iconColor} style={styles.photoIcon} />
+                  <Text weight="semibold" style={styles.photoLabel}>
+                    {photo.label}
+                  </Text>
+                </View>
+              ))}
+            </View>
+
+            <View style={styles.photoRow}>
+              {photoSteps.slice(2, 4).map(photo => (
+                <View key={photo.id} style={styles.photoCard}>
+                  <Icon name={photo.icon} size={32} color={photo.iconColor} style={styles.photoIcon} />
+                  <Text weight="semibold" style={styles.photoLabel}>
+                    {photo.label}
+                  </Text>
+                </View>
+              ))}
+            </View>
+
+            <View style={styles.photoRowCenter}>
+              <View style={styles.photoCard}>
+                <Icon name={photoSteps[4].icon} size={32} color={photoSteps[4].iconColor} style={styles.photoIcon} />
                 <Text weight="semibold" style={styles.photoLabel}>
-                  {photo.label}
+                  {photoSteps[4].label}
                 </Text>
               </View>
-            ))}
-          </View>
-
-          <View style={styles.photoRowCenter}>
-            <View style={styles.photoCard}>
-              <Icon name={photoSteps[4].icon} size={32} color={photoSteps[4].iconColor} style={styles.photoIcon} />
-              <Text weight="semibold" style={styles.photoLabel}>
-                {photoSteps[4].label}
-              </Text>
             </View>
           </View>
         </View>
@@ -119,51 +119,47 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    justifyContent: 'space-between',
+    justifyContent: 'center',
+    paddingHorizontal: 24,
   },
   header: {
     alignItems: 'center',
-    paddingTop: 12,
-    paddingBottom: 8,
+    marginBottom: 24,
   },
   logoContainer: {
-    width: 40,
-    height: 40,
-    marginBottom: 6,
+    width: 60,
+    height: 60,
   },
   logo: {
     width: '100%',
     height: '100%',
   },
-  clinicName: {
-    fontSize: 14,
-    color: '#1A1A1A',
-  },
-  titleSection: {
-    paddingHorizontal: 24,
-    paddingVertical: 16,
+  mainContent: {
     alignItems: 'center',
   },
+  titleSection: {
+    alignItems: 'center',
+    marginBottom: 24,
+  },
   title: {
-    fontSize: 18,
+    fontSize: 24,
     color: '#01213D',
     textAlign: 'center',
-    lineHeight: 24,
+    lineHeight: 32,
   },
   photoGrid: {
-    paddingHorizontal: 24,
-    flex: 1,
-    justifyContent: 'center',
+    width: '100%',
+    marginBottom: 24,
   },
   photoRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: 10,
+    marginBottom: 12,
   },
   photoRowCenter: {
     flexDirection: 'row',
     justifyContent: 'center',
-    marginBottom: 10,
+    marginBottom: 12,
   },
   photoCard: {
     width: '48%',
@@ -184,19 +180,19 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   photoIcon: {
-    marginBottom: 6,
+    marginBottom: 8,
   },
   photoLabel: {
     fontSize: 12,
     color: '#01213D',
+    textAlign: 'center',
   },
   buttonSection: {
-    paddingHorizontal: 24,
-    paddingBottom: 16,
+    width: '100%',
   },
   scanButton: {
     backgroundColor: '#01213D',
-    paddingVertical: 12,
+    paddingVertical: 14,
     borderRadius: 12,
     alignItems: 'center',
     shadowColor: '#01213D',
@@ -210,13 +206,13 @@ const styles = StyleSheet.create({
   },
   scanButtonText: {
     color: '#FFFFFF',
-    fontSize: 15,
+    fontSize: 16,
   },
   helperText: {
-    fontSize: 11,
-    color: '#666',
+    fontSize: 12,
+    color: '#6B7280',
     textAlign: 'center',
-    marginTop: 8,
+    marginTop: 10,
   },
 });
 

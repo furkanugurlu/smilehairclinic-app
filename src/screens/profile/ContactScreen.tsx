@@ -8,6 +8,7 @@ import {
   Alert,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import Icon from 'react-native-vector-icons/Ionicons';
 import { Text } from '../../components';
 
 interface ContactScreenProps {
@@ -37,7 +38,7 @@ const ContactScreen: React.FC<ContactScreenProps> = ({ navigation }) => {
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-          <Text style={styles.backIcon}>←</Text>
+          <Icon name="chevron-back" size={28} color="#1A1A1A" />
         </TouchableOpacity>
         <Text weight="bold" style={styles.headerTitle}>İletişim</Text>
         <View style={styles.headerRight} />
@@ -46,7 +47,7 @@ const ContactScreen: React.FC<ContactScreenProps> = ({ navigation }) => {
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.heroSection}>
           <View style={styles.logoContainer}>
-            <Text style={styles.logoIcon}>🏥</Text>
+            <Icon name="medical-outline" size={40} color="#FFFFFF" />
           </View>
           <Text weight="bold" style={styles.clinicName}>Smile Hair Clinic</Text>
           <Text weight="regular" style={styles.clinicSubtitle}>
@@ -59,7 +60,7 @@ const ContactScreen: React.FC<ContactScreenProps> = ({ navigation }) => {
 
           <TouchableOpacity style={styles.contactCard} onPress={handleCall}>
             <View style={styles.contactIconContainer}>
-              <Text style={styles.contactIcon}>📞</Text>
+              <Icon name="call-outline" size={24} color="#3B82F6" />
             </View>
             <View style={styles.contactInfo}>
               <Text weight="semibold" style={styles.contactLabel}>Telefon</Text>
@@ -67,12 +68,12 @@ const ContactScreen: React.FC<ContactScreenProps> = ({ navigation }) => {
                 +90 549 149 24 00
               </Text>
             </View>
-            <Text style={styles.contactArrow}>›</Text>
+            <Icon name="chevron-forward" size={24} color="#D1D5DB" />
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.contactCard} onPress={handleEmail}>
             <View style={styles.contactIconContainer}>
-              <Text style={styles.contactIcon}>📧</Text>
+              <Icon name="mail-outline" size={24} color="#3B82F6" />
             </View>
             <View style={styles.contactInfo}>
               <Text weight="semibold" style={styles.contactLabel}>E-Posta</Text>
@@ -80,12 +81,12 @@ const ContactScreen: React.FC<ContactScreenProps> = ({ navigation }) => {
                 info@smilehairclinic.com
               </Text>
             </View>
-            <Text style={styles.contactArrow}>›</Text>
+            <Icon name="chevron-forward" size={24} color="#D1D5DB" />
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.contactCard} onPress={handleWhatsApp}>
             <View style={styles.contactIconContainer}>
-              <Text style={styles.contactIcon}>💬</Text>
+              <Icon name="logo-whatsapp" size={24} color="#25D366" />
             </View>
             <View style={styles.contactInfo}>
               <Text weight="semibold" style={styles.contactLabel}>WhatsApp</Text>
@@ -93,12 +94,12 @@ const ContactScreen: React.FC<ContactScreenProps> = ({ navigation }) => {
                 +90 549 149 24 00
               </Text>
             </View>
-            <Text style={styles.contactArrow}>›</Text>
+            <Icon name="chevron-forward" size={24} color="#D1D5DB" />
           </TouchableOpacity>
 
           <TouchableOpacity style={styles.contactCard} onPress={handleAddress}>
             <View style={styles.contactIconContainer}>
-              <Text style={styles.contactIcon}>📍</Text>
+              <Icon name="location-outline" size={24} color="#3B82F6" />
             </View>
             <View style={styles.contactInfo}>
               <Text weight="semibold" style={styles.contactLabel}>Adres</Text>
@@ -107,7 +108,7 @@ const ContactScreen: React.FC<ContactScreenProps> = ({ navigation }) => {
                 34774 Ümraniye/İstanbul, Türkiye
               </Text>
             </View>
-            <Text style={styles.contactArrow}>›</Text>
+            <Icon name="chevron-forward" size={24} color="#D1D5DB" />
           </TouchableOpacity>
         </View>
 
@@ -130,11 +131,11 @@ const ContactScreen: React.FC<ContactScreenProps> = ({ navigation }) => {
           <Text weight="semibold" style={styles.sectionTitle}>SOSYAL MEDYA</Text>
           <View style={styles.socialButtons}>
             <TouchableOpacity style={styles.socialButton}>
-              <Text style={styles.socialIcon}>📘</Text>
+              <Icon name="logo-facebook" size={20} color="#1877F2" />
               <Text weight="medium" style={styles.socialText}>Facebook</Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.socialButton}>
-              <Text style={styles.socialIcon}>📷</Text>
+              <Icon name="logo-instagram" size={20} color="#E4405F" />
               <Text weight="medium" style={styles.socialText}>Instagram</Text>
             </TouchableOpacity>
           </View>
@@ -164,10 +165,6 @@ const styles = StyleSheet.create({
   backButton: {
     padding: 4,
   },
-  backIcon: {
-    fontSize: 28,
-    color: '#1A1A1A',
-  },
   headerTitle: {
     fontSize: 18,
     color: '#1A1A1A',
@@ -190,9 +187,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 16,
-  },
-  logoIcon: {
-    fontSize: 40,
   },
   clinicName: {
     fontSize: 24,
@@ -239,9 +233,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginRight: 12,
   },
-  contactIcon: {
-    fontSize: 24,
-  },
   contactInfo: {
     flex: 1,
   },
@@ -254,10 +245,6 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: '#1A1A1A',
     lineHeight: 20,
-  },
-  contactArrow: {
-    fontSize: 24,
-    color: '#D1D5DB',
   },
   infoCard: {
     backgroundColor: '#FFFFFF',
@@ -311,9 +298,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.05,
     shadowRadius: 8,
     elevation: 2,
-  },
-  socialIcon: {
-    fontSize: 20,
   },
   socialText: {
     fontSize: 14,

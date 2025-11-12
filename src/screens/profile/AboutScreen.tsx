@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import Icon from 'react-native-vector-icons/Ionicons';
 import { Text } from '../../components';
 
 interface AboutScreenProps {
@@ -17,7 +18,7 @@ const AboutScreen: React.FC<AboutScreenProps> = ({ navigation }) => {
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-          <Text style={styles.backIcon}>←</Text>
+          <Icon name="chevron-back" size={28} color="#1A1A1A" />
         </TouchableOpacity>
         <Text weight="bold" style={styles.headerTitle}>Hakkımızda</Text>
         <View style={styles.headerRight} />
@@ -26,7 +27,7 @@ const AboutScreen: React.FC<AboutScreenProps> = ({ navigation }) => {
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.heroSection}>
           <View style={styles.logoContainer}>
-            <Text style={styles.logoIcon}>😊</Text>
+            <Icon name="happy-outline" size={40} color="#FFFFFF" />
           </View>
           <Text weight="bold" style={styles.clinicName}>Smile Hair Clinic</Text>
           <Text weight="regular" style={styles.clinicSubtitle}>
@@ -106,7 +107,7 @@ const AboutScreen: React.FC<AboutScreenProps> = ({ navigation }) => {
           <Text weight="semibold" style={styles.sectionTitle}>FELSEFEMİZ</Text>
           
           <View style={styles.philosophyCard}>
-            <Text style={styles.philosophyIcon}>🎯</Text>
+            <Icon name="target-outline" size={32} color="#3B82F6" style={styles.philosophyIcon} />
             <Text weight="bold" style={styles.philosophyTitle}>True Philosophy</Text>
             <Text weight="regular" style={styles.philosophyDescription}>
               Her hastanın benzersiz olduğunu biliyoruz. Ekip çalışması ve detaylı planlama ile kişiye özel çözümler sunuyoruz. Saç çizgisi tasarımımız doğal görünüm ve estetik mükemmellik için her zaman açıları dikkate alır.
@@ -114,7 +115,7 @@ const AboutScreen: React.FC<AboutScreenProps> = ({ navigation }) => {
           </View>
 
           <View style={styles.philosophyCard}>
-            <Text style={styles.philosophyIcon}>⚡</Text>
+            <Icon name="flash-outline" size={32} color="#3B82F6" style={styles.philosophyIcon} />
             <Text weight="bold" style={styles.philosophyTitle}>True Execution</Text>
             <Text weight="regular" style={styles.philosophyDescription}>
               Operasyon günü, tüm dönüşüm sürecinde başarılı bir sonuç için kilit kilometre taşıdır. Yüksek seviyeli önlemlerimiz sayesinde hiçbir şeyin ters gitmesine izin vermeyiz. Başarılı operasyonlar ve sonuçlar elde etmek için tüm çabamızı ve kaynaklarımızı kullanırız.
@@ -122,7 +123,7 @@ const AboutScreen: React.FC<AboutScreenProps> = ({ navigation }) => {
           </View>
 
           <View style={styles.philosophyCard}>
-            <Text style={styles.philosophyIcon}>🚀</Text>
+            <Icon name="rocket-outline" size={32} color="#3B82F6" style={styles.philosophyIcon} />
             <Text weight="bold" style={styles.philosophyTitle}>True Innovation</Text>
             <Text weight="regular" style={styles.philosophyDescription}>
               Gelişimi tıbbın temeli olarak görüyoruz. Her zaman en etkili saç ekimi operasyonlarını gerçekleştirmenin daha iyi yollarını arıyoruz. Safir Nakil tekniği, inovasyon tutkumuzun en parlak örneklerinden biridir.
@@ -171,10 +172,6 @@ const styles = StyleSheet.create({
   backButton: {
     padding: 4,
   },
-  backIcon: {
-    fontSize: 28,
-    color: '#1A1A1A',
-  },
   headerTitle: {
     fontSize: 18,
     color: '#1A1A1A',
@@ -197,9 +194,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 16,
-  },
-  logoIcon: {
-    fontSize: 40,
   },
   clinicName: {
     fontSize: 24,
@@ -303,7 +297,6 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   philosophyIcon: {
-    fontSize: 32,
     marginBottom: 12,
   },
   philosophyTitle: {

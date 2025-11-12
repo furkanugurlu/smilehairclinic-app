@@ -203,7 +203,7 @@ const AdminAppointmentsScreen: React.FC<AdminAppointmentsScreenProps> = ({ navig
       >
         {filteredAppointments.length === 0 ? (
           <View style={styles.emptyContainer}>
-            <Text style={styles.emptyIcon}>📅</Text>
+            <Icon name="calendar-outline" size={64} color="#D1D5DB" style={styles.emptyIcon} />
             <Text weight="semibold" style={styles.emptyTitle}>
               Randevu Bulunamadı
             </Text>
@@ -245,12 +245,18 @@ const AdminAppointmentsScreen: React.FC<AdminAppointmentsScreenProps> = ({ navig
                 <View style={styles.divider} />
 
                 <View style={styles.appointmentInfo}>
-                  <Text weight="medium" style={styles.infoLabel}>
-                    📅 {formatDate(appointment.appointment_date)}
-                  </Text>
-                  <Text weight="medium" style={styles.infoLabel}>
-                    ⏰ {formatTime(appointment.appointment_time)}
-                  </Text>
+                  <View style={styles.infoRow}>
+                    <Icon name="calendar-outline" size={16} color="#3B82F6" />
+                    <Text weight="medium" style={styles.infoLabel}>
+                      {formatDate(appointment.appointment_date)}
+                    </Text>
+                  </View>
+                  <View style={styles.infoRow}>
+                    <Icon name="time-outline" size={16} color="#3B82F6" />
+                    <Text weight="medium" style={styles.infoLabel}>
+                      {formatTime(appointment.appointment_time)}
+                    </Text>
+                  </View>
                 </View>
 
                 {appointment.patient_notes && (
@@ -359,7 +365,6 @@ const styles = StyleSheet.create({
     paddingVertical: 80,
   },
   emptyIcon: {
-    fontSize: 64,
     marginBottom: 16,
   },
   emptyTitle: {
@@ -417,6 +422,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: 16,
     marginBottom: 12,
+  },
+  infoRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
   },
   infoLabel: {
     fontSize: 14,

@@ -9,6 +9,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import Icon from 'react-native-vector-icons/Ionicons';
 import { Text, LoadingModal } from '../../components';
 import { supabase } from '../../config/supabase';
 import { useAuthStore } from '../../store/authStore';
@@ -129,18 +130,18 @@ const AppointmentsScreen: React.FC<AppointmentsScreenProps> = ({ navigation }) =
     }
   };
 
-  const getStatusIcon = (status: AppointmentStatus) => {
+  const getStatusIconName = (status: AppointmentStatus) => {
     switch (status) {
       case 'confirmed':
-        return '✓';
+        return 'checkmark-circle';
       case 'pending':
-        return '⏳';
+        return 'time';
       case 'cancelled':
-        return '✕';
+        return 'close-circle';
       case 'completed':
-        return '✔';
+        return 'checkmark-done';
       default:
-        return '•';
+        return 'ellipse';
     }
   };
 
@@ -188,7 +189,7 @@ const AppointmentsScreen: React.FC<AppointmentsScreenProps> = ({ navigation }) =
           style={styles.addButton}
           onPress={handleCreateAppointment}
         >
-          <Text style={styles.addButtonIcon}>+</Text>
+          <Icon name="add" size={24} color="#FFFFFF" />
         </TouchableOpacity>
       </View>
 
@@ -203,7 +204,7 @@ const AppointmentsScreen: React.FC<AppointmentsScreenProps> = ({ navigation }) =
         {appointments.length === 0 ? (
           <View style={styles.content}>
             <View style={styles.emptyState}>
-              <Text style={styles.emptyIcon}>📅</Text>
+              <Icon name="calendar-outline" size={64} color="#D1D5DB" style={styles.emptyIcon} />
               <Text weight="semibold" style={styles.emptyTitle}>
                 Randevu Bulunamadı
               </Text>
@@ -233,14 +234,17 @@ const AppointmentsScreen: React.FC<AppointmentsScreenProps> = ({ navigation }) =
                   <View key={appointment.id} style={styles.appointmentCard}>
                     <View style={styles.appointmentHeader}>
                       <View style={styles.appointmentDateContainer}>
-                        <Text style={styles.appointmentDateIcon}>📅</Text>
+                        <Icon name="calendar" size={24} color="#3B82F6" style={styles.appointmentDateIcon} />
                         <View>
                           <Text weight="semibold" style={styles.appointmentDate}>
                             {formatDate(appointment.appointment_date)}
                           </Text>
-                          <Text weight="semibold" style={styles.appointmentTime}>
-                            ⏰ {formatTime(appointment.appointment_time)}
-                          </Text>
+                          <View style={styles.timeRow}>
+                            <Icon name="time-outline" size={14} color="#666" />
+                            <Text weight="semibold" style={styles.appointmentTime}>
+                              {formatTime(appointment.appointment_time)}
+                            </Text>
+                          </View>
                         </View>
                       </View>
                       <View
@@ -249,6 +253,12 @@ const AppointmentsScreen: React.FC<AppointmentsScreenProps> = ({ navigation }) =
                           { backgroundColor: getStatusColor(appointment.status) + '20' },
                         ]}
                       >
+                        <Icon 
+                          name={getStatusIconName(appointment.status)} 
+                          size={14} 
+                          color={getStatusColor(appointment.status)} 
+                          style={styles.statusIcon}
+                        />
                         <Text
                           weight="semibold"
                           style={[
@@ -256,7 +266,7 @@ const AppointmentsScreen: React.FC<AppointmentsScreenProps> = ({ navigation }) =
                             { color: getStatusColor(appointment.status) },
                           ]}
                         >
-                          {getStatusIcon(appointment.status)} {getStatusText(appointment.status)}
+                          {getStatusText(appointment.status)}
                         </Text>
                       </View>
                     </View>
@@ -327,14 +337,17 @@ const AppointmentsScreen: React.FC<AppointmentsScreenProps> = ({ navigation }) =
                   <View key={appointment.id} style={styles.appointmentCardPast}>
                     <View style={styles.appointmentHeader}>
                       <View style={styles.appointmentDateContainer}>
-                        <Text style={styles.appointmentDateIcon}>📅</Text>
+                        <Icon name="calendar" size={24} color="#999" style={styles.appointmentDateIcon} />
                         <View>
                           <Text weight="semibold" style={styles.appointmentDate}>
                             {formatDate(appointment.appointment_date)}
                           </Text>
-                          <Text weight="semibold" style={styles.appointmentTime}>
-                            ⏰ {formatTime(appointment.appointment_time)}
-                          </Text>
+                          <View style={styles.timeRow}>
+                            <Icon name="time-outline" size={14} color="#666" />
+                            <Text weight="semibold" style={styles.appointmentTime}>
+                              {formatTime(appointment.appointment_time)}
+                            </Text>
+                          </View>
                         </View>
                       </View>
                       <View
@@ -343,6 +356,12 @@ const AppointmentsScreen: React.FC<AppointmentsScreenProps> = ({ navigation }) =
                           { backgroundColor: getStatusColor(appointment.status) + '20' },
                         ]}
                       >
+                        <Icon 
+                          name={getStatusIconName(appointment.status)} 
+                          size={14} 
+                          color={getStatusColor(appointment.status)} 
+                          style={styles.statusIcon}
+                        />
                         <Text
                           weight="semibold"
                           style={[
@@ -350,7 +369,7 @@ const AppointmentsScreen: React.FC<AppointmentsScreenProps> = ({ navigation }) =
                             { color: getStatusColor(appointment.status) },
                           ]}
                         >
-                          {getStatusIcon(appointment.status)} {getStatusText(appointment.status)}
+                          {getStatusText(appointment.status)}
                         </Text>
                       </View>
                     </View>
@@ -414,11 +433,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  addButtonIcon: {
-    fontSize: 24,
-    color: '#FFFFFF',
-    lineHeight: 24,
-  },
   content: {
     flex: 1,
     paddingHorizontal: 24,
@@ -431,7 +445,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   emptyIcon: {
-    fontSize: 64,
     marginBottom: 16,
   },
   emptyTitle: {
@@ -506,7 +519,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   appointmentDateIcon: {
-    fontSize: 24,
     marginRight: 12,
   },
   appointmentDate: {
@@ -514,15 +526,26 @@ const styles = StyleSheet.create({
     color: '#1A1A1A',
     marginBottom: 4,
   },
+  timeRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+  },
   appointmentTime: {
     fontSize: 14,
     color: '#666',
   },
   statusBadge: {
+    flexDirection: 'row',
+    alignItems: 'center',
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 8,
     marginLeft: 8,
+    gap: 4,
+  },
+  statusIcon: {
+    marginTop: 1,
   },
   statusText: {
     fontSize: 12,

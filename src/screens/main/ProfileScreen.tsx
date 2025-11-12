@@ -8,6 +8,7 @@ import {
   Image,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import Icon from 'react-native-vector-icons/Ionicons';
 import { Text } from '../../components';
 import { useAuthStore } from '../../store/authStore';
 
@@ -59,28 +60,28 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
             style={styles.menuItem}
             onPress={() => navigation.navigate('ProfileEdit')}
           >
-            <Text style={styles.menuIcon}>👤</Text>
+            <Icon name="person-outline" size={24} color="#3B82F6" style={styles.menuIcon} />
             <Text weight="regular" style={styles.menuText}>Profil Bilgileri</Text>
-            <Text style={styles.menuArrow}>›</Text>
+            <Icon name="chevron-forward" size={24} color="#D1D5DB" />
           </TouchableOpacity>
           <TouchableOpacity style={styles.menuItem}>
-            <Text style={styles.menuIcon}>🔒</Text>
+            <Icon name="lock-closed-outline" size={24} color="#3B82F6" style={styles.menuIcon} />
             <Text weight="regular" style={styles.menuText}>Şifre Değiştir</Text>
-            <Text style={styles.menuArrow}>›</Text>
+            <Icon name="chevron-forward" size={24} color="#D1D5DB" />
           </TouchableOpacity>
         </View>
 
         <View style={styles.section}>
           <Text weight="semibold" style={styles.sectionTitle}>Ayarlar</Text>
           <TouchableOpacity style={styles.menuItem}>
-            <Text style={styles.menuIcon}>🔔</Text>
+            <Icon name="notifications-outline" size={24} color="#3B82F6" style={styles.menuIcon} />
             <Text weight="regular" style={styles.menuText}>Bildirimler</Text>
-            <Text style={styles.menuArrow}>›</Text>
+            <Icon name="chevron-forward" size={24} color="#D1D5DB" />
           </TouchableOpacity>
           <TouchableOpacity style={styles.menuItem}>
-            <Text style={styles.menuIcon}>🌐</Text>
+            <Icon name="language-outline" size={24} color="#3B82F6" style={styles.menuIcon} />
             <Text weight="regular" style={styles.menuText}>Dil</Text>
-            <Text style={styles.menuArrow}>›</Text>
+            <Icon name="chevron-forward" size={24} color="#D1D5DB" />
           </TouchableOpacity>
         </View>
 
@@ -90,25 +91,25 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
             style={styles.menuItem}
             onPress={() => navigation.navigate('HelpCenter')}
           >
-            <Text style={styles.menuIcon}>❓</Text>
+            <Icon name="help-circle-outline" size={24} color="#3B82F6" style={styles.menuIcon} />
             <Text weight="regular" style={styles.menuText}>Yardım Merkezi</Text>
-            <Text style={styles.menuArrow}>›</Text>
+            <Icon name="chevron-forward" size={24} color="#D1D5DB" />
           </TouchableOpacity>
           <TouchableOpacity 
             style={styles.menuItem}
             onPress={() => navigation.navigate('Contact')}
           >
-            <Text style={styles.menuIcon}>📧</Text>
+            <Icon name="mail-outline" size={24} color="#3B82F6" style={styles.menuIcon} />
             <Text weight="regular" style={styles.menuText}>İletişim</Text>
-            <Text style={styles.menuArrow}>›</Text>
+            <Icon name="chevron-forward" size={24} color="#D1D5DB" />
           </TouchableOpacity>
           <TouchableOpacity 
             style={styles.menuItem}
             onPress={() => navigation.navigate('About')}
           >
-            <Text style={styles.menuIcon}>ℹ️</Text>
+            <Icon name="information-circle-outline" size={24} color="#3B82F6" style={styles.menuIcon} />
             <Text weight="regular" style={styles.menuText}>Hakkında</Text>
-            <Text style={styles.menuArrow}>›</Text>
+            <Icon name="chevron-forward" size={24} color="#D1D5DB" />
           </TouchableOpacity>
         </View>
 
@@ -175,17 +176,12 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
   menuIcon: {
-    fontSize: 24,
     marginRight: 16,
   },
   menuText: {
     flex: 1,
     fontSize: 16,
     color: '#1A1A1A',
-  },
-  menuArrow: {
-    fontSize: 24,
-    color: '#D1D5DB',
   },
   signOutButton: {
     backgroundColor: '#FFFFFF',

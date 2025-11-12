@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import Icon from 'react-native-vector-icons/Ionicons';
 import { Text } from '../../components';
 
 interface FAQItem {
@@ -84,7 +85,7 @@ const HelpCenterScreen: React.FC<HelpCenterScreenProps> = ({ navigation }) => {
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-          <Text style={styles.backIcon}>←</Text>
+          <Icon name="chevron-back" size={28} color="#1A1A1A" />
         </TouchableOpacity>
         <Text weight="bold" style={styles.headerTitle}>Yardım Merkezi</Text>
         <View style={styles.headerRight} />
@@ -92,7 +93,7 @@ const HelpCenterScreen: React.FC<HelpCenterScreenProps> = ({ navigation }) => {
 
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.heroSection}>
-          <Text style={styles.heroIcon}>❓</Text>
+          <Icon name="help-circle-outline" size={48} color="#3B82F6" style={styles.heroIcon} />
           <Text weight="bold" style={styles.heroTitle}>
             Sıkça Sorulan Sorular
           </Text>
@@ -142,7 +143,7 @@ const HelpCenterScreen: React.FC<HelpCenterScreenProps> = ({ navigation }) => {
 
         <View style={styles.section}>
           <View style={styles.contactCard}>
-            <Text style={styles.contactIcon}>💬</Text>
+            <Icon name="chatbubbles-outline" size={48} color="#FFFFFF" style={styles.contactIcon} />
             <View style={styles.contactContent}>
               <Text weight="bold" style={styles.contactTitle}>
                 Başka bir sorunuz mu var?
@@ -186,10 +187,6 @@ const styles = StyleSheet.create({
   backButton: {
     padding: 4,
   },
-  backIcon: {
-    fontSize: 28,
-    color: '#1A1A1A',
-  },
   headerTitle: {
     fontSize: 18,
     color: '#1A1A1A',
@@ -206,7 +203,6 @@ const styles = StyleSheet.create({
     borderBottomColor: '#E5E7EB',
   },
   heroIcon: {
-    fontSize: 48,
     marginBottom: 16,
   },
   heroTitle: {
@@ -297,7 +293,6 @@ const styles = StyleSheet.create({
     elevation: 8,
   },
   contactIcon: {
-    fontSize: 48,
     marginBottom: 16,
   },
   contactContent: {

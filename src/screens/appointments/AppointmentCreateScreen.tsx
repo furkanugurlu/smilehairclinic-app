@@ -9,8 +9,9 @@ import {
   Alert,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import Icon from 'react-native-vector-icons/Ionicons';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import { Text, LoadingModal } from '../../components';
+import { Text, LoadingModal, BottomSheet } from '../../components';
 import { supabase } from '../../config/supabase';
 import { useAuthStore } from '../../store/authStore';
 import { ServiceType, ServiceOption } from '../../types';
@@ -24,7 +25,7 @@ const serviceOptions: ServiceOption[] = [
     id: 'hair_transplant_consultation',
     title: 'Saç Ekimi Danışmanlığı',
     description: 'Saç ekimi için detaylı analiz ve planlama',
-    icon: '🔬',
+    icon: 'analytics',
     estimatedDuration: '45 dakika',
     estimatedPrice: 'Ücretsiz',
   },
@@ -32,7 +33,7 @@ const serviceOptions: ServiceOption[] = [
     id: 'hair_analysis',
     title: 'Saç Analizi',
     description: 'Saç ve saç derisi sağlığının değerlendirilmesi',
-    icon: '📊',
+    icon: 'stats-chart',
     estimatedDuration: '30 dakika',
     estimatedPrice: '₺500',
   },
@@ -40,7 +41,7 @@ const serviceOptions: ServiceOption[] = [
     id: 'hair_treatment',
     title: 'Saç Tedavisi',
     description: 'PRP, mezoterapi ve diğer tedaviler',
-    icon: '💉',
+    icon: 'medkit',
     estimatedDuration: '60 dakika',
     estimatedPrice: '₺1,500',
   },
@@ -48,7 +49,7 @@ const serviceOptions: ServiceOption[] = [
     id: 'follow_up',
     title: 'Kontrol Randevusu',
     description: 'Tedavi sonrası kontrol',
-    icon: '✅',
+    icon: 'checkmark-done-circle',
     estimatedDuration: '20 dakika',
     estimatedPrice: 'Ücretsiz',
   },
@@ -56,7 +57,7 @@ const serviceOptions: ServiceOption[] = [
     id: 'other',
     title: 'Diğer',
     description: 'Diğer hizmetler için randevu',
-    icon: '📋',
+    icon: 'document-text',
     estimatedDuration: '30 dakika',
   },
 ];
@@ -72,17 +73,29 @@ const AppointmentCreateScreen: React.FC<AppointmentCreateScreenProps> = ({ navig
   const [loading, setLoading] = useState(false);
 
   const handleDateChange = (event: any, date?: Date) => {
-    setShowDatePicker(Platform.OS === 'ios');
+    if (Platform.OS === 'android') {
+      setShowDatePicker(false);
+    }
     if (date) {
       setSelectedDate(date);
     }
   };
 
   const handleTimeChange = (event: any, time?: Date) => {
-    setShowTimePicker(Platform.OS === 'ios');
+    if (Platform.OS === 'android') {
+      setShowTimePicker(false);
+    }
     if (time) {
       setSelectedTime(time);
     }
+  };
+
+  const confirmDateSelection = () => {
+    setShowDatePicker(false);
+  };
+
+  const confirmTimeSelection = () => {
+    setShowTimePicker(false);
   };
 
   const formatDate = (date: Date) => {
@@ -173,7 +186,7 @@ const AppointmentCreateScreen: React.FC<AppointmentCreateScreenProps> = ({ navig
       
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-          <Text style={styles.backIcon}>←</Text>
+          <Icon name="chevron-back" size={28} color="#1A1A1A" />
         </TouchableOpacity>
         <Text weight="bold" style={styles.headerTitle}>Yeni Randevu</Text>
         <View style={{ width: 40 }} />
@@ -193,7 +206,9 @@ const AppointmentCreateScreen: React.FC<AppointmentCreateScreenProps> = ({ navig
               onPress={() => setSelectedService(service.id)}
             >
               <View style={styles.serviceCardLeft}>
-                <Text style={styles.serviceIcon}>{service.icon}</Text>
+                <View style={styles.serviceIconContainer}>
+                  <Icon name={service.icon} size={28} color={selectedService === service.id ? '#3B82F6' : '#666'} />
+                </View>
                 <View style={styles.serviceInfo}>
                   <Text 
                     weight="semibold" 
@@ -214,16 +229,12 @@ const AppointmentCreateScreen: React.FC<AppointmentCreateScreenProps> = ({ navig
                     {service.description}
                   </Text>
                   <View style={styles.serviceDetails}>
-                    <Text 
-                      weight="regular" 
-                      style={[
-                        styles.serviceDetailText,
-                        selectedService === service.id && styles.serviceTextSelected,
-                      ]}
-                    >
-                      ⏱ {service.estimatedDuration}
-                    </Text>
-                    {service.estimatedPrice && (
+                    <View style={styles.serviceDetailRow}>
+                      <Icon 
+                        name="time-outline" 
+                        size={14} 
+                        color={selectedService === service.id ? '#3B82F6' : '#666'} 
+                      />
                       <Text 
                         weight="regular" 
                         style={[
@@ -231,15 +242,33 @@ const AppointmentCreateScreen: React.FC<AppointmentCreateScreenProps> = ({ navig
                           selectedService === service.id && styles.serviceTextSelected,
                         ]}
                       >
-                        💰 {service.estimatedPrice}
+                        {service.estimatedDuration}
                       </Text>
+                    </View>
+                    {service.estimatedPrice && (
+                      <View style={styles.serviceDetailRow}>
+                        <Icon 
+                          name="cash-outline" 
+                          size={14} 
+                          color={selectedService === service.id ? '#3B82F6' : '#666'} 
+                        />
+                        <Text 
+                          weight="regular" 
+                          style={[
+                            styles.serviceDetailText,
+                            selectedService === service.id && styles.serviceTextSelected,
+                          ]}
+                        >
+                          {service.estimatedPrice}
+                        </Text>
+                      </View>
                     )}
                   </View>
                 </View>
               </View>
               {selectedService === service.id && (
                 <View style={styles.checkmark}>
-                  <Text style={styles.checkmarkIcon}>✓</Text>
+                  <Icon name="checkmark" size={18} color="#FFFFFF" />
                 </View>
               )}
             </TouchableOpacity>
@@ -255,7 +284,7 @@ const AppointmentCreateScreen: React.FC<AppointmentCreateScreenProps> = ({ navig
               style={styles.dateTimeCard}
               onPress={() => setShowDatePicker(true)}
             >
-              <Text style={styles.dateTimeIcon}>📅</Text>
+              <Icon name="calendar" size={28} color="#3B82F6" style={styles.dateTimeIcon} />
               <View style={styles.dateTimeInfo}>
                 <Text weight="regular" style={styles.dateTimeLabel}>Tarih</Text>
                 <Text weight="semibold" style={styles.dateTimeValue}>
@@ -268,7 +297,7 @@ const AppointmentCreateScreen: React.FC<AppointmentCreateScreenProps> = ({ navig
               style={styles.dateTimeCard}
               onPress={() => setShowTimePicker(true)}
             >
-              <Text style={styles.dateTimeIcon}>⏰</Text>
+              <Icon name="time" size={28} color="#3B82F6" style={styles.dateTimeIcon} />
               <View style={styles.dateTimeInfo}>
                 <Text weight="regular" style={styles.dateTimeLabel}>Saat</Text>
                 <Text weight="semibold" style={styles.dateTimeValue}>
@@ -278,21 +307,56 @@ const AppointmentCreateScreen: React.FC<AppointmentCreateScreenProps> = ({ navig
             </TouchableOpacity>
           </View>
 
-          {showDatePicker && (
+          {/* iOS Bottom Sheet for Date Picker */}
+          <BottomSheet
+            visible={showDatePicker && Platform.OS === 'ios'}
+            onClose={() => setShowDatePicker(false)}
+            onConfirm={confirmDateSelection}
+            title="Tarih Seçin"
+          >
             <DateTimePicker
               value={selectedDate}
               mode="date"
-              display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+              display="spinner"
+              onChange={handleDateChange}
+              minimumDate={new Date()}
+              style={styles.datePicker}
+            />
+          </BottomSheet>
+
+          {/* iOS Bottom Sheet for Time Picker */}
+          <BottomSheet
+            visible={showTimePicker && Platform.OS === 'ios'}
+            onClose={() => setShowTimePicker(false)}
+            onConfirm={confirmTimeSelection}
+            title="Saat Seçin"
+          >
+            <DateTimePicker
+              value={selectedTime}
+              mode="time"
+              display="spinner"
+              onChange={handleTimeChange}
+              minuteInterval={15}
+              style={styles.datePicker}
+            />
+          </BottomSheet>
+
+          {/* Android Default Picker */}
+          {Platform.OS === 'android' && showDatePicker && (
+            <DateTimePicker
+              value={selectedDate}
+              mode="date"
+              display="default"
               onChange={handleDateChange}
               minimumDate={new Date()}
             />
           )}
 
-          {showTimePicker && (
+          {Platform.OS === 'android' && showTimePicker && (
             <DateTimePicker
               value={selectedTime}
               mode="time"
-              display={Platform.OS === 'ios' ? 'spinner' : 'default'}
+              display="default"
               onChange={handleTimeChange}
               minuteInterval={15}
             />
@@ -316,7 +380,7 @@ const AppointmentCreateScreen: React.FC<AppointmentCreateScreenProps> = ({ navig
 
         {/* Bilgilendirme */}
         <View style={styles.infoCard}>
-          <Text style={styles.infoIcon}>ℹ️</Text>
+          <Icon name="information-circle" size={24} color="#92400E" style={styles.infoIcon} />
           <View style={styles.infoContent}>
             <Text weight="semibold" style={styles.infoTitle}>
               Önemli Bilgi
@@ -369,10 +433,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  backIcon: {
-    fontSize: 24,
-    color: '#1A1A1A',
-  },
   headerTitle: {
     fontSize: 18,
     color: '#1A1A1A',
@@ -406,8 +466,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flex: 1,
   },
-  serviceIcon: {
-    fontSize: 32,
+  serviceIconContainer: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: '#F3F4F6',
+    justifyContent: 'center',
+    alignItems: 'center',
     marginRight: 12,
   },
   serviceInfo: {
@@ -427,6 +492,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     gap: 16,
   },
+  serviceDetailRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+  },
   serviceDetailText: {
     fontSize: 12,
     color: '#666',
@@ -443,10 +513,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginLeft: 12,
   },
-  checkmarkIcon: {
-    fontSize: 16,
-    color: '#FFFFFF',
-  },
   dateTimeContainer: {
     flexDirection: 'row',
     gap: 12,
@@ -462,7 +528,6 @@ const styles = StyleSheet.create({
     borderColor: '#E5E7EB',
   },
   dateTimeIcon: {
-    fontSize: 28,
     marginRight: 12,
   },
   dateTimeInfo: {
@@ -498,7 +563,6 @@ const styles = StyleSheet.create({
     borderColor: '#FDE68A',
   },
   infoIcon: {
-    fontSize: 24,
     marginRight: 12,
   },
   infoContent: {
@@ -538,6 +602,9 @@ const styles = StyleSheet.create({
   createButtonText: {
     fontSize: 16,
     color: '#FFFFFF',
+  },
+  datePicker: {
+    height: 200,
   },
 });
 

@@ -11,6 +11,7 @@ import {
   Image,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import Icon from 'react-native-vector-icons/Ionicons';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { useAuthStore } from '../../store/authStore';
@@ -180,9 +181,11 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
                       style={styles.eyeButton}
                       onPress={() => setShowPassword(!showPassword)}
                     >
-                      <Text style={styles.eyeIcon}>
-                        {showPassword ? '👁️' : '👁️‍🗨️'}
-                      </Text>
+                      <Icon 
+                        name={showPassword ? 'eye-outline' : 'eye-off-outline'} 
+                        size={22} 
+                        color="#666" 
+                      />
                     </TouchableOpacity>
                   </View>
                   {touched.password && errors.password && (
@@ -216,9 +219,11 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
                         setShowConfirmPassword(!showConfirmPassword)
                       }
                     >
-                      <Text style={styles.eyeIcon}>
-                        {showConfirmPassword ? '👁️' : '👁️‍🗨️'}
-                      </Text>
+                      <Icon 
+                        name={showConfirmPassword ? 'eye-outline' : 'eye-off-outline'} 
+                        size={22} 
+                        color="#666" 
+                      />
                     </TouchableOpacity>
                   </View>
                   {touched.confirmPassword && errors.confirmPassword && (
@@ -318,9 +323,6 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: 16,
     top: 14,
-  },
-  eyeIcon: {
-    fontSize: 20,
   },
   errorText: {
     color: '#EF4444',

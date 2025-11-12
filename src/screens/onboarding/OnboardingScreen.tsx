@@ -8,6 +8,7 @@ import {
   Image,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import Icon from 'react-native-vector-icons/Ionicons';
 import { Text } from '../../components';
 
 const { width, height } = Dimensions.get('window');
@@ -17,6 +18,7 @@ interface OnboardingItem {
   title: string;
   description: string;
   icon: string;
+  iconColor: string;
 }
 
 const onboardingData: OnboardingItem[] = [
@@ -24,19 +26,22 @@ const onboardingData: OnboardingItem[] = [
     id: '1',
     title: 'Smile Hair Clinic\'e Hoş Geldiniz',
     description: 'Profesyonel saç ekimi ve tedavi hizmetleri ile yeni bir başlangıç yapın.',
-    icon: '💇‍♂️',
+    icon: 'cut',
+    iconColor: '#3B82F6',
   },
   {
     id: '2',
     title: 'Uzman Kadromuz',
     description: 'Alanında uzman doktorlarımız ve ekibimizle güvenli ellerde olun.',
-    icon: '👨‍⚕️',
+    icon: 'medkit',
+    iconColor: '#10B981',
   },
   {
     id: '3',
     title: 'Randevularınızı Kolayca Yönetin',
     description: 'Uygulamamız üzerinden randevu alın, takip edin ve sonuçlarınızı görün.',
-    icon: '📅',
+    icon: 'calendar',
+    iconColor: '#F59E0B',
   },
 ];
 
@@ -65,7 +70,7 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ onComplete }) => {
   const renderItem = ({ item }: { item: OnboardingItem }) => (
     <View style={styles.slide}>
       <View style={styles.iconContainer}>
-        <Text style={styles.icon}>{item.icon}</Text>
+        <Icon name={item.icon} size={80} color={item.iconColor} />
       </View>
       <Text weight="bold" style={styles.title}>{item.title}</Text>
       <Text weight="regular" style={styles.description}>{item.description}</Text>
@@ -150,9 +155,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: 40,
-  },
-  icon: {
-    fontSize: 80,
   },
   title: {
     fontSize: 28,

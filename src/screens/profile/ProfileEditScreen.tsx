@@ -10,6 +10,7 @@ import {
   Image,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import Icon from 'react-native-vector-icons/Ionicons';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
 import { Text } from '../../components';
@@ -174,7 +175,7 @@ const ProfileEditScreen: React.FC<ProfileEditScreenProps> = ({ navigation }) => 
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-          <Text weight="semibold" style={styles.backText}>← Geri</Text>
+          <Icon name="chevron-back" size={28} color="#3B82F6" />
         </TouchableOpacity>
         <Text weight="bold" style={styles.title}>Profil Bilgileri</Text>
         <View style={styles.placeholder} />
@@ -318,11 +319,7 @@ const styles = StyleSheet.create({
     borderBottomColor: '#E5E7EB',
   },
   backButton: {
-    padding: 8,
-  },
-  backText: {
-    fontSize: 16,
-    color: '#3B82F6',
+    padding: 4,
   },
   title: {
     fontSize: 18,

@@ -10,6 +10,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import Icon from 'react-native-vector-icons/Ionicons';
 import { useAuthStore } from '../../store/authStore';
 import { Text, LoadingModal } from '../../components';
 import { supabase } from '../../config/supabase';
@@ -196,7 +197,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation, route }) => {
         <View style={styles.heroSection}>
           <View style={styles.heroCard}>
             <View style={styles.heroIconContainer}>
-              <Text style={styles.heroIcon}>🔬</Text>
+              <Icon name="analytics-outline" size={40} color="#FFFFFF" />
             </View>
             <Text weight="bold" style={styles.heroTitle}>
               Saç Durumu Kontrolü
@@ -211,7 +212,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation, route }) => {
               <Text weight="bold" style={styles.heroButtonText}>
                 Kontrol Başlat
               </Text>
-              <Text style={styles.heroButtonIcon}>→</Text>
+              <Icon name="arrow-forward" size={18} color="#3B82F6" />
             </TouchableOpacity>
           </View>
         </View>
@@ -287,7 +288,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation, route }) => {
                     <View style={styles.checkStatusBadge}>
                       {check.status === 'pending' && (
                         <>
-                          <Text style={styles.checkStatusIcon}>⏳</Text>
+                          <Icon name="time-outline" size={14} color="#F59E0B" style={styles.checkStatusIcon} />
                           <Text weight="medium" style={styles.checkStatusText}>
                             İnceleniyor
                           </Text>
@@ -295,7 +296,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation, route }) => {
                       )}
                       {check.status === 'analyzing' && (
                         <>
-                          <Text style={styles.checkStatusIcon}>🔬</Text>
+                          <Icon name="analytics-outline" size={14} color="#3B82F6" style={styles.checkStatusIcon} />
                           <Text weight="medium" style={styles.checkStatusText}>
                             Analiz Ediliyor
                           </Text>
@@ -337,7 +338,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation, route }) => {
           <View style={styles.section}>
             <Text weight="bold" style={styles.sectionTitle}>Kontrol Geçmişi</Text>
             <View style={styles.emptyCard}>
-              <Text style={styles.emptyIcon}>📊</Text>
+              <Icon name="bar-chart-outline" size={64} color="#D1D5DB" style={styles.emptyIcon} />
               <Text weight="medium" style={styles.emptyTitle}>
                 Henüz kontrol yapılmadı
               </Text>
@@ -354,14 +355,17 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation, route }) => {
             <Text weight="bold" style={styles.sectionTitle}>İstatistikler</Text>
             <View style={styles.statsGrid}>
               <View style={styles.statCard}>
-                <Text style={styles.statIcon}>📊</Text>
+                <Icon name="bar-chart-outline" size={28} color="#3B82F6" style={styles.statIcon} />
                 <Text weight="bold" style={styles.statNumber}>{stats.totalChecks}</Text>
                 <Text weight="regular" style={styles.statLabel}>Toplam Kontrol</Text>
               </View>
               <View style={styles.statCard}>
-                <Text style={styles.statIcon}>
-                  {stats.improvement > 0 ? '📈' : stats.improvement < 0 ? '📉' : '➖'}
-                </Text>
+                <Icon 
+                  name={stats.improvement > 0 ? 'trending-up-outline' : stats.improvement < 0 ? 'trending-down-outline' : 'remove-outline'} 
+                  size={28} 
+                  color={stats.improvement > 0 ? '#10B981' : stats.improvement < 0 ? '#EF4444' : '#666'}
+                  style={styles.statIcon}
+                />
                 <Text 
                   weight="bold" 
                   style={[
@@ -374,14 +378,14 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation, route }) => {
                 <Text weight="regular" style={styles.statLabel}>İyileşme</Text>
               </View>
               <View style={styles.statCard}>
-                <Text style={styles.statIcon}>📅</Text>
+                <Icon name="calendar-outline" size={28} color="#3B82F6" style={styles.statIcon} />
                 <Text weight="bold" style={styles.statNumber}>
                   {stats.lastCheckDate || '-'}
                 </Text>
                 <Text weight="regular" style={styles.statLabel}>Son Kontrol</Text>
               </View>
               <View style={styles.statCard}>
-                <Text style={styles.statIcon}>⭐</Text>
+                <Icon name="star-outline" size={28} color="#3B82F6" style={styles.statIcon} />
                 <Text weight="bold" style={styles.statNumber}>
                   {stats.averageScore || '-'}
                 </Text>
@@ -395,7 +399,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation, route }) => {
         <View style={styles.section}>
           <Text weight="bold" style={styles.sectionTitle}>Öneriler</Text>
           <View style={styles.tipCard}>
-            <Text style={styles.tipIcon}>💡</Text>
+            <Icon name="bulb-outline" size={32} color="#F59E0B" style={styles.tipIcon} />
             <View style={styles.tipContent}>
               <Text weight="semibold" style={styles.tipTitle}>
                 Düzenli Kontrol
@@ -406,7 +410,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation, route }) => {
             </View>
           </View>
           <View style={styles.tipCard}>
-            <Text style={styles.tipIcon}>🌞</Text>
+            <Icon name="sunny-outline" size={32} color="#F59E0B" style={styles.tipIcon} />
             <View style={styles.tipContent}>
               <Text weight="semibold" style={styles.tipTitle}>
                 Güneş Koruması
@@ -417,7 +421,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation, route }) => {
             </View>
           </View>
           <View style={styles.tipCard}>
-            <Text style={styles.tipIcon}>💧</Text>
+            <Icon name="water-outline" size={32} color="#3B82F6" style={styles.tipIcon} />
             <View style={styles.tipContent}>
               <Text weight="semibold" style={styles.tipTitle}>
                 Yeterli Su Tüketimi
@@ -437,14 +441,14 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation, route }) => {
               style={styles.actionCard}
               onPress={() => navigation.navigate('AppointmentCreate')}
             >
-              <Text style={styles.actionIcon}>📅</Text>
+              <Icon name="calendar-outline" size={32} color="#3B82F6" style={styles.actionIcon} />
               <Text weight="semibold" style={styles.actionText}>Randevu Al</Text>
             </TouchableOpacity>
             <TouchableOpacity 
               style={styles.actionCard}
               onPress={() => navigation.navigate('Messages')}
             >
-              <Text style={styles.actionIcon}>💬</Text>
+              <Icon name="chatbubbles-outline" size={32} color="#3B82F6" style={styles.actionIcon} />
               <Text weight="semibold" style={styles.actionText}>Uzman Desteği</Text>
             </TouchableOpacity>
           </View>
@@ -522,9 +526,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 16,
   },
-  heroIcon: {
-    fontSize: 40,
-  },
   heroTitle: {
     fontSize: 24,
     color: '#FFFFFF',
@@ -550,10 +551,6 @@ const styles = StyleSheet.create({
   heroButtonText: {
     color: '#3B82F6',
     fontSize: 16,
-  },
-  heroButtonIcon: {
-    fontSize: 18,
-    color: '#3B82F6',
   },
   section: {
     marginTop: 24,
@@ -637,7 +634,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   emptyIcon: {
-    fontSize: 64,
     marginBottom: 16,
   },
   emptyTitle: {
@@ -673,7 +669,6 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   statIcon: {
-    fontSize: 28,
     marginBottom: 8,
   },
   statNumber: {
@@ -702,7 +697,6 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   tipIcon: {
-    fontSize: 32,
     marginRight: 12,
   },
   tipContent: {
@@ -740,7 +734,6 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   actionIcon: {
-    fontSize: 32,
     marginBottom: 8,
   },
   actionText: {
@@ -790,7 +783,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   checkStatusIcon: {
-    fontSize: 14,
     marginRight: 4,
   },
   checkStatusText: {

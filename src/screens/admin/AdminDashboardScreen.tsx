@@ -9,6 +9,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import Icon from 'react-native-vector-icons/Ionicons';
 import { Text, LoadingModal } from '../../components';
 import { supabase } from '../../config/supabase';
 import { useAuthStore } from '../../store/authStore';
@@ -150,7 +151,7 @@ const AdminDashboardScreen: React.FC<AdminDashboardScreenProps> = ({ navigation 
               onPress={() => navigation.navigate('AdminAppointments')}
             >
               <View style={[styles.statIconContainer, { backgroundColor: '#DBEAFE' }]}>
-                <Text style={styles.statIcon}>📅</Text>
+                <Icon name="calendar-outline" size={24} color="#3B82F6" />
               </View>
               <Text weight="bold" style={styles.statNumber}>
                 {stats.pendingAppointments}
@@ -165,7 +166,7 @@ const AdminDashboardScreen: React.FC<AdminDashboardScreenProps> = ({ navigation 
               onPress={() => navigation.navigate('AdminHairChecks')}
             >
               <View style={[styles.statIconContainer, { backgroundColor: '#FCE7F3' }]}>
-                <Text style={styles.statIcon}>🔬</Text>
+                <Icon name="analytics-outline" size={24} color="#EC4899" />
               </View>
               <Text weight="bold" style={styles.statNumber}>
                 {stats.pendingHairChecks}
@@ -180,7 +181,7 @@ const AdminDashboardScreen: React.FC<AdminDashboardScreenProps> = ({ navigation 
               onPress={() => navigation.navigate('AdminMessages')}
             >
               <View style={[styles.statIconContainer, { backgroundColor: '#FEF3C7' }]}>
-                <Text style={styles.statIcon}>💬</Text>
+                <Icon name="chatbubbles-outline" size={24} color="#F59E0B" />
               </View>
               <Text weight="bold" style={styles.statNumber}>
                 {stats.unreadMessages}
@@ -192,7 +193,7 @@ const AdminDashboardScreen: React.FC<AdminDashboardScreenProps> = ({ navigation 
 
             <View style={styles.statCard}>
               <View style={[styles.statIconContainer, { backgroundColor: '#D1FAE5' }]}>
-                <Text style={styles.statIcon}>👥</Text>
+                <Icon name="people-outline" size={24} color="#10B981" />
               </View>
               <Text weight="bold" style={styles.statNumber}>
                 {stats.totalUsers}
@@ -215,7 +216,7 @@ const AdminDashboardScreen: React.FC<AdminDashboardScreenProps> = ({ navigation 
 
           {recentAppointments.length === 0 ? (
             <View style={styles.emptyCard}>
-              <Text style={styles.emptyIcon}>📅</Text>
+              <Icon name="calendar-outline" size={48} color="#D1D5DB" style={styles.emptyIcon} />
               <Text weight="medium" style={styles.emptyText}>
                 Henüz randevu yok
               </Text>
@@ -269,7 +270,7 @@ const AdminDashboardScreen: React.FC<AdminDashboardScreenProps> = ({ navigation 
 
           {recentHairChecks.length === 0 ? (
             <View style={styles.emptyCard}>
-              <Text style={styles.emptyIcon}>🔬</Text>
+              <Icon name="analytics-outline" size={48} color="#D1D5DB" style={styles.emptyIcon} />
               <Text weight="medium" style={styles.emptyText}>
                 Henüz kontrol yok
               </Text>
@@ -320,7 +321,7 @@ const AdminDashboardScreen: React.FC<AdminDashboardScreenProps> = ({ navigation 
               style={styles.actionButton}
               onPress={() => navigation.navigate('AdminAppointments')}
             >
-              <Text style={styles.actionIcon}>📅</Text>
+              <Icon name="calendar-outline" size={32} color="#3B82F6" style={styles.actionIcon} />
               <Text weight="semibold" style={styles.actionText}>
                 Randevular
               </Text>
@@ -330,7 +331,7 @@ const AdminDashboardScreen: React.FC<AdminDashboardScreenProps> = ({ navigation 
               style={styles.actionButton}
               onPress={() => navigation.navigate('AdminHairChecks')}
             >
-              <Text style={styles.actionIcon}>🔬</Text>
+              <Icon name="analytics-outline" size={32} color="#3B82F6" style={styles.actionIcon} />
               <Text weight="semibold" style={styles.actionText}>
                 Kontroller
               </Text>
@@ -340,7 +341,7 @@ const AdminDashboardScreen: React.FC<AdminDashboardScreenProps> = ({ navigation 
               style={styles.actionButton}
               onPress={() => navigation.navigate('AdminMessages')}
             >
-              <Text style={styles.actionIcon}>💬</Text>
+              <Icon name="chatbubbles-outline" size={32} color="#3B82F6" style={styles.actionIcon} />
               <Text weight="semibold" style={styles.actionText}>
                 Mesajlar
               </Text>
@@ -428,9 +429,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 12,
   },
-  statIcon: {
-    fontSize: 24,
-  },
   statNumber: {
     fontSize: 28,
     color: '#1A1A1A',
@@ -489,7 +487,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   emptyIcon: {
-    fontSize: 48,
     marginBottom: 12,
   },
   emptyText: {
@@ -517,7 +514,6 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   actionIcon: {
-    fontSize: 32,
     marginBottom: 8,
   },
   actionText: {

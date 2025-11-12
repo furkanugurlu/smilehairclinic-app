@@ -6,12 +6,14 @@ import {
   Image,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import Icon from 'react-native-vector-icons/Ionicons';
 import { Text } from '../../components';
 
 interface PhotoStep {
   id: string;
   label: string;
   icon: string;
+  iconColor: string;
 }
 
 interface HairCheckStartScreenProps {
@@ -20,11 +22,11 @@ interface HairCheckStartScreenProps {
 
 const HairCheckStartScreen: React.FC<HairCheckStartScreenProps> = ({ navigation }) => {
   const photoSteps: PhotoStep[] = [
-    { id: 'front', label: 'Ön Görünüm', icon: '😊' },
-    { id: 'right45', label: 'Sağ 45°', icon: '↻' },
-    { id: 'left45', label: 'Sol 45°', icon: '↺' },
-    { id: 'top', label: 'Üst Görünüm', icon: '↑' },
-    { id: 'back', label: 'Arka Görünüm', icon: '👤' },
+    { id: 'front', label: 'Ön Görünüm', icon: 'happy-outline', iconColor: '#3B82F6' },
+    { id: 'right45', label: 'Sağ 45°', icon: 'arrow-redo-outline', iconColor: '#10B981' },
+    { id: 'left45', label: 'Sol 45°', icon: 'arrow-undo-outline', iconColor: '#10B981' },
+    { id: 'top', label: 'Üst Görünüm', icon: 'arrow-up-outline', iconColor: '#F59E0B' },
+    { id: 'back', label: 'Arka Görünüm', icon: 'person-outline', iconColor: '#8B5CF6' },
   ];
 
   const handleStartCapture = () => {
@@ -65,7 +67,7 @@ const HairCheckStartScreen: React.FC<HairCheckStartScreenProps> = ({ navigation 
           <View style={styles.photoRow}>
             {photoSteps.slice(0, 2).map(photo => (
               <View key={photo.id} style={styles.photoCard}>
-                <Text style={styles.photoIcon}>{photo.icon}</Text>
+                <Icon name={photo.icon} size={32} color={photo.iconColor} style={styles.photoIcon} />
                 <Text weight="semibold" style={styles.photoLabel}>
                   {photo.label}
                 </Text>
@@ -76,7 +78,7 @@ const HairCheckStartScreen: React.FC<HairCheckStartScreenProps> = ({ navigation 
           <View style={styles.photoRow}>
             {photoSteps.slice(2, 4).map(photo => (
               <View key={photo.id} style={styles.photoCard}>
-                <Text style={styles.photoIcon}>{photo.icon}</Text>
+                <Icon name={photo.icon} size={32} color={photo.iconColor} style={styles.photoIcon} />
                 <Text weight="semibold" style={styles.photoLabel}>
                   {photo.label}
                 </Text>
@@ -86,7 +88,7 @@ const HairCheckStartScreen: React.FC<HairCheckStartScreenProps> = ({ navigation 
 
           <View style={styles.photoRowCenter}>
             <View style={styles.photoCard}>
-              <Text style={styles.photoIcon}>{photoSteps[4].icon}</Text>
+              <Icon name={photoSteps[4].icon} size={32} color={photoSteps[4].iconColor} style={styles.photoIcon} />
               <Text weight="semibold" style={styles.photoLabel}>
                 {photoSteps[4].label}
               </Text>
@@ -182,7 +184,6 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   photoIcon: {
-    fontSize: 32,
     marginBottom: 6,
   },
   photoLabel: {

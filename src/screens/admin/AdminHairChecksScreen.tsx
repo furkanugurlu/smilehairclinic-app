@@ -10,6 +10,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import Icon from 'react-native-vector-icons/Ionicons';
 import { Text, LoadingModal, FilterTabs, FilterOption } from '../../components';
 import { supabase } from '../../config/supabase';
 import { HairCheck, HairCheckStatus } from '../../types';
@@ -173,7 +174,7 @@ const AdminHairChecksScreen: React.FC<AdminHairChecksScreenProps> = ({ navigatio
       >
         {filteredHairChecks.length === 0 ? (
           <View style={styles.emptyContainer}>
-            <Text style={styles.emptyIcon}>🔬</Text>
+            <Icon name="analytics-outline" size={64} color="#D1D5DB" style={styles.emptyIcon} />
             <Text weight="semibold" style={styles.emptyTitle}>
               Kontrol Bulunamadı
             </Text>
@@ -249,8 +250,9 @@ const AdminHairChecksScreen: React.FC<AdminHairChecksScreenProps> = ({ navigatio
 
                 <View style={styles.viewButton}>
                   <Text weight="semibold" style={styles.viewButtonText}>
-                    Detayları Görüntüle →
+                    Detayları Görüntüle
                   </Text>
+                  <Icon name="arrow-forward" size={16} color="#3B82F6" />
                 </View>
               </TouchableOpacity>
             ))}
@@ -294,7 +296,6 @@ const styles = StyleSheet.create({
     paddingVertical: 80,
   },
   emptyIcon: {
-    fontSize: 64,
     marginBottom: 16,
   },
   emptyTitle: {
@@ -394,10 +395,13 @@ const styles = StyleSheet.create({
     lineHeight: 18,
   },
   viewButton: {
+    flexDirection: 'row',
     backgroundColor: '#F3F4F6',
     paddingVertical: 12,
     borderRadius: 8,
     alignItems: 'center',
+    justifyContent: 'center',
+    gap: 6,
   },
   viewButtonText: {
     fontSize: 14,

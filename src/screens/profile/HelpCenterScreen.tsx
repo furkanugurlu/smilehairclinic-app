@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { useTranslation } from 'react-i18next';
 import { Text } from '../../components';
 
 interface FAQItem {
@@ -15,68 +16,59 @@ interface HelpCenterScreenProps {
 }
 
 const HelpCenterScreen: React.FC<HelpCenterScreenProps> = ({ navigation }) => {
+  const { t } = useTranslation();
   const [expandedId, setExpandedId] = useState<number | null>(null);
 
   const faqs: FAQItem[] = [
     {
-      category: 'Operasyon Sonrası',
-      question: 'Ne kadar süre antibiyotik içeren krem kullanmam gerekir?',
-      answer:
-        'Operasyondan sonraki 5 gün içinde donör bölgeniz iyileştiyse antibiyotik içeren kremleri kullanmaya devam etmeniz gerekmez.',
+      category: t('helpCenter.postOperation'),
+      question: t('helpCenter.antibioticQuestion'),
+      answer: t('helpCenter.antibioticAnswer'),
     },
     {
-      category: 'Operasyon Sonrası',
-      question: 'Saç ekimi sonrasında ne kadar süre şapka kullanmalıyım?',
-      answer:
-        'Saç ekiminden sonra size verdiğimiz şapkayı 10 gün boyunca kullanmanızı öneririz.',
+      category: t('helpCenter.postOperation'),
+      question: t('helpCenter.hatQuestion'),
+      answer: t('helpCenter.hatAnswer'),
     },
     {
-      category: 'Operasyon Sonrası',
-      question: 'Ameliyattan sonra ne zaman spor yapabilirim?',
-      answer:
-        'Operasyondan sonra egzersiz yapmaya başlamak için en az 1 ay beklemelisiniz.',
+      category: t('helpCenter.postOperation'),
+      question: t('helpCenter.exerciseQuestion'),
+      answer: t('helpCenter.exerciseAnswer'),
     },
     {
-      category: 'Bakım',
-      question: 'Saç ekiminden sonra her gün başımı yıkamalı mıyım?',
-      answer:
-        'Saç ekiminden sonra 1 ay boyunca her gün başınızı yıkamalısınız.',
+      category: t('helpCenter.postOperation'),
+      question: t('helpCenter.bandageQuestion'),
+      answer: t('helpCenter.bandageAnswer'),
     },
     {
-      category: 'Operasyon Sonrası',
-      question: 'Saç ekimi sonrasında bandajımı ne zaman çıkarabilirim?',
-      answer:
-        'Operasyondan sonraki ikinci gün başınızı yıkamanız gerekir. Başınızı yıkamadan önce bandaj çıkartılır ve sonrasında tekrar kullanılması gerekmez.',
+      category: t('helpCenter.care'),
+      question: t('helpCenter.washingQuestion'),
+      answer: t('helpCenter.washingAnswer'),
     },
     {
-      category: 'Bakım',
-      question: 'Ne kadar süre özel şampuan kullanmam gerekir?',
-      answer:
-        '1 ay boyunca size önerdiğimiz şampuanı kullanmalısınız. Saçlarınızın ve baş bölgenizin sağlığından emin olduktan sonra her zaman kullandığınız şampuanı kullanmaya devam edebilirsiniz.',
+      category: t('helpCenter.care'),
+      question: t('helpCenter.specialShampooQuestion'),
+      answer: t('helpCenter.specialShampooAnswer'),
     },
     {
-      category: 'Bakım',
-      question: 'Ne kadar süre Panthenol sprey kullanmam gerekir?',
-      answer:
-        'Yaklaşık 15 gün boyunca, kabuklar deriden tamamen atılana kadar kullanmanız gerekir.',
+      category: t('helpCenter.care'),
+      question: t('helpCenter.panthenolDurationQuestion'),
+      answer: t('helpCenter.panthenolDurationAnswer'),
     },
     {
-      category: 'Genel',
-      question: 'Saç ekimi sonrası ne zaman cinsel ilişkiye girebilirim?',
-      answer:
-        'Operasyon sonrası cinsel ilişki konusunda kısıtlama getirilmez, çok efor harcamamanız önerilir.',
+      category: t('helpCenter.care'),
+      question: t('helpCenter.differentProductQuestion'),
+      answer: t('helpCenter.differentProductAnswer'),
     },
     {
-      category: 'Bakım',
-      question: 'Önerilen ürünler dışında farklı bir ürün kullanabilir miyim?',
-      answer:
-        'Kullanacağınız ürünlerin içeriğini dikkatle incelemeli, size zarar vermeyecek, paraben içermeyen, doğal ürünleri tercih etmelisiniz.',
+      category: t('helpCenter.care'),
+      question: t('helpCenter.panthenolDonorQuestion'),
+      answer: t('helpCenter.panthenolDonorAnswer'),
     },
     {
-      category: 'Bakım',
-      question: 'Panthenol spreyi donör bölgede kullanabilir miyim?',
-      answer:
-        'Kullanabilirsiniz ancak bu spreyin çok hızlı tükenmesine sebep olacaktır.',
+      category: t('helpCenter.general'),
+      question: t('helpCenter.sexualActivityQuestion'),
+      answer: t('helpCenter.sexualActivityAnswer'),
     },
   ];
 
@@ -96,7 +88,7 @@ const HelpCenterScreen: React.FC<HelpCenterScreenProps> = ({ navigation }) => {
           <Icon name="chevron-back" size={28} color="#1A1A1A" />
         </TouchableOpacity>
         <Text weight="bold" style={styles.headerTitle}>
-          Yardım Merkezi
+          {t('helpCenter.title')}
         </Text>
         <View style={styles.headerRight} />
       </View>
@@ -110,10 +102,10 @@ const HelpCenterScreen: React.FC<HelpCenterScreenProps> = ({ navigation }) => {
             style={styles.heroIcon}
           />
           <Text weight="bold" style={styles.heroTitle}>
-            Sıkça Sorulan Sorular
+            {t('helpCenter.heroTitle')}
           </Text>
           <Text weight="regular" style={styles.heroDescription}>
-            Saç ekimi operasyonu öncesi ve sonrası hakkında merak ettikleriniz
+            {t('helpCenter.heroDescription')}
           </Text>
         </View>
 
@@ -170,10 +162,10 @@ const HelpCenterScreen: React.FC<HelpCenterScreenProps> = ({ navigation }) => {
             />
             <View style={styles.contactContent}>
               <Text weight="bold" style={styles.contactTitle}>
-                Başka bir sorunuz mu var?
+                {t('helpCenter.contactTitle')}
               </Text>
               <Text weight="regular" style={styles.contactDescription}>
-                Uzman ekibimiz size yardımcı olmak için hazır
+                {t('helpCenter.contactDescription')}
               </Text>
             </View>
             <TouchableOpacity
@@ -181,7 +173,7 @@ const HelpCenterScreen: React.FC<HelpCenterScreenProps> = ({ navigation }) => {
               onPress={() => navigation.navigate('Messages')}
             >
               <Text weight="semibold" style={styles.contactButtonText}>
-                İletişime Geç
+                {t('helpCenter.contactButton')}
               </Text>
             </TouchableOpacity>
           </View>

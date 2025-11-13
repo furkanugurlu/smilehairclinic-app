@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useFocusEffect } from '@react-navigation/native';
+import { useTranslation } from 'react-i18next';
 import { Text, LoadingModal } from '../../components';
 import { supabase } from '../../config/supabase';
 import { useAuthStore } from '../../store/authStore';
@@ -23,6 +24,7 @@ interface MessageListScreenProps {
 const MessageListScreen: React.FC<MessageListScreenProps> = ({
   navigation,
 }) => {
+  const { t } = useTranslation();
   const { user } = useAuthStore();
   const isAdmin = user?.is_admin || false;
   const [chatUsers, setChatUsers] = useState<ChatUser[]>([]);
@@ -67,14 +69,14 @@ const MessageListScreen: React.FC<MessageListScreenProps> = ({
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [user?.id, isAdmin]);
+  }, [user?.id, isAdmin, t]);
 
   // Ekran focus olduğunda listeyi yenile (chat'ten geri dönüldüğünde)
   useFocusEffect(
     useCallback(() => {
       console.log('📱 MessageList ekranı focus oldu, liste yenileniyor...');
       fetchChatUsers(false);
-    }, [user?.id, isAdmin]),
+    }, [user?.id, isAdmin, t]),
   );
 
   const fetchChatUsers = async (showLoader = true) => {
@@ -208,7 +210,7 @@ const MessageListScreen: React.FC<MessageListScreenProps> = ({
         setChatUsers([
           {
             user_id: adminProfile?.id || 'admin',
-            full_name: 'Uzman Destek',
+            full_name: t('messages.expertSupport'),
             email: adminProfile?.email || '',
             avatar_url: adminProfile?.avatar_url,
             last_message: lastMessage?.message,
@@ -266,7 +268,7 @@ const MessageListScreen: React.FC<MessageListScreenProps> = ({
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
         <Text weight="bold" style={styles.title}>
-          {isAdmin ? 'Mesajlar' : 'Destek'}
+          {isAdmin ? t('messages.title') : t('messages.support')}
         </Text>
       </View>
 
@@ -368,7 +370,7 @@ const styles = StyleSheet.create({
   },
   header: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#FFFFFF',
     paddingHorizontal: 24,
@@ -378,8 +380,9 @@ const styles = StyleSheet.create({
     height: 68,
   },
   title: {
-    fontSize: 24,
+    fontSize: 18,
     color: '#1A1A1A',
+    textAlign: 'center',
   },
   emptyContainer: {
     flex: 1,

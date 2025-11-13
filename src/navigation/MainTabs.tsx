@@ -3,6 +3,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { useTranslation } from 'react-i18next';
 import { useAuthStore } from '../store/authStore';
 
 // Admin Screens
@@ -23,6 +24,7 @@ import ProfileStack from './ProfileStack';
 const Tab = createBottomTabNavigator();
 
 const MainTabs: React.FC = () => {
+  const { t } = useTranslation();
   const insets = useSafeAreaInsets();
   const { user } = useAuthStore();
   const isAdmin = user?.is_admin || false;
@@ -44,12 +46,12 @@ const MainTabs: React.FC = () => {
         tabBarIconStyle: styles.tabBarIcon,
       }}
     >
-      {/* Tab 1: Ana Sayfa / Dashboard */}
+      {/* Tab 1: Home / Dashboard */}
       <Tab.Screen
         name={isAdmin ? 'AdminDashboard' : 'Home'}
         component={isAdmin ? AdminDashboardScreen : HomeScreen}
         options={{
-          tabBarLabel: 'Ana Sayfa',
+          tabBarLabel: t('home.title'),
           tabBarIcon: ({ color, focused }) => (
             <Icon
               name={focused ? 'home' : 'home-outline'}
@@ -60,12 +62,12 @@ const MainTabs: React.FC = () => {
         }}
       />
 
-      {/* Tab 2: Randevular */}
+      {/* Tab 2: Appointments */}
       <Tab.Screen
         name={isAdmin ? 'AdminAppointments' : 'Appointments'}
         component={isAdmin ? AdminAppointmentsScreen : AppointmentsScreen}
         options={{
-          tabBarLabel: 'Randevular',
+          tabBarLabel: t('appointments.title'),
           tabBarIcon: ({ color, focused }) => (
             <Icon
               name={focused ? 'calendar' : 'calendar-outline'}
@@ -127,12 +129,12 @@ const MainTabs: React.FC = () => {
         />
       )}
 
-      {/* Tab 4: Mesajlar / Destek */}
+      {/* Tab 4: Messages / Support */}
       <Tab.Screen
         name={isAdmin ? 'AdminMessages' : 'Messages'}
         component={MessageListScreen}
         options={{
-          tabBarLabel: isAdmin ? 'Mesajlar' : 'Destek',
+          tabBarLabel: isAdmin ? t('messages.title') : t('profile.support'),
           tabBarIcon: ({ color, focused }) => (
             <Icon
               name={focused ? 'chatbubbles' : 'chatbubbles-outline'}
@@ -143,12 +145,12 @@ const MainTabs: React.FC = () => {
         }}
       />
 
-      {/* Tab 5: Profil */}
+      {/* Tab 5: Profile */}
       <Tab.Screen
         name={isAdmin ? 'AdminProfile' : 'Profile'}
         component={ProfileStack}
         options={{
-          tabBarLabel: 'Profil',
+          tabBarLabel: t('profile.title'),
           tabBarIcon: ({ color, focused }) => (
             <Icon
               name={focused ? 'person' : 'person-outline'}

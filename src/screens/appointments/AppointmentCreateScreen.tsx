@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import {
   View,
   StyleSheet,
@@ -11,6 +11,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Ionicons';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import { useTranslation } from 'react-i18next';
 import { Text, LoadingModal, BottomSheet } from '../../components';
 import { supabase } from '../../config/supabase';
 import { useAuthStore } from '../../store/authStore';
@@ -20,52 +21,59 @@ interface AppointmentCreateScreenProps {
   navigation: any;
 }
 
-const serviceOptions: ServiceOption[] = [
-  {
-    id: 'hair_transplant_consultation',
-    title: 'Saç Ekimi Danışmanlığı',
-    description: 'Saç ekimi için detaylı analiz ve planlama',
-    icon: 'analytics',
-    estimatedDuration: '45 dakika',
-    estimatedPrice: 'Ücretsiz',
-  },
-  {
-    id: 'hair_analysis',
-    title: 'Saç Analizi',
-    description: 'Saç ve saç derisi sağlığının değerlendirilmesi',
-    icon: 'stats-chart',
-    estimatedDuration: '30 dakika',
-    estimatedPrice: '₺500',
-  },
-  {
-    id: 'hair_treatment',
-    title: 'Saç Tedavisi',
-    description: 'PRP, mezoterapi ve diğer tedaviler',
-    icon: 'medkit',
-    estimatedDuration: '60 dakika',
-    estimatedPrice: '₺1,500',
-  },
-  {
-    id: 'follow_up',
-    title: 'Kontrol Randevusu',
-    description: 'Tedavi sonrası kontrol',
-    icon: 'checkmark-done-circle',
-    estimatedDuration: '20 dakika',
-    estimatedPrice: 'Ücretsiz',
-  },
-  {
-    id: 'other',
-    title: 'Diğer',
-    description: 'Diğer hizmetler için randevu',
-    icon: 'document-text',
-    estimatedDuration: '30 dakika',
-  },
-];
-
 const AppointmentCreateScreen: React.FC<AppointmentCreateScreenProps> = ({
   navigation,
 }) => {
+  const { t } = useTranslation();
   const { user } = useAuthStore();
+
+  const serviceOptions: ServiceOption[] = useMemo(
+    () => [
+      {
+        id: 'hair_transplant_consultation',
+        title: t('appointments.services.hair_transplant_consultation'),
+        description: t(
+          'appointments.services.hair_transplant_consultation_desc',
+        ),
+        icon: 'analytics',
+        estimatedDuration: `45 ${t('appointments.minutes')}`,
+        estimatedPrice: t('appointments.free'),
+      },
+      {
+        id: 'hair_analysis',
+        title: t('appointments.services.hair_analysis'),
+        description: t('appointments.services.hair_analysis_desc'),
+        icon: 'stats-chart',
+        estimatedDuration: `30 ${t('appointments.minutes')}`,
+        estimatedPrice: '₺500',
+      },
+      {
+        id: 'hair_treatment',
+        title: t('appointments.services.hair_treatment'),
+        description: t('appointments.services.hair_treatment_desc'),
+        icon: 'medkit',
+        estimatedDuration: `60 ${t('appointments.minutes')}`,
+        estimatedPrice: '₺1,500',
+      },
+      {
+        id: 'follow_up',
+        title: t('appointments.services.follow_up'),
+        description: t('appointments.services.follow_up_desc'),
+        icon: 'checkmark-done-circle',
+        estimatedDuration: `20 ${t('appointments.minutes')}`,
+        estimatedPrice: t('appointments.free'),
+      },
+      {
+        id: 'other',
+        title: t('appointments.services.other'),
+        description: t('appointments.services.other_desc'),
+        icon: 'document-text',
+        estimatedDuration: `30 ${t('appointments.minutes')}`,
+      },
+    ],
+    [t],
+  );
+
   const [selectedService, setSelectedService] = useState<ServiceType | null>(
     null,
   );
@@ -103,7 +111,8 @@ const AppointmentCreateScreen: React.FC<AppointmentCreateScreenProps> = ({
   };
 
   const formatDate = (date: Date) => {
-    return date.toLocaleDateString('tr-TR', {
+    const locale = t('common.locale');
+    return date.toLocaleDateString(locale, {
       day: 'numeric',
       month: 'long',
       year: 'numeric',
@@ -111,7 +120,8 @@ const AppointmentCreateScreen: React.FC<AppointmentCreateScreenProps> = ({
   };
 
   const formatTime = (time: Date) => {
-    return time.toLocaleTimeString('tr-TR', {
+    const locale = t('common.locale');
+    return time.toLocaleTimeString(locale, {
       hour: '2-digit',
       minute: '2-digit',
     });
@@ -119,12 +129,12 @@ const AppointmentCreateScreen: React.FC<AppointmentCreateScreenProps> = ({
 
   const handleCreateAppointment = async () => {
     if (!selectedService) {
-      Alert.alert('Hata', 'Lütfen bir hizmet seçin');
+      Alert.alert(t('common.error'), t('appointments.selectServiceError'));
       return;
     }
 
     if (!user?.id) {
-      Alert.alert('Hata', 'Kullanıcı bilgisi bulunamadı');
+      Alert.alert(t('common.error'), t('common.userNotFound'));
       return;
     }
 
@@ -175,22 +185,15 @@ const AppointmentCreateScreen: React.FC<AppointmentCreateScreenProps> = ({
 
       console.log('✅ Randevu oluşturuldu:', data);
 
-      Alert.alert(
-        'Başarılı',
-        'Randevunuz başarıyla oluşturuldu. En kısa sürede onaylanacaktır.',
-        [
-          {
-            text: 'Tamam',
-            onPress: () => navigation.goBack(),
-          },
-        ],
-      );
+      Alert.alert(t('common.success'), t('appointments.createSuccessMessage'), [
+        {
+          text: t('common.ok'),
+          onPress: () => navigation.goBack(),
+        },
+      ]);
     } catch (error: any) {
       console.error('❌ Create appointment error:', error);
-      Alert.alert(
-        'Hata',
-        'Randevu oluşturulurken bir hata oluştu. Lütfen tekrar deneyin.',
-      );
+      Alert.alert(t('common.error'), t('appointments.createErrorMessage'));
     } finally {
       setLoading(false);
     }
@@ -198,7 +201,10 @@ const AppointmentCreateScreen: React.FC<AppointmentCreateScreenProps> = ({
 
   return (
     <SafeAreaView style={styles.container}>
-      <LoadingModal visible={loading} message="Randevu oluşturuluyor..." />
+      <LoadingModal
+        visible={loading}
+        message={t('appointments.creatingAppointment')}
+      />
 
       <View style={styles.header}>
         <TouchableOpacity
@@ -208,7 +214,7 @@ const AppointmentCreateScreen: React.FC<AppointmentCreateScreenProps> = ({
           <Icon name="chevron-back" size={28} color="#1A1A1A" />
         </TouchableOpacity>
         <Text weight="bold" style={styles.headerTitle}>
-          Yeni Randevu
+          {t('appointments.newAppointment')}
         </Text>
         <View style={{ width: 40 }} />
       </View>
@@ -217,7 +223,7 @@ const AppointmentCreateScreen: React.FC<AppointmentCreateScreenProps> = ({
         {/* Hizmet Seçimi */}
         <View style={styles.section}>
           <Text weight="bold" style={styles.sectionTitle}>
-            Hizmet Seçin
+            {t('appointments.selectService')}
           </Text>
           {serviceOptions.map(service => (
             <TouchableOpacity
@@ -313,7 +319,7 @@ const AppointmentCreateScreen: React.FC<AppointmentCreateScreenProps> = ({
         {/* Tarih ve Saat Seçimi */}
         <View style={styles.section}>
           <Text weight="bold" style={styles.sectionTitle}>
-            Tarih ve Saat
+            {t('appointments.selectDateTime')}
           </Text>
 
           <View style={styles.dateTimeContainer}>
@@ -329,7 +335,7 @@ const AppointmentCreateScreen: React.FC<AppointmentCreateScreenProps> = ({
               />
               <View style={styles.dateTimeInfo}>
                 <Text weight="regular" style={styles.dateTimeLabel}>
-                  Tarih
+                  {t('common.date')}
                 </Text>
                 <Text weight="semibold" style={styles.dateTimeValue}>
                   {formatDate(selectedDate)}
@@ -349,7 +355,7 @@ const AppointmentCreateScreen: React.FC<AppointmentCreateScreenProps> = ({
               />
               <View style={styles.dateTimeInfo}>
                 <Text weight="regular" style={styles.dateTimeLabel}>
-                  Saat
+                  {t('common.time')}
                 </Text>
                 <Text weight="semibold" style={styles.dateTimeValue}>
                   {formatTime(selectedTime)}
@@ -363,7 +369,7 @@ const AppointmentCreateScreen: React.FC<AppointmentCreateScreenProps> = ({
             visible={showDatePicker && Platform.OS === 'ios'}
             onClose={() => setShowDatePicker(false)}
             onConfirm={confirmDateSelection}
-            title="Tarih Seçin"
+            title={t('appointments.selectDateTitle')}
           >
             <DateTimePicker
               value={selectedDate}
@@ -380,7 +386,7 @@ const AppointmentCreateScreen: React.FC<AppointmentCreateScreenProps> = ({
             visible={showTimePicker && Platform.OS === 'ios'}
             onClose={() => setShowTimePicker(false)}
             onConfirm={confirmTimeSelection}
-            title="Saat Seçin"
+            title={t('appointments.selectTimeTitle')}
           >
             <DateTimePicker
               value={selectedTime}
@@ -417,11 +423,11 @@ const AppointmentCreateScreen: React.FC<AppointmentCreateScreenProps> = ({
         {/* Notlar */}
         <View style={styles.section}>
           <Text weight="bold" style={styles.sectionTitle}>
-            Notlarınız (Opsiyonel)
+            {t('appointments.yourNotes')}
           </Text>
           <TextInput
             style={styles.notesInput}
-            placeholder="Belirtmek istediğiniz özel bir durum varsa yazabilirsiniz..."
+            placeholder={t('appointments.notesPlaceholder')}
             placeholderTextColor="#999"
             multiline
             numberOfLines={4}
@@ -441,11 +447,10 @@ const AppointmentCreateScreen: React.FC<AppointmentCreateScreenProps> = ({
           />
           <View style={styles.infoContent}>
             <Text weight="semibold" style={styles.infoTitle}>
-              Önemli Bilgi
+              {t('appointments.importantInfo')}
             </Text>
             <Text weight="regular" style={styles.infoText}>
-              Randevunuz oluşturulduktan sonra klinik tarafından onaylanacaktır.
-              Onay durumu hakkında bilgilendirileceksiniz.
+              {t('appointments.infoMessage')}
             </Text>
           </View>
         </View>
@@ -460,7 +465,7 @@ const AppointmentCreateScreen: React.FC<AppointmentCreateScreenProps> = ({
           disabled={!selectedService || loading}
         >
           <Text weight="bold" style={styles.createButtonText}>
-            Randevu Oluştur
+            {t('appointments.createAppointment')}
           </Text>
         </TouchableOpacity>
 

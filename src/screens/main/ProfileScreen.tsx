@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { useTranslation } from 'react-i18next';
 import { Text } from '../../components';
 import { useAuthStore } from '../../store/authStore';
 
@@ -17,16 +18,17 @@ interface ProfileScreenProps {
 }
 
 const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
+  const { t } = useTranslation();
   const { user, signOut } = useAuthStore();
 
   const handleSignOut = () => {
-    Alert.alert('Çıkış Yap', 'Çıkış yapmak istediğinize emin misiniz?', [
+    Alert.alert(t('auth.logout'), t('auth.logoutConfirm'), [
       {
-        text: 'İptal',
+        text: t('common.cancel'),
         style: 'cancel',
       },
       {
-        text: 'Çıkış Yap',
+        text: t('auth.logout'),
         style: 'destructive',
         onPress: signOut,
       },
@@ -48,7 +50,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
           )}
           <View style={styles.userInfo}>
             <Text weight="bold" style={styles.name}>
-              {user?.full_name || 'Kullanıcı'}
+              {user?.full_name || t('profile.user')}
             </Text>
             <Text weight="regular" style={styles.email}>
               {user?.email}
@@ -58,7 +60,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
 
         <View style={styles.section}>
           <Text weight="semibold" style={styles.sectionTitle}>
-            Hesap
+            {t('profile.account')}
           </Text>
           <TouchableOpacity
             style={styles.menuItem}
@@ -71,7 +73,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
               style={styles.menuIcon}
             />
             <Text weight="regular" style={styles.menuText}>
-              Profil Bilgileri
+              {t('profile.personalInfo')}
             </Text>
             <Icon name="chevron-forward" size={24} color="#D1D5DB" />
           </TouchableOpacity>
@@ -83,7 +85,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
               style={styles.menuIcon}
             />
             <Text weight="regular" style={styles.menuText}>
-              Şifre Değiştir
+              {t('auth.changePassword')}
             </Text>
             <Icon name="chevron-forward" size={24} color="#D1D5DB" />
           </TouchableOpacity>
@@ -91,7 +93,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
 
         <View style={styles.section}>
           <Text weight="semibold" style={styles.sectionTitle}>
-            Ayarlar
+            {t('profile.settings')}
           </Text>
           <TouchableOpacity style={styles.menuItem}>
             <Icon
@@ -101,7 +103,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
               style={styles.menuIcon}
             />
             <Text weight="regular" style={styles.menuText}>
-              Bildirimler
+              {t('profile.notifications')}
             </Text>
             <Icon name="chevron-forward" size={24} color="#D1D5DB" />
           </TouchableOpacity>
@@ -116,7 +118,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
               style={styles.menuIcon}
             />
             <Text weight="regular" style={styles.menuText}>
-              Dil
+              {t('profile.language')}
             </Text>
             <Icon name="chevron-forward" size={24} color="#D1D5DB" />
           </TouchableOpacity>
@@ -124,7 +126,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
 
         <View style={styles.section}>
           <Text weight="semibold" style={styles.sectionTitle}>
-            Destek
+            {t('profile.support')}
           </Text>
           <TouchableOpacity
             style={styles.menuItem}
@@ -137,7 +139,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
               style={styles.menuIcon}
             />
             <Text weight="regular" style={styles.menuText}>
-              Yardım Merkezi
+              {t('profile.helpCenter')}
             </Text>
             <Icon name="chevron-forward" size={24} color="#D1D5DB" />
           </TouchableOpacity>
@@ -152,7 +154,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
               style={styles.menuIcon}
             />
             <Text weight="regular" style={styles.menuText}>
-              İletişim
+              {t('profile.contact')}
             </Text>
             <Icon name="chevron-forward" size={24} color="#D1D5DB" />
           </TouchableOpacity>
@@ -167,7 +169,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
               style={styles.menuIcon}
             />
             <Text weight="regular" style={styles.menuText}>
-              Hakkında
+              {t('profile.about')}
             </Text>
             <Icon name="chevron-forward" size={24} color="#D1D5DB" />
           </TouchableOpacity>
@@ -179,7 +181,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
             onPress={handleSignOut}
           >
             <Text weight="semibold" style={styles.signOutText}>
-              Çıkış Yap
+              {t('auth.logout')}
             </Text>
           </TouchableOpacity>
         </View>

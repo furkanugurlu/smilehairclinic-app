@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { useTranslation } from 'react-i18next';
 import { Text } from '../../components';
 
 interface LanguageScreenProps {
@@ -20,11 +21,14 @@ const languages: Language[] = [
 ];
 
 const LanguageScreen: React.FC<LanguageScreenProps> = ({ navigation }) => {
-  const [selectedLanguage, setSelectedLanguage] = useState<string>('tr');
+  const { t, i18n } = useTranslation();
+  const [selectedLanguage, setSelectedLanguage] = useState<string>(
+    i18n.language,
+  );
 
-  const handleLanguageSelect = (languageId: string) => {
+  const handleLanguageSelect = async (languageId: string) => {
     setSelectedLanguage(languageId);
-    // TODO: Implement actual language change logic here
+    await i18n.changeLanguage(languageId);
   };
 
   return (
@@ -37,7 +41,7 @@ const LanguageScreen: React.FC<LanguageScreenProps> = ({ navigation }) => {
           <Icon name="chevron-back" size={28} color="#1A1A1A" />
         </TouchableOpacity>
         <Text weight="bold" style={styles.headerTitle}>
-          Dil
+          {t('language.title')}
         </Text>
         <View style={styles.headerRight} />
       </View>
@@ -45,7 +49,7 @@ const LanguageScreen: React.FC<LanguageScreenProps> = ({ navigation }) => {
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.content}>
           <Text weight="bold" style={styles.description}>
-            Uygulama dilini seçin
+            {t('language.selectLanguage')}
           </Text>
 
           {languages.map(language => (

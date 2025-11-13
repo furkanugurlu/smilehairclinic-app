@@ -14,6 +14,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
+import { useTranslation } from 'react-i18next';
 import { useAuthStore } from '../../store/authStore';
 import { Text } from '../../components';
 
@@ -21,18 +22,19 @@ interface LoginScreenProps {
   navigation: any;
 }
 
-const LoginSchema = Yup.object().shape({
-  email: Yup.string()
-    .email('Geçerli bir e-posta adresi giriniz')
-    .required('E-posta adresi zorunludur'),
-  password: Yup.string()
-    .min(6, 'Şifre en az 6 karakter olmalıdır')
-    .required('Şifre zorunludur'),
-});
-
 const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
+  const { t } = useTranslation();
   const { signIn, loading } = useAuthStore();
   const [showPassword, setShowPassword] = useState(false);
+
+  const LoginSchema = Yup.object().shape({
+    email: Yup.string()
+      .email(t('auth.validation.emailInvalid'))
+      .required(t('auth.validation.emailRequired')),
+    password: Yup.string()
+      .min(6, t('auth.validation.passwordMin'))
+      .required(t('auth.validation.passwordRequired')),
+  });
 
   const handleLogin = async (values: { email: string; password: string }) => {
     try {
@@ -42,15 +44,15 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
     }
   };
 
-  const adminUser = { 
+  const adminUser = {
     email: 'admin@smilehairclinic.com',
     password: 'şifre1234',
-  }
+  };
 
   const normalUser = {
     email: 'furkancelik@gmail.com',
     password: '123456',
-  }
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -68,8 +70,12 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
               style={styles.logo}
               resizeMode="contain"
             />
-            <Text weight="bold" style={styles.title}>Smile Hair Clinic</Text>
-            <Text weight="regular" style={styles.subtitle}>Hesabınıza giriş yapın</Text>
+            <Text weight="bold" style={styles.title}>
+              {t('common.appName')}
+            </Text>
+            <Text weight="regular" style={styles.subtitle}>
+              {t('auth.loginTitle')}
+            </Text>
           </View>
 
           <Formik
@@ -87,13 +93,15 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
             }) => (
               <View style={styles.form}>
                 <View style={styles.inputContainer}>
-                  <Text weight="semibold" style={styles.label}>E-posta</Text>
+                  <Text weight="semibold" style={styles.label}>
+                    {t('auth.email')}
+                  </Text>
                   <TextInput
                     style={[
                       styles.input,
                       touched.email && errors.email && styles.inputError,
                     ]}
-                    placeholder="ornek@email.com"
+                    placeholder={t('auth.emailPlaceholder')}
                     placeholderTextColor="#999"
                     onChangeText={handleChange('email')}
                     onBlur={handleBlur('email')}
@@ -108,15 +116,19 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
                 </View>
 
                 <View style={styles.inputContainer}>
-                  <Text weight="semibold" style={styles.label}>Şifre</Text>
+                  <Text weight="semibold" style={styles.label}>
+                    {t('auth.password')}
+                  </Text>
                   <View style={styles.passwordContainer}>
                     <TextInput
                       style={[
                         styles.input,
                         styles.passwordInput,
-                        touched.password && errors.password && styles.inputError,
+                        touched.password &&
+                          errors.password &&
+                          styles.inputError,
                       ]}
-                      placeholder="••••••••"
+                      placeholder={t('auth.passwordPlaceholder')}
                       placeholderTextColor="#999"
                       onChangeText={handleChange('password')}
                       onBlur={handleBlur('password')}
@@ -129,10 +141,10 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
                       style={styles.eyeButton}
                       onPress={() => setShowPassword(!showPassword)}
                     >
-                      <Icon 
-                        name={showPassword ? 'eye-outline' : 'eye-off-outline'} 
-                        size={22} 
-                        color="#666" 
+                      <Icon
+                        name={showPassword ? 'eye-outline' : 'eye-off-outline'}
+                        size={22}
+                        color="#666"
                       />
                     </TouchableOpacity>
                   </View>
@@ -147,7 +159,9 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
                     // TODO: Şifremi unuttum sayfasına yönlendir
                   }}
                 >
-                  <Text weight="semibold" style={styles.forgotPasswordText}>Şifremi Unuttum</Text>
+                  <Text weight="semibold" style={styles.forgotPasswordText}>
+                    {t('auth.forgotPassword')}
+                  </Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity
@@ -155,15 +169,21 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
                   onPress={() => handleSubmit()}
                   disabled={loading}
                 >
-                    <Text weight="semibold" style={styles.buttonText}>Giriş Yap</Text>
+                  <Text weight="semibold" style={styles.buttonText}>
+                    {t('auth.login')}
+                  </Text>
                 </TouchableOpacity>
 
                 <View style={styles.footer}>
-                  <Text weight="regular" style={styles.footerText}>Hesabınız yok mu? </Text>
+                  <Text weight="regular" style={styles.footerText}>
+                    {t('auth.dontHaveAccount')}{' '}
+                  </Text>
                   <TouchableOpacity
                     onPress={() => navigation.navigate('Register')}
                   >
-                    <Text weight="semibold" style={styles.footerLink}>Kayıt Ol</Text>
+                    <Text weight="semibold" style={styles.footerLink}>
+                      {t('auth.register')}
+                    </Text>
                   </TouchableOpacity>
                 </View>
               </View>
@@ -293,4 +313,3 @@ const styles = StyleSheet.create({
 });
 
 export default LoginScreen;
-

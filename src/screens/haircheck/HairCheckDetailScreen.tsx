@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import {
   View,
   StyleSheet,
@@ -10,56 +10,62 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { useTranslation } from 'react-i18next';
 import { Text } from '../../components';
 import { HairCheck, AnalysisStatus } from '../../types';
 
 const { width } = Dimensions.get('window');
 
 const HairCheckDetailScreen = ({ navigation, route }: any) => {
+  const { t } = useTranslation();
   const { check } = route.params;
   const [selectedPhoto, setSelectedPhoto] = useState<string | null>(null);
 
-  const photos = [
-    {
-      id: 'front',
-      label: 'Ön Görünüm',
-      icon: 'happy-outline',
-      iconColor: '#01213D',
-      url: check.photo_front,
-    },
-    {
-      id: 'right45',
-      label: 'Sağ 45°',
-      icon: 'arrow-redo-outline',
-      iconColor: '#10B981',
-      url: check.photo_right45,
-    },
-    {
-      id: 'left45',
-      label: 'Sol 45°',
-      icon: 'arrow-undo-outline',
-      iconColor: '#10B981',
-      url: check.photo_left45,
-    },
-    {
-      id: 'top',
-      label: 'Üst Görünüm',
-      icon: 'arrow-up-outline',
-      iconColor: '#F59E0B',
-      url: check.photo_top,
-    },
-    {
-      id: 'back',
-      label: 'Arka Görünüm',
-      icon: 'person-outline',
-      iconColor: '#8B5CF6',
-      url: check.photo_back,
-    },
-  ];
+  const photos = useMemo(
+    () => [
+      {
+        id: 'front',
+        label: t('hairCheck.frontView'),
+        icon: 'happy-outline',
+        iconColor: '#01213D',
+        url: check.photo_front,
+      },
+      {
+        id: 'right45',
+        label: t('hairCheck.right45'),
+        icon: 'arrow-redo-outline',
+        iconColor: '#10B981',
+        url: check.photo_right45,
+      },
+      {
+        id: 'left45',
+        label: t('hairCheck.left45'),
+        icon: 'arrow-undo-outline',
+        iconColor: '#10B981',
+        url: check.photo_left45,
+      },
+      {
+        id: 'top',
+        label: t('hairCheck.topView'),
+        icon: 'arrow-up-outline',
+        iconColor: '#F59E0B',
+        url: check.photo_top,
+      },
+      {
+        id: 'back',
+        label: t('hairCheck.backView'),
+        icon: 'person-outline',
+        iconColor: '#8B5CF6',
+        url: check.photo_back,
+      },
+    ],
+    [t, check],
+  );
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString('tr-TR', {
+    const locale = t('common.locale');
+    return date.toLocaleDateString(locale, {
       day: 'numeric',
       month: 'long',
       year: 'numeric',
@@ -84,13 +90,13 @@ const HairCheckDetailScreen = ({ navigation, route }: any) => {
   const getStatusText = (status?: AnalysisStatus) => {
     switch (status) {
       case 'good':
-        return 'İyi';
+        return t('hairCheck.statusGood');
       case 'warning':
-        return 'Dikkat';
+        return t('hairCheck.statusWarning');
       case 'critical':
-        return 'Kritik';
+        return t('hairCheck.statusCritical');
       default:
-        return 'Bilinmiyor';
+        return t('hairCheck.statusUnknown');
     }
   };
 
@@ -123,15 +129,15 @@ const HairCheckDetailScreen = ({ navigation, route }: any) => {
 
   const getStatusDescription = () => {
     if (check.status === 'pending') {
-      return 'Kontrolünüz uzmanlarımız tarafından incelenmek üzere sıraya alındı.';
+      return t('hairCheck.pendingDesc');
     }
     if (check.status === 'analyzing') {
-      return 'Fotoğraflarınız yapay zeka destekli sistemimiz tarafından analiz ediliyor.';
+      return t('hairCheck.analyzingDesc');
     }
     if (check.status === 'completed') {
-      return check.analysis_notes || 'Analiz tamamlandı.';
+      return check.analysis_notes || t('hairCheck.analysisComplete');
     }
-    return 'İşlem durumu bilinmiyor.';
+    return t('hairCheck.statusUnknownDesc');
   };
 
   return (
@@ -145,7 +151,7 @@ const HairCheckDetailScreen = ({ navigation, route }: any) => {
           <Icon name="chevron-back" size={28} color="#1A1A1A" />
         </TouchableOpacity>
         <Text weight="bold" style={styles.headerTitle}>
-          Kontrol Detayı
+          {t('hairCheck.detailTitle')}
         </Text>
         <View style={styles.headerRight} />
       </View>
@@ -166,7 +172,7 @@ const HairCheckDetailScreen = ({ navigation, route }: any) => {
               />
               <View>
                 <Text weight="regular" style={styles.dateLabel}>
-                  Kontrol Tarihi
+                  {t('hairCheck.checkDate')}
                 </Text>
                 <Text weight="semibold" style={styles.dateText}>
                   {formatDate(check.created_at)}
@@ -193,8 +199,8 @@ const HairCheckDetailScreen = ({ navigation, route }: any) => {
               ) : (
                 <Text weight="semibold" style={styles.statusText}>
                   {check.status === 'pending'
-                    ? 'İnceleniyor'
-                    : 'Analiz Ediliyor'}
+                    ? t('hairCheck.statusPending')
+                    : t('hairCheck.statusAnalyzing')}
                 </Text>
               )}
             </View>
@@ -205,7 +211,7 @@ const HairCheckDetailScreen = ({ navigation, route }: any) => {
         {check.status === 'completed' && check.analysis_score && (
           <View style={styles.section}>
             <Text weight="bold" style={styles.sectionTitle}>
-              Analiz Sonucu
+              {t('hairCheck.analysisResult')}
             </Text>
             <View style={styles.scoreCard}>
               <View style={styles.scoreCircle}>
@@ -218,7 +224,7 @@ const HairCheckDetailScreen = ({ navigation, route }: any) => {
               </View>
               <View style={styles.scoreInfo}>
                 <Text weight="semibold" style={styles.scoreTitle}>
-                  Saç Sağlığı Skoru
+                  {t('hairCheck.hairHealthScore')}
                 </Text>
                 <Text weight="regular" style={styles.scoreDescription}>
                   {getStatusDescription()}
@@ -241,8 +247,8 @@ const HairCheckDetailScreen = ({ navigation, route }: any) => {
               <View style={styles.infoContent}>
                 <Text weight="semibold" style={styles.infoTitle}>
                   {check.status === 'pending'
-                    ? 'İnceleme Aşamasında'
-                    : 'Analiz Ediliyor'}
+                    ? t('hairCheck.pendingTitle')
+                    : t('hairCheck.analyzingTitle')}
                 </Text>
                 <Text weight="regular" style={styles.infoText}>
                   {getStatusDescription()}
@@ -255,7 +261,7 @@ const HairCheckDetailScreen = ({ navigation, route }: any) => {
         {/* Fotoğraflar */}
         <View style={styles.section}>
           <Text weight="bold" style={styles.sectionTitle}>
-            Fotoğraflar
+            {t('hairCheck.photosTitle')}
           </Text>
           <View style={styles.photosGrid}>
             {photos.map((photo, index) => (
@@ -285,7 +291,7 @@ const HairCheckDetailScreen = ({ navigation, route }: any) => {
         {check.status === 'completed' && check.recommendations && (
           <View style={styles.section}>
             <Text weight="bold" style={styles.sectionTitle}>
-              Öneriler
+              {t('hairCheck.recommendationsTitle')}
             </Text>
             <View style={styles.recommendationsCard}>
               <Icon

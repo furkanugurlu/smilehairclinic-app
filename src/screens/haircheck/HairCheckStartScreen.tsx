@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { View, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { useTranslation } from 'react-i18next';
 import { Text } from '../../components';
 
 interface PhotoStep {
@@ -18,38 +19,43 @@ interface HairCheckStartScreenProps {
 const HairCheckStartScreen: React.FC<HairCheckStartScreenProps> = ({
   navigation,
 }) => {
-  const photoSteps: PhotoStep[] = [
-    {
-      id: 'front',
-      label: 'Ön Görünüm',
-      icon: 'happy-outline',
-      iconColor: '#01213D',
-    },
-    {
-      id: 'right45',
-      label: 'Sağ 45°',
-      icon: 'arrow-redo-outline',
-      iconColor: '#10B981',
-    },
-    {
-      id: 'left45',
-      label: 'Sol 45°',
-      icon: 'arrow-undo-outline',
-      iconColor: '#10B981',
-    },
-    {
-      id: 'top',
-      label: 'Üst Görünüm',
-      icon: 'arrow-up-outline',
-      iconColor: '#F59E0B',
-    },
-    {
-      id: 'back',
-      label: 'Arka Görünüm',
-      icon: 'person-outline',
-      iconColor: '#8B5CF6',
-    },
-  ];
+  const { t } = useTranslation();
+
+  const photoSteps: PhotoStep[] = useMemo(
+    () => [
+      {
+        id: 'front',
+        label: t('hairCheck.frontView'),
+        icon: 'happy-outline',
+        iconColor: '#01213D',
+      },
+      {
+        id: 'right45',
+        label: t('hairCheck.right45'),
+        icon: 'arrow-redo-outline',
+        iconColor: '#10B981',
+      },
+      {
+        id: 'left45',
+        label: t('hairCheck.left45'),
+        icon: 'arrow-undo-outline',
+        iconColor: '#10B981',
+      },
+      {
+        id: 'top',
+        label: t('hairCheck.topView'),
+        icon: 'arrow-up-outline',
+        iconColor: '#F59E0B',
+      },
+      {
+        id: 'back',
+        label: t('hairCheck.backView'),
+        icon: 'person-outline',
+        iconColor: '#8B5CF6',
+      },
+    ],
+    [t],
+  );
 
   const handleStartCapture = () => {
     console.log('🔬 Fotoğraf çekimi başlatılıyor...');
@@ -79,7 +85,7 @@ const HairCheckStartScreen: React.FC<HairCheckStartScreenProps> = ({
           {/* Title */}
           <View style={styles.titleSection}>
             <Text weight="bold" style={styles.title}>
-              Uzman değerlendirmesi{'\n'}için fotoğraflarınızı{'\n'}çekelim.
+              {t('hairCheck.startTitle')}
             </Text>
           </View>
 
@@ -140,11 +146,11 @@ const HairCheckStartScreen: React.FC<HairCheckStartScreenProps> = ({
             onPress={handleStartCapture}
           >
             <Text weight="bold" style={styles.scanButtonText}>
-              Taramayı Başlat
+              {t('hairCheck.startScan')}
             </Text>
           </TouchableOpacity>
           <Text weight="regular" style={styles.helperText}>
-            İyi aydınlatılmış bir ortamda olduğunuzdan emin olun.
+            {t('hairCheck.wellLitNote')}
           </Text>
         </View>
       </View>

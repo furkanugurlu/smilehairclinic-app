@@ -12,6 +12,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
+import { useTranslation } from 'react-i18next';
 import { Text } from '../../components';
 import { useAuthStore } from '../../store/authStore';
 import { supabase } from '../../config/supabase';
@@ -25,24 +26,25 @@ interface ProfileEditScreenProps {
   navigation: any;
 }
 
-const ProfileSchema = Yup.object().shape({
-  fullName: Yup.string()
-    .min(2, 'Ad Soyad en az 2 karakter olmalıdır')
-    .required('Ad Soyad zorunludur'),
-  phone: Yup.string()
-    .matches(/^[0-9]{10}$/, 'Geçerli bir telefon numarası giriniz (10 haneli)')
-    .required('Telefon numarası zorunludur'),
-});
-
 const ProfileEditScreen: React.FC<ProfileEditScreenProps> = ({
   navigation,
 }) => {
+  const { t } = useTranslation();
   const { user } = useAuthStore();
   const [loading, setLoading] = useState(false);
   const [uploadingAvatar, setUploadingAvatar] = useState(false);
   const [avatarUrl, setAvatarUrl] = useState<string | undefined>(
     user?.avatar_url,
   );
+
+  const ProfileSchema = Yup.object().shape({
+    fullName: Yup.string()
+      .min(2, t('auth.validation.fullNameMin'))
+      .required(t('auth.validation.fullNameRequired')),
+    phone: Yup.string()
+      .matches(/^[0-9]{10}$/, t('auth.validation.phoneInvalid'))
+      .required(t('auth.validation.phoneRequired')),
+  });
 
   const handleSelectAvatar = async () => {
     try {
@@ -64,7 +66,7 @@ const ProfileEditScreen: React.FC<ProfileEditScreenProps> = ({
       });
 
       if (!user?.id) {
-        Alert.alert('Hata', 'Kullanıcı bulunamadı');
+        Alert.alert(t('common.error'), t('profile.userNotFound'));
         setUploadingAvatar(false);
         return;
       }
@@ -104,24 +106,24 @@ const ProfileEditScreen: React.FC<ProfileEditScreenProps> = ({
       await initialize();
 
       console.log('✅ Avatar başarıyla güncellendi');
-      Alert.alert('Başarılı', 'Profil fotoğrafınız güncellendi');
+      Alert.alert(t('common.success'), t('profile.photoUpdateSuccess'));
     } catch (error: any) {
       console.error('❌ Avatar yükleme hatası:', error);
 
       // Daha detaylı hata mesajı
-      let errorMessage = 'Fotoğraf yüklenirken bir hata oluştu';
+      let errorMessage = t('profile.photoUpdateError');
 
       if (error.message) {
         if (error.message.includes('Network')) {
-          errorMessage = 'Network hatası. İnternet bağlantınızı kontrol edin.';
+          errorMessage = t('errors.networkError');
         } else if (error.message.includes('Storage')) {
-          errorMessage = 'Storage hatası. Lütfen daha sonra tekrar deneyin.';
+          errorMessage = t('errors.storageError');
         } else {
           errorMessage = error.message;
         }
       }
 
-      Alert.alert('Hata', errorMessage);
+      Alert.alert(t('common.error'), errorMessage);
     } finally {
       setUploadingAvatar(false);
     }
@@ -133,7 +135,7 @@ const ProfileEditScreen: React.FC<ProfileEditScreenProps> = ({
       console.log('💾 Profil güncelleniyor...');
 
       if (!user?.id) {
-        Alert.alert('Hata', 'Kullanıcı bulunamadı');
+        Alert.alert(t('common.error'), t('profile.userNotFound'));
         return;
       }
 
@@ -160,18 +162,15 @@ const ProfileEditScreen: React.FC<ProfileEditScreenProps> = ({
         await initialize();
       }
 
-      Alert.alert('Başarılı', 'Profil bilgileriniz güncellendi', [
+      Alert.alert(t('common.success'), t('profile.updateSuccess'), [
         {
-          text: 'Tamam',
+          text: t('common.close'),
           onPress: () => navigation.goBack(),
         },
       ]);
     } catch (error: any) {
       console.error('❌ Profil güncelleme hatası:', error);
-      Alert.alert(
-        'Hata',
-        error.message || 'Profil güncellenirken bir hata oluştu',
-      );
+      Alert.alert(t('common.error'), error.message || t('profile.updateError'));
     } finally {
       setLoading(false);
     }
@@ -187,7 +186,7 @@ const ProfileEditScreen: React.FC<ProfileEditScreenProps> = ({
           <Icon name="chevron-back" size={28} color="#01213D" />
         </TouchableOpacity>
         <Text weight="bold" style={styles.title}>
-          Profil Bilgileri
+          {t('profile.personalInfo')}
         </Text>
         <View style={styles.placeholder} />
       </View>
@@ -217,7 +216,9 @@ const ProfileEditScreen: React.FC<ProfileEditScreenProps> = ({
             disabled={uploadingAvatar}
           >
             <Text weight="semibold" style={styles.changeAvatarText}>
-              {uploadingAvatar ? 'Yükleniyor...' : 'Fotoğraf Değiştir'}
+              {uploadingAvatar
+                ? t('profile.uploading')
+                : t('profile.changePhoto')}
             </Text>
           </TouchableOpacity>
         </View>
@@ -242,7 +243,7 @@ const ProfileEditScreen: React.FC<ProfileEditScreenProps> = ({
             <View style={styles.form}>
               <View style={styles.inputContainer}>
                 <Text weight="semibold" style={styles.label}>
-                  E-posta
+                  {t('profile.emailLabel')}
                 </Text>
                 <View style={styles.disabledInput}>
                   <Text weight="regular" style={styles.disabledText}>
@@ -250,13 +251,13 @@ const ProfileEditScreen: React.FC<ProfileEditScreenProps> = ({
                   </Text>
                 </View>
                 <Text weight="regular" style={styles.hint}>
-                  E-posta adresi değiştirilemez
+                  {t('profile.emailNotEditable')}
                 </Text>
               </View>
 
               <View style={styles.inputContainer}>
                 <Text weight="semibold" style={styles.label}>
-                  Ad Soyad
+                  {t('profile.fullNameLabel')}
                 </Text>
                 <TextInput
                   style={[
@@ -277,7 +278,7 @@ const ProfileEditScreen: React.FC<ProfileEditScreenProps> = ({
 
               <View style={styles.inputContainer}>
                 <Text weight="semibold" style={styles.label}>
-                  Telefon
+                  {t('profile.phoneLabel')}
                 </Text>
                 <TextInput
                   style={[
@@ -306,7 +307,7 @@ const ProfileEditScreen: React.FC<ProfileEditScreenProps> = ({
                   <ActivityIndicator color="#FFFFFF" />
                 ) : (
                   <Text weight="semibold" style={styles.buttonText}>
-                    Güncelle
+                    {t('common.update')}
                   </Text>
                 )}
               </TouchableOpacity>

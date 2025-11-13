@@ -11,6 +11,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useFocusEffect } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { useTranslation } from 'react-i18next';
 import { Text, LoadingModal } from '../../components';
 import { supabase } from '../../config/supabase';
 import { useAuthStore } from '../../store/authStore';
@@ -23,6 +24,7 @@ interface AppointmentsScreenProps {
 const AppointmentsScreen: React.FC<AppointmentsScreenProps> = ({
   navigation,
 }) => {
+  const { t } = useTranslation();
   const { user } = useAuthStore();
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [loading, setLoading] = useState(true);
@@ -57,7 +59,7 @@ const AppointmentsScreen: React.FC<AppointmentsScreenProps> = ({
       setAppointments(data || []);
     } catch (error: any) {
       console.error('❌ Fetch appointments error:', error);
-      Alert.alert('Hata', 'Randevular yüklenirken bir hata oluştu');
+      Alert.alert(t('common.error'), t('appointments.loadError'));
     } finally {
       setLoading(false);
     }
@@ -74,36 +76,32 @@ const AppointmentsScreen: React.FC<AppointmentsScreenProps> = ({
   };
 
   const handleCancelAppointment = (appointment: Appointment) => {
-    Alert.alert(
-      'Randevu İptali',
-      'Bu randevuyu iptal etmek istediğinize emin misiniz?',
-      [
-        { text: 'Hayır', style: 'cancel' },
-        {
-          text: 'Evet, İptal Et',
-          style: 'destructive',
-          onPress: async () => {
-            try {
-              const { error } = await supabase
-                .from('appointments')
-                .update({
-                  status: 'cancelled',
-                  cancelled_at: new Date().toISOString(),
-                })
-                .eq('id', appointment.id);
+    Alert.alert(t('appointments.cancel'), t('appointments.cancelConfirm'), [
+      { text: t('common.no'), style: 'cancel' },
+      {
+        text: t('common.yes'),
+        style: 'destructive',
+        onPress: async () => {
+          try {
+            const { error } = await supabase
+              .from('appointments')
+              .update({
+                status: 'cancelled',
+                cancelled_at: new Date().toISOString(),
+              })
+              .eq('id', appointment.id);
 
-              if (error) throw error;
+            if (error) throw error;
 
-              Alert.alert('Başarılı', 'Randevunuz iptal edildi');
-              fetchAppointments();
-            } catch (error) {
-              console.error('❌ Cancel appointment error:', error);
-              Alert.alert('Hata', 'Randevu iptal edilirken bir hata oluştu');
-            }
-          },
+            Alert.alert(t('common.success'), t('appointments.cancelSuccess'));
+            fetchAppointments();
+          } catch (error) {
+            console.error('❌ Cancel appointment error:', error);
+            Alert.alert(t('common.error'), t('appointments.cancelError'));
+          }
         },
-      ],
-    );
+      },
+    ]);
   };
 
   const getStatusColor = (status: AppointmentStatus) => {
@@ -122,18 +120,7 @@ const AppointmentsScreen: React.FC<AppointmentsScreenProps> = ({
   };
 
   const getStatusText = (status: AppointmentStatus) => {
-    switch (status) {
-      case 'confirmed':
-        return 'Onaylandı';
-      case 'pending':
-        return 'Beklemede';
-      case 'cancelled':
-        return 'İptal Edildi';
-      case 'completed':
-        return 'Tamamlandı';
-      default:
-        return status;
-    }
+    return t(`appointments.statuses.${status}`);
   };
 
   const getStatusIconName = (status: AppointmentStatus) => {
@@ -152,19 +139,13 @@ const AppointmentsScreen: React.FC<AppointmentsScreenProps> = ({
   };
 
   const getServiceTitle = (serviceType: string) => {
-    const serviceMap: Record<string, string> = {
-      hair_transplant_consultation: 'Saç Ekimi Danışmanlığı',
-      hair_analysis: 'Saç Analizi',
-      hair_treatment: 'Saç Tedavisi',
-      follow_up: 'Kontrol Randevusu',
-      other: 'Diğer',
-    };
-    return serviceMap[serviceType] || serviceType;
+    return t(`appointments.services.${serviceType}`);
   };
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString('tr-TR', {
+    const locale = t('common.locale');
+    return date.toLocaleDateString(locale, {
       day: 'numeric',
       month: 'long',
       year: 'numeric',
@@ -194,8 +175,9 @@ const AppointmentsScreen: React.FC<AppointmentsScreenProps> = ({
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
+        <View style={{ width: 40 }} />
         <Text weight="bold" style={styles.title}>
-          Randevularım
+          {t('appointments.title')}
         </Text>
         <TouchableOpacity
           style={styles.addButton}
@@ -226,18 +208,17 @@ const AppointmentsScreen: React.FC<AppointmentsScreenProps> = ({
                   style={styles.emptyIcon}
                 />
                 <Text weight="semibold" style={styles.emptyTitle}>
-                  Randevu Bulunamadı
+                  {t('appointments.noAppointments')}
                 </Text>
                 <Text weight="regular" style={styles.emptyText}>
-                  Henüz bir randevunuz bulunmuyor. Yeni bir randevu oluşturmak
-                  için aşağıdaki butona tıklayın.
+                  {t('appointments.noAppointmentsDescription')}
                 </Text>
                 <TouchableOpacity
                   style={styles.button}
                   onPress={handleCreateAppointment}
                 >
                   <Text weight="semibold" style={styles.buttonText}>
-                    Yeni Randevu Oluştur
+                    {t('appointments.create')}
                   </Text>
                 </TouchableOpacity>
               </View>
@@ -248,7 +229,7 @@ const AppointmentsScreen: React.FC<AppointmentsScreenProps> = ({
               {upcomingAppointments.length > 0 && (
                 <View style={styles.section}>
                   <Text weight="bold" style={styles.sectionTitle}>
-                    Yaklaşan Randevular
+                    {t('appointments.upcoming')}
                   </Text>
                   {upcomingAppointments.map(appointment => (
                     <View key={appointment.id} style={styles.appointmentCard}>
@@ -319,7 +300,7 @@ const AppointmentsScreen: React.FC<AppointmentsScreenProps> = ({
                         {appointment.patient_notes && (
                           <View style={styles.notesContainer}>
                             <Text weight="regular" style={styles.notesLabel}>
-                              Notlarınız:
+                              {t('appointments.yourNotesLabel')}
                             </Text>
                             <Text weight="regular" style={styles.notesText}>
                               {appointment.patient_notes}
@@ -330,7 +311,7 @@ const AppointmentsScreen: React.FC<AppointmentsScreenProps> = ({
                         {appointment.doctor_notes && (
                           <View style={styles.notesContainer}>
                             <Text weight="regular" style={styles.notesLabel}>
-                              Klinik Notları:
+                              {t('appointments.clinicNotes')}
                             </Text>
                             <Text weight="regular" style={styles.notesText}>
                               {appointment.doctor_notes}
@@ -341,7 +322,7 @@ const AppointmentsScreen: React.FC<AppointmentsScreenProps> = ({
                         {appointment.estimated_price && (
                           <View style={styles.priceContainer}>
                             <Text weight="regular" style={styles.priceLabel}>
-                              Tahmini Ücret:
+                              {t('appointments.estimatedPrice')}
                             </Text>
                             <Text weight="bold" style={styles.priceText}>
                               ₺{appointment.estimated_price}
@@ -359,7 +340,7 @@ const AppointmentsScreen: React.FC<AppointmentsScreenProps> = ({
                             weight="semibold"
                             style={styles.cancelButtonText}
                           >
-                            Randevuyu İptal Et
+                            {t('appointments.cancelButton')}
                           </Text>
                         </TouchableOpacity>
                       )}
@@ -372,7 +353,7 @@ const AppointmentsScreen: React.FC<AppointmentsScreenProps> = ({
               {pastAppointments.length > 0 && (
                 <View style={styles.section}>
                   <Text weight="bold" style={styles.sectionTitle}>
-                    Geçmiş Randevular
+                    {t('appointments.pastAppointments')}
                   </Text>
                   {pastAppointments.map(appointment => (
                     <View
@@ -451,13 +432,13 @@ const AppointmentsScreen: React.FC<AppointmentsScreenProps> = ({
                 onPress={handleCreateAppointment}
               >
                 <Text weight="bold" style={styles.floatingButtonText}>
-                  + Yeni Randevu
+                  + {t('appointments.newAppointment')}
                 </Text>
               </TouchableOpacity>
             </>
           )}
 
-          <View style={{ height: 100 }} />
+          <View style={{ height: 40 }} />
         </ScrollView>
       )}
     </SafeAreaView>
@@ -486,8 +467,10 @@ const styles = StyleSheet.create({
     height: 68,
   },
   title: {
-    fontSize: 24,
+    fontSize: 18,
     color: '#1A1A1A',
+    flex: 1,
+    textAlign: 'center',
   },
   addButton: {
     width: 40,

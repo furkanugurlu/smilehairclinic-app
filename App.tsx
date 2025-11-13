@@ -8,6 +8,7 @@ import { StatusBar, useColorScheme } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import RootNavigator from './src/navigation/RootNavigator';
+import './src/config/i18n';
 
 function App() {
   const isDarkMode = useColorScheme() === 'dark';

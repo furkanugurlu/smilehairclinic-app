@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import {
   View,
   StyleSheet,
@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { useTranslation } from 'react-i18next';
 import { Text, LoadingModal } from '../../components';
 import { PhotoStep, HairCheckPhotos } from '../../types';
 import {
@@ -27,6 +28,7 @@ interface HairCheckCaptureScreenProps {
 const HairCheckCaptureScreen: React.FC<HairCheckCaptureScreenProps> = ({
   navigation,
 }) => {
+  const { t } = useTranslation();
   const { user } = useAuthStore();
   const [selectedPhotos, setSelectedPhotos] = useState<{
     [key: string]: ImagePickerResult;
@@ -34,38 +36,41 @@ const HairCheckCaptureScreen: React.FC<HairCheckCaptureScreenProps> = ({
   const [uploading, setUploading] = useState(false);
   const [uploadingStep, setUploadingStep] = useState('');
 
-  const photoSteps: PhotoStep[] = [
-    {
-      id: 'front',
-      label: 'Ön Görünüm',
-      icon: '😊',
-      description: 'Yüzünüzü kameraya bakacak şekilde',
-    },
-    {
-      id: 'right45',
-      label: 'Sağ 45°',
-      icon: '↻',
-      description: 'Başınızı sağa 45 derece çevirin',
-    },
-    {
-      id: 'left45',
-      label: 'Sol 45°',
-      icon: '↺',
-      description: 'Başınızı sola 45 derece çevirin',
-    },
-    {
-      id: 'top',
-      label: 'Üst Görünüm',
-      icon: '↑',
-      description: 'Başınızı yukarıdan çekin',
-    },
-    {
-      id: 'back',
-      label: 'Arka Görünüm',
-      icon: '👤',
-      description: 'Başınızın arka kısmını çekin',
-    },
-  ];
+  const photoSteps: PhotoStep[] = useMemo(
+    () => [
+      {
+        id: 'front',
+        label: t('hairCheck.frontView'),
+        icon: '😊',
+        description: t('hairCheck.frontViewDesc'),
+      },
+      {
+        id: 'right45',
+        label: t('hairCheck.right45'),
+        icon: '↻',
+        description: t('hairCheck.right45Desc'),
+      },
+      {
+        id: 'left45',
+        label: t('hairCheck.left45'),
+        icon: '↺',
+        description: t('hairCheck.left45Desc'),
+      },
+      {
+        id: 'top',
+        label: t('hairCheck.topView'),
+        icon: '↑',
+        description: t('hairCheck.topViewDesc'),
+      },
+      {
+        id: 'back',
+        label: t('hairCheck.backView'),
+        icon: '👤',
+        description: t('hairCheck.backViewDesc'),
+      },
+    ],
+    [t],
+  );
 
   const handleSelectPhoto = async (photoId: string) => {
     try {
@@ -80,10 +85,7 @@ const HairCheckCaptureScreen: React.FC<HairCheckCaptureScreenProps> = ({
       }
     } catch (error: any) {
       console.error('❌ Fotoğraf seçme hatası:', error);
-      Alert.alert(
-        'Hata',
-        'Fotoğraf seçilirken bir hata oluştu. Lütfen tekrar deneyin.',
-      );
+      Alert.alert(t('common.error'), t('hairCheck.photoError'));
     }
   };
 
@@ -101,18 +103,18 @@ const HairCheckCaptureScreen: React.FC<HairCheckCaptureScreenProps> = ({
 
   const handleSubmit = async () => {
     if (!user?.id) {
-      Alert.alert('Hata', 'Kullanıcı bilgisi bulunamadı');
+      Alert.alert(t('common.error'), t('common.userNotFound'));
       return;
     }
 
     if (!isAllPhotosSelected()) {
-      Alert.alert('Uyarı', 'Lütfen tüm fotoğrafları seçin');
+      Alert.alert(t('common.warning'), t('hairCheck.selectAllPhotos'));
       return;
     }
 
     try {
       setUploading(true);
-      setUploadingStep('Fotoğraflar yükleniyor...');
+      setUploadingStep(t('hairCheck.uploadingPhotos'));
 
       // Fotoğrafları Supabase Storage'a yükle
       const photoUrls = await uploadMultipleHairCheckPhotos(
@@ -120,7 +122,7 @@ const HairCheckCaptureScreen: React.FC<HairCheckCaptureScreenProps> = ({
         selectedPhotos,
       );
 
-      setUploadingStep('Kontrol kaydediliyor...');
+      setUploadingStep(t('hairCheck.savingCheck'));
 
       // Veritabanına kaydet
       const { data, error } = await supabase
@@ -146,28 +148,23 @@ const HairCheckCaptureScreen: React.FC<HairCheckCaptureScreenProps> = ({
 
       console.log('✅ Hair check kaydedildi:', data);
 
-      Alert.alert(
-        'Başarılı',
-        'Saç kontrolü başarıyla kaydedildi. Uzmanlarımız en kısa sürede değerlendirecek.',
-        [
-          {
-            text: 'Tamam',
-            onPress: () => {
-              // Ana sayfaya dön
-              navigation.navigate('MainTabs', {
-                screen: 'Home',
-                params: { refresh: true },
-              });
-            },
+      Alert.alert(t('common.success'), t('hairCheck.submitSuccess'), [
+        {
+          text: t('common.ok'),
+          onPress: () => {
+            // Ana sayfaya dön
+            navigation.navigate('MainTabs', {
+              screen: 'Home',
+              params: { refresh: true },
+            });
           },
-        ],
-      );
+        },
+      ]);
     } catch (error: any) {
       console.error('❌ Kontrol gönderme hatası:', error);
       Alert.alert(
-        'Hata',
-        error.message ||
-          'Kontrol kaydedilirken bir hata oluştu. Lütfen tekrar deneyin.',
+        t('common.error'),
+        error.message || t('hairCheck.submitError'),
       );
     } finally {
       setUploading(false);
@@ -207,7 +204,7 @@ const HairCheckCaptureScreen: React.FC<HairCheckCaptureScreenProps> = ({
             <>
               <Text style={styles.photoIcon}>{step.icon}</Text>
               <Text weight="medium" style={styles.photoButtonText}>
-                Fotoğraf Seç
+                {t('hairCheck.takePhoto')}
               </Text>
             </>
           )}
@@ -231,7 +228,7 @@ const HairCheckCaptureScreen: React.FC<HairCheckCaptureScreenProps> = ({
           <Icon name="chevron-back" size={28} color="#1A1A1A" />
         </TouchableOpacity>
         <Text weight="bold" style={styles.headerTitle}>
-          Fotoğraf Çekimi
+          {t('hairCheck.photoCapture')}
         </Text>
         <View style={{ width: 40 }} />
       </View>
@@ -242,7 +239,7 @@ const HairCheckCaptureScreen: React.FC<HairCheckCaptureScreenProps> = ({
           <View style={[styles.progressFill, { width: `${progress}%` }]} />
         </View>
         <Text weight="medium" style={styles.progressText}>
-          {completedCount} / {totalCount} Fotoğraf
+          {completedCount} / {totalCount} {t('hairCheck.photos')}
         </Text>
       </View>
 
@@ -256,12 +253,10 @@ const HairCheckCaptureScreen: React.FC<HairCheckCaptureScreenProps> = ({
           <Text style={styles.instructionIcon}>💡</Text>
           <View style={styles.instructionContent}>
             <Text weight="semibold" style={styles.instructionTitle}>
-              Önemli Notlar
+              {t('hairCheck.importantNotes')}
             </Text>
             <Text weight="regular" style={styles.instructionText}>
-              • İyi aydınlatılmış bir ortamda çekim yapın{'\n'}• Saçlarınızı
-              arkaya doğru toplayın{'\n'}• Net ve odaklı fotoğraflar çekin{'\n'}
-              • Her açıdan farklı fotoğraf gereklidir
+              {t('hairCheck.instructions')}
             </Text>
           </View>
         </View>
@@ -285,7 +280,7 @@ const HairCheckCaptureScreen: React.FC<HairCheckCaptureScreenProps> = ({
             <ActivityIndicator color="#FFFFFF" />
           ) : (
             <Text weight="bold" style={styles.submitButtonText}>
-              Kontrolü Gönder
+              {t('hairCheck.submitCheck')}
             </Text>
           )}
         </TouchableOpacity>

@@ -2,6 +2,7 @@ import React from 'react';
 import { View, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { useTranslation } from 'react-i18next';
 import { Text } from '../../../components';
 
 interface AboutScreenProps {
@@ -9,6 +10,8 @@ interface AboutScreenProps {
 }
 
 const AboutScreen: React.FC<AboutScreenProps> = ({ navigation }) => {
+  const { t } = useTranslation();
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
@@ -19,7 +22,7 @@ const AboutScreen: React.FC<AboutScreenProps> = ({ navigation }) => {
           <Icon name="chevron-back" size={28} color="#1A1A1A" />
         </TouchableOpacity>
         <Text weight="bold" style={styles.headerTitle}>
-          Hakkımızda
+          {t('about.title')}
         </Text>
         <View style={styles.headerRight} />
       </View>
@@ -30,37 +33,30 @@ const AboutScreen: React.FC<AboutScreenProps> = ({ navigation }) => {
             <Icon name="happy-outline" size={40} color="#FFFFFF" />
           </View>
           <Text weight="bold" style={styles.clinicName}>
-            Smile Hair Clinic
+            {t('about.clinicName')}
           </Text>
           <Text weight="regular" style={styles.clinicSubtitle}>
-            Türkiye'nin Önde Gelen Saç Ekimi Kliniği
+            {t('about.clinicSubtitle')}
           </Text>
         </View>
 
         <View style={styles.section}>
           <View style={styles.card}>
             <Text weight="semibold" style={styles.cardTitle}>
-              Smile Hair Clinic, Türkiye'nin göz bebeği İstanbul'da, saç ekimi
-              alanında hizmet veren önde gelen kliniklerden biridir.
+              {t('about.description1')}
             </Text>
             <Text weight="regular" style={styles.cardDescription}>
-              Alanında uluslararası tanınırlığa sahip Dr. Gökay Bilgin ve Dr.
-              Mehmet Erdoğan'ın liderliğinde faaliyet gösteren Smile Hair
-              Clinic'te hasta memnuniyeti daima ön planda tutulur.
+              {t('about.description2')}
             </Text>
             <Text weight="regular" style={styles.cardDescription}>
-              Tüm operasyon süreçleri bizzat doktorlar tarafından takip edilir
-              ve ekipte yer alan her bir üye medikal eğitim almış
-              profesyonellerden oluşur. Bugüne kadar dünyanın dört bir yanından
-              gelen çok sayıda hastaya başarılı saç ekimi uygulamaları
-              gerçekleştirilmiştir.
+              {t('about.description3')}
             </Text>
           </View>
         </View>
 
         <View style={styles.section}>
           <Text weight="semibold" style={styles.sectionTitle}>
-            DOKTORLARIMIZ
+            {t('about.doctors')}
           </Text>
 
           <View style={styles.doctorCard}>
@@ -72,7 +68,7 @@ const AboutScreen: React.FC<AboutScreenProps> = ({ navigation }) => {
                 Dr. Gökay Bilgin
               </Text>
               <Text weight="regular" style={styles.doctorTitle}>
-                Kurucu Doktor
+                {t('about.founderDoctor')}
               </Text>
             </View>
           </View>
@@ -86,7 +82,7 @@ const AboutScreen: React.FC<AboutScreenProps> = ({ navigation }) => {
                 Dr. Mehmet Erdoğan
               </Text>
               <Text weight="regular" style={styles.doctorTitle}>
-                Kurucu Doktor
+                {t('about.founderDoctor')}
               </Text>
             </View>
           </View>
@@ -100,7 +96,7 @@ const AboutScreen: React.FC<AboutScreenProps> = ({ navigation }) => {
                 Dr. Firdavs Ahmedov
               </Text>
               <Text weight="regular" style={styles.doctorTitle}>
-                Saç Ekimi Uzmanı
+                {t('about.hairTransplantSpecialist')}
               </Text>
             </View>
           </View>
@@ -114,7 +110,7 @@ const AboutScreen: React.FC<AboutScreenProps> = ({ navigation }) => {
                 Dr. Ali Osman Soluk
               </Text>
               <Text weight="regular" style={styles.doctorTitle}>
-                Saç Ekimi Uzmanı
+                {t('about.hairTransplantSpecialist')}
               </Text>
             </View>
           </View>
@@ -128,7 +124,7 @@ const AboutScreen: React.FC<AboutScreenProps> = ({ navigation }) => {
                 Dr. M. Reşat Arpacı
               </Text>
               <Text weight="regular" style={styles.doctorTitle}>
-                Saç Ekimi Uzmanı
+                {t('about.hairTransplantSpecialist')}
               </Text>
             </View>
           </View>
@@ -136,7 +132,7 @@ const AboutScreen: React.FC<AboutScreenProps> = ({ navigation }) => {
 
         <View style={styles.section}>
           <Text weight="semibold" style={styles.sectionTitle}>
-            FELSEFEMİZ
+            {t('about.philosophy')}
           </Text>
 
           <View style={styles.philosophyCard}>
@@ -147,13 +143,10 @@ const AboutScreen: React.FC<AboutScreenProps> = ({ navigation }) => {
               style={styles.philosophyIcon}
             />
             <Text weight="bold" style={styles.philosophyTitle}>
-              Gerçek Felsefe
+              {t('about.philosophy1Title')}
             </Text>
             <Text weight="regular" style={styles.philosophyDescription}>
-              Her hastanın benzersiz olduğunu biliyoruz. Ekip çalışması ve
-              detaylı planlama ile kişiye özel çözümler sunuyoruz. Saç çizgisi
-              tasarımımız doğal görünüm ve estetik mükemmellik için her zaman
-              açıları dikkate alır.
+              {t('about.philosophy1Description')}
             </Text>
           </View>
 
@@ -165,14 +158,10 @@ const AboutScreen: React.FC<AboutScreenProps> = ({ navigation }) => {
               style={styles.philosophyIcon}
             />
             <Text weight="bold" style={styles.philosophyTitle}>
-              Gerçek Uygulama
+              {t('about.philosophy2Title')}
             </Text>
             <Text weight="regular" style={styles.philosophyDescription}>
-              Operasyon günü, tüm dönüşüm sürecinde başarılı bir sonuç için
-              kilit kilometre taşıdır. Yüksek seviyeli önlemlerimiz sayesinde
-              hiçbir şeyin ters gitmesine izin vermeyiz. Başarılı operasyonlar
-              ve sonuçlar elde etmek için tüm çabamızı ve kaynaklarımızı
-              kullanırız.
+              {t('about.philosophy2Description')}
             </Text>
           </View>
 
@@ -184,54 +173,51 @@ const AboutScreen: React.FC<AboutScreenProps> = ({ navigation }) => {
               style={styles.philosophyIcon}
             />
             <Text weight="bold" style={styles.philosophyTitle}>
-              Gerçek İnovasyon
+              {t('about.philosophy3Title')}
             </Text>
             <Text weight="regular" style={styles.philosophyDescription}>
-              Gelişimi tıbbın temeli olarak görüyoruz. Her zaman en etkili saç
-              ekimi operasyonlarını gerçekleştirmenin daha iyi yollarını
-              arıyoruz. Safir Nakil tekniği, inovasyon tutkumuzun en parlak
-              örneklerinden biridir.
+              {t('about.philosophy3Description')}
             </Text>
           </View>
         </View>
 
         <View style={styles.section}>
           <Text weight="semibold" style={styles.sectionTitle}>
-            TEDAVİLERİMİZ
+            {t('about.treatments')}
           </Text>
           <View style={styles.card}>
             <Text weight="regular" style={styles.treatmentItem}>
-              • Saç Ekimi
+              • {t('about.treatment1')}
             </Text>
             <Text weight="regular" style={styles.treatmentItem}>
-              • Safir Saç Ekimi
+              • {t('about.treatment2')}
             </Text>
             <Text weight="regular" style={styles.treatmentItem}>
-              • DHI Saç Ekimi
+              • {t('about.treatment3')}
             </Text>
             <Text weight="regular" style={styles.treatmentItem}>
-              • Manuel FUE Saç Ekimi
+              • {t('about.treatment4')}
             </Text>
             <Text weight="regular" style={styles.treatmentItem}>
-              • Sakal Ekimi
+              • {t('about.treatment5')}
             </Text>
             <Text weight="regular" style={styles.treatmentItem}>
-              • Kaş Ekimi
+              • {t('about.treatment6')}
             </Text>
             <Text weight="regular" style={styles.treatmentItem}>
-              • Kadın Saç Ekimi
+              • {t('about.treatment7')}
             </Text>
             <Text weight="regular" style={styles.treatmentItem}>
-              • Afro Saç Ekimi
+              • {t('about.treatment8')}
             </Text>
             <Text weight="regular" style={styles.treatmentItem}>
-              • Tıraşsız Saç Ekimi
+              • {t('about.treatment9')}
             </Text>
             <Text weight="regular" style={styles.treatmentItem}>
-              • İğnesiz Anestezi
+              • {t('about.treatment10')}
             </Text>
             <Text weight="regular" style={styles.treatmentItem}>
-              • Mezoterapi
+              • {t('about.treatment11')}
             </Text>
           </View>
         </View>

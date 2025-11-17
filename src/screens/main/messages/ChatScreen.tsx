@@ -17,6 +17,7 @@ import {
 } from 'react-native-safe-area-context';
 import { useFocusEffect } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
+import Icon from 'react-native-vector-icons/Ionicons';
 import i18n from '../../../i18n';
 import { Text } from '../../../components';
 import { supabase } from '../../../config/supabase';
@@ -282,7 +283,7 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ navigation, route }) => {
           style={styles.backButton}
           onPress={() => navigation.goBack()}
         >
-          <Text style={styles.backIcon}>←</Text>
+          <Icon name="chevron-back" size={28} color="#1A1A1A" />
         </TouchableOpacity>
         <View style={styles.headerCenter}>
           {chatUser.avatar_url ? (
@@ -329,7 +330,7 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ navigation, route }) => {
           >
             {Object.keys(messageGroups).length === 0 ? (
               <View style={styles.emptyContainer}>
-                <Text style={styles.emptyIcon}>💬</Text>
+                <Icon name="chatbubbles-outline" size={64} color="#D1D5DB" />
                 <Text weight="medium" style={styles.emptyText}>
                   {t('messages.chat.emptyChat')}
                 </Text>
@@ -408,7 +409,11 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ navigation, route }) => {
             onPress={handleSendMessage}
             disabled={!newMessage.trim() || sending}
           >
-            <Text style={styles.sendIcon}>{sending ? '⏳' : '➤'}</Text>
+            {sending ? (
+              <ActivityIndicator size="small" color="#FFFFFF" />
+            ) : (
+              <Icon name="send" size={20} color="#FFFFFF" />
+            )}
           </TouchableOpacity>
         </View>
       </KeyboardAvoidingView>
@@ -437,10 +442,6 @@ const styles = StyleSheet.create({
     height: 40,
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  backIcon: {
-    fontSize: 24,
-    color: '#1A1A1A',
   },
   headerCenter: {
     flex: 1,
@@ -491,14 +492,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingVertical: 80,
   },
-  emptyIcon: {
-    fontSize: 64,
-    marginBottom: 16,
-  },
   emptyText: {
     fontSize: 14,
     color: '#666',
     textAlign: 'center',
+    marginTop: 16,
   },
   dateSeparator: {
     alignItems: 'center',
@@ -581,10 +579,6 @@ const styles = StyleSheet.create({
   },
   sendButtonDisabled: {
     backgroundColor: '#D1D5DB',
-  },
-  sendIcon: {
-    fontSize: 20,
-    color: '#FFFFFF',
   },
 });
 

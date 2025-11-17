@@ -9,49 +9,51 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { useTranslation } from 'react-i18next';
 import { Text } from '../../components';
 
 const { width, height } = Dimensions.get('window');
 
 interface OnboardingItem {
   id: string;
-  title: string;
-  description: string;
+  titleKey: string;
+  descriptionKey: string;
   icon: string;
   iconColor: string;
 }
-
-const onboardingData: OnboardingItem[] = [
-  {
-    id: '1',
-    title: 'Smile Hair Clinic\'e Hoş Geldiniz',
-    description: 'Profesyonel saç ekimi ve tedavi hizmetleri ile yeni bir başlangıç yapın.',
-    icon: 'cut',
-    iconColor: '#01213D',
-  },
-  {
-    id: '2',
-    title: 'Uzman Kadromuz',
-    description: 'Alanında uzman doktorlarımız ve ekibimizle güvenli ellerde olun.',
-    icon: 'medkit',
-    iconColor: '#10B981',
-  },
-  {
-    id: '3',
-    title: 'Randevularınızı Kolayca Yönetin',
-    description: 'Uygulamamız üzerinden randevu alın, takip edin ve sonuçlarınızı görün.',
-    icon: 'calendar',
-    iconColor: '#F59E0B',
-  },
-];
 
 interface OnboardingScreenProps {
   onComplete: () => void;
 }
 
 const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ onComplete }) => {
+  const { t } = useTranslation();
   const [currentIndex, setCurrentIndex] = useState(0);
   const flatListRef = useRef<FlatList>(null);
+
+  const onboardingData: OnboardingItem[] = [
+    {
+      id: '1',
+      titleKey: 'onboarding.slide1.title',
+      descriptionKey: 'onboarding.slide1.description',
+      icon: 'cut',
+      iconColor: '#01213D',
+    },
+    {
+      id: '2',
+      titleKey: 'onboarding.slide2.title',
+      descriptionKey: 'onboarding.slide2.description',
+      icon: 'medkit',
+      iconColor: '#10B981',
+    },
+    {
+      id: '3',
+      titleKey: 'onboarding.slide3.title',
+      descriptionKey: 'onboarding.slide3.description',
+      icon: 'calendar',
+      iconColor: '#F59E0B',
+    },
+  ];
 
   const handleNext = () => {
     if (currentIndex < onboardingData.length - 1) {
@@ -72,8 +74,8 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ onComplete }) => {
       <View style={styles.iconContainer}>
         <Icon name={item.icon} size={80} color={item.iconColor} />
       </View>
-      <Text weight="bold" style={styles.title}>{item.title}</Text>
-      <Text weight="regular" style={styles.description}>{item.description}</Text>
+      <Text weight="bold" style={styles.title}>{t(item.titleKey)}</Text>
+      <Text weight="regular" style={styles.description}>{t(item.descriptionKey)}</Text>
     </View>
   );
 
@@ -94,7 +96,7 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ onComplete }) => {
   return (
     <SafeAreaView style={styles.container}>
       <TouchableOpacity style={styles.skipButton} onPress={handleSkip}>
-        <Text weight="semibold" style={styles.skipText}>Atla</Text>
+        <Text weight="semibold" style={styles.skipText}>{t('onboarding.skip')}</Text>
       </TouchableOpacity>
 
       <FlatList
@@ -116,7 +118,9 @@ const OnboardingScreen: React.FC<OnboardingScreenProps> = ({ onComplete }) => {
       <View style={styles.buttonContainer}>
         <TouchableOpacity style={styles.button} onPress={handleNext}>
           <Text weight="semibold" style={styles.buttonText}>
-            {currentIndex === onboardingData.length - 1 ? 'Başla' : 'İleri'}
+            {currentIndex === onboardingData.length - 1
+              ? t('onboarding.start')
+              : t('onboarding.next')}
           </Text>
         </TouchableOpacity>
       </View>

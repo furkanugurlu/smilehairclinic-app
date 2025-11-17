@@ -12,6 +12,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useFocusEffect } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { useTranslation } from 'react-i18next';
 import { Text, LoadingModal, FilterTabs, FilterOption } from '../../../../components';
 import { supabase } from '../../../../config/supabase';
 import { HairCheck, HairCheckStatus } from '../../../../types';
@@ -23,6 +24,7 @@ interface AdminHairChecksScreenProps {
 const AdminHairChecksScreen: React.FC<AdminHairChecksScreenProps> = ({
   navigation,
 }) => {
+  const { t } = useTranslation();
   const [hairChecks, setHairChecks] = useState<HairCheck[]>([]);
   const [filteredHairChecks, setFilteredHairChecks] = useState<HairCheck[]>([]);
   const [loading, setLoading] = useState(true);
@@ -60,7 +62,7 @@ const AdminHairChecksScreen: React.FC<AdminHairChecksScreenProps> = ({
       setHairChecks(data || []);
     } catch (error: any) {
       console.error('❌ Fetch hair checks error:', error);
-      Alert.alert('Hata', 'Kontroller yüklenirken bir hata oluştu');
+      Alert.alert(t('common.error'), t('adminHairChecks.loadError'));
     } finally {
       setLoading(false);
     }
@@ -92,18 +94,7 @@ const AdminHairChecksScreen: React.FC<AdminHairChecksScreenProps> = ({
   };
 
   const getStatusText = (status: HairCheckStatus) => {
-    switch (status) {
-      case 'completed':
-        return 'Tamamlandı';
-      case 'pending':
-        return 'Beklemede';
-      case 'analyzing':
-        return 'Analiz Ediliyor';
-      case 'failed':
-        return 'Başarısız';
-      default:
-        return status;
-    }
+    return t(`adminHairChecks.status.${status}`);
   };
 
   const formatDate = (dateString: string) => {
@@ -122,35 +113,35 @@ const AdminHairChecksScreen: React.FC<AdminHairChecksScreenProps> = ({
   const filterOptions: FilterOption[] = [
     {
       id: 'all',
-      label: 'Tümü',
+      label: t('adminHairChecks.filters.all'),
       icon: 'apps',
       color: '#666',
       count: hairChecks.length,
     },
     {
       id: 'pending',
-      label: 'Bekleyen',
+      label: t('adminHairChecks.filters.pending'),
       icon: 'time',
       color: '#F59E0B',
       count: hairChecks.filter(h => h.status === 'pending').length,
     },
     {
       id: 'analyzing',
-      label: 'Analiz Ediliyor',
+      label: t('adminHairChecks.filters.analyzing'),
       icon: 'analytics',
       color: '#01213D',
       count: hairChecks.filter(h => h.status === 'analyzing').length,
     },
     {
       id: 'completed',
-      label: 'Tamamlandı',
+      label: t('adminHairChecks.filters.completed'),
       icon: 'checkmark-done',
       color: '#10B981',
       count: hairChecks.filter(h => h.status === 'completed').length,
     },
     {
       id: 'failed',
-      label: 'Başarısız',
+      label: t('adminHairChecks.filters.failed'),
       icon: 'close-circle',
       color: '#EF4444',
       count: hairChecks.filter(h => h.status === 'failed').length,
@@ -161,7 +152,7 @@ const AdminHairChecksScreen: React.FC<AdminHairChecksScreenProps> = ({
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
         <Text weight="bold" style={styles.title}>
-          Saç Kontrolleri
+          {t('adminHairChecks.title')}
         </Text>
       </View>
 
@@ -194,10 +185,10 @@ const AdminHairChecksScreen: React.FC<AdminHairChecksScreenProps> = ({
                 style={styles.emptyIcon}
               />
               <Text weight="semibold" style={styles.emptyTitle}>
-                Kontrol Bulunamadı
+                {t('adminHairChecks.noChecksFound')}
               </Text>
               <Text weight="regular" style={styles.emptyText}>
-                Bu filtrede kontrol bulunmuyor
+                {t('adminHairChecks.noChecksInFilter')}
               </Text>
             </View>
           ) : (
@@ -217,7 +208,8 @@ const AdminHairChecksScreen: React.FC<AdminHairChecksScreenProps> = ({
                       />
                       <View style={styles.userInfo}>
                         <Text weight="semibold" style={styles.patientName}>
-                          {check.profiles?.full_name || 'İsimsiz Kullanıcı'}
+                          {check.profiles?.full_name ||
+                            t('admin.hairChecks.unnamedUser')}
                         </Text>
                         <Text weight="regular" style={styles.patientEmail}>
                           {check.profiles?.email}
@@ -272,11 +264,10 @@ const AdminHairChecksScreen: React.FC<AdminHairChecksScreenProps> = ({
                                   weight="medium"
                                   style={styles.statusLabel}
                                 >
-                                  {check.analysis_status === 'good' && 'İyi'}
-                                  {check.analysis_status === 'warning' &&
-                                    'Uyarı'}
-                                  {check.analysis_status === 'critical' &&
-                                    'Kritik'}
+                                  {check.analysis_status &&
+                                    t(
+                                      `adminHairChecks.analysisStatus.${check.analysis_status}`,
+                                    )}
                                 </Text>
                               </View>
                             )}

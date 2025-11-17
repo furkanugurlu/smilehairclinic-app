@@ -2,12 +2,13 @@ import React, { useState } from 'react';
 import { View, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { useTranslation } from 'react-i18next';
 import { Text } from '../../../components';
 
 interface FAQItem {
-  question: string;
-  answer: string;
-  category: string;
+  questionKey: string;
+  answerKey: string;
+  categoryKey: string;
 }
 
 interface HelpCenterScreenProps {
@@ -15,72 +16,63 @@ interface HelpCenterScreenProps {
 }
 
 const HelpCenterScreen: React.FC<HelpCenterScreenProps> = ({ navigation }) => {
+  const { t } = useTranslation();
   const [expandedId, setExpandedId] = useState<number | null>(null);
 
   const faqs: FAQItem[] = [
     {
-      category: 'Operasyon Sonrası',
-      question: 'Ne kadar süre antibiyotik içeren krem kullanmam gerekir?',
-      answer:
-        'Operasyondan sonraki 5 gün içinde donör bölgeniz iyileştiyse antibiyotik içeren kremleri kullanmaya devam etmeniz gerekmez.',
+      categoryKey: 'helpCenter.category.postOperation',
+      questionKey: 'helpCenter.faqs.q1',
+      answerKey: 'helpCenter.faqs.a1',
     },
     {
-      category: 'Operasyon Sonrası',
-      question: 'Saç ekimi sonrasında ne kadar süre şapka kullanmalıyım?',
-      answer:
-        'Saç ekiminden sonra size verdiğimiz şapkayı 10 gün boyunca kullanmanızı öneririz.',
+      categoryKey: 'helpCenter.category.postOperation',
+      questionKey: 'helpCenter.faqs.q2',
+      answerKey: 'helpCenter.faqs.a2',
     },
     {
-      category: 'Operasyon Sonrası',
-      question: 'Ameliyattan sonra ne zaman spor yapabilirim?',
-      answer:
-        'Operasyondan sonra egzersiz yapmaya başlamak için en az 1 ay beklemelisiniz.',
+      categoryKey: 'helpCenter.category.postOperation',
+      questionKey: 'helpCenter.faqs.q3',
+      answerKey: 'helpCenter.faqs.a3',
     },
     {
-      category: 'Bakım',
-      question: 'Saç ekiminden sonra her gün başımı yıkamalı mıyım?',
-      answer:
-        'Saç ekiminden sonra 1 ay boyunca her gün başınızı yıkamalısınız.',
+      categoryKey: 'helpCenter.category.care',
+      questionKey: 'helpCenter.faqs.q4',
+      answerKey: 'helpCenter.faqs.a4',
     },
     {
-      category: 'Operasyon Sonrası',
-      question: 'Saç ekimi sonrasında bandajımı ne zaman çıkarabilirim?',
-      answer:
-        'Operasyondan sonraki ikinci gün başınızı yıkamanız gerekir. Başınızı yıkamadan önce bandaj çıkartılır ve sonrasında tekrar kullanılması gerekmez.',
+      categoryKey: 'helpCenter.category.postOperation',
+      questionKey: 'helpCenter.faqs.q5',
+      answerKey: 'helpCenter.faqs.a5',
     },
     {
-      category: 'Bakım',
-      question: 'Ne kadar süre özel şampuan kullanmam gerekir?',
-      answer:
-        '1 ay boyunca size önerdiğimiz şampuanı kullanmalısınız. Saçlarınızın ve baş bölgenizin sağlığından emin olduktan sonra her zaman kullandığınız şampuanı kullanmaya devam edebilirsiniz.',
+      categoryKey: 'helpCenter.category.care',
+      questionKey: 'helpCenter.faqs.q6',
+      answerKey: 'helpCenter.faqs.a6',
     },
     {
-      category: 'Bakım',
-      question: 'Ne kadar süre Panthenol sprey kullanmam gerekir?',
-      answer:
-        'Yaklaşık 15 gün boyunca, kabuklar deriden tamamen atılana kadar kullanmanız gerekir.',
+      categoryKey: 'helpCenter.category.care',
+      questionKey: 'helpCenter.faqs.q7',
+      answerKey: 'helpCenter.faqs.a7',
     },
     {
-      category: 'Genel',
-      question: 'Saç ekimi sonrası ne zaman cinsel ilişkiye girebilirim?',
-      answer:
-        'Operasyon sonrası cinsel ilişki konusunda kısıtlama getirilmez, çok efor harcamamanız önerilir.',
+      categoryKey: 'helpCenter.category.general',
+      questionKey: 'helpCenter.faqs.q8',
+      answerKey: 'helpCenter.faqs.a8',
     },
     {
-      category: 'Bakım',
-      question: 'Önerilen ürünler dışında farklı bir ürün kullanabilir miyim?',
-      answer:
-        'Kullanacağınız ürünlerin içeriğini dikkatle incelemeli, size zarar vermeyecek, paraben içermeyen, doğal ürünleri tercih etmelisiniz.',
+      categoryKey: 'helpCenter.category.care',
+      questionKey: 'helpCenter.faqs.q9',
+      answerKey: 'helpCenter.faqs.a9',
     },
     {
-      category: 'Bakım',
-      question: 'Panthenol spreyi donör bölgede kullanabilir miyim?',
-      answer:
-        'Kullanabilirsiniz ancak bu spreyin çok hızlı tükenmesine sebep olacaktır.',
+      categoryKey: 'helpCenter.category.care',
+      questionKey: 'helpCenter.faqs.q10',
+      answerKey: 'helpCenter.faqs.a10',
     },
   ];
 
-  const categories = Array.from(new Set(faqs.map(faq => faq.category)));
+  const categories = Array.from(new Set(faqs.map(faq => faq.categoryKey)));
 
   const toggleExpand = (index: number) => {
     setExpandedId(expandedId === index ? null : index);
@@ -96,7 +88,7 @@ const HelpCenterScreen: React.FC<HelpCenterScreenProps> = ({ navigation }) => {
           <Icon name="chevron-back" size={28} color="#1A1A1A" />
         </TouchableOpacity>
         <Text weight="bold" style={styles.headerTitle}>
-          Yardım Merkezi
+          {t('helpCenter.title')}
         </Text>
         <View style={styles.headerRight} />
       </View>
@@ -110,23 +102,23 @@ const HelpCenterScreen: React.FC<HelpCenterScreenProps> = ({ navigation }) => {
             style={styles.heroIcon}
           />
           <Text weight="bold" style={styles.heroTitle}>
-            Sıkça Sorulan Sorular
+            {t('helpCenter.faqTitle')}
           </Text>
           <Text weight="regular" style={styles.heroDescription}>
-            Saç ekimi operasyonu öncesi ve sonrası hakkında merak ettikleriniz
+            {t('helpCenter.faqDescription')}
           </Text>
         </View>
 
         {categories.map((category, categoryIndex) => (
           <View key={categoryIndex} style={styles.section}>
             <Text weight="semibold" style={styles.categoryTitle}>
-              {category.toUpperCase()}
+              {t(category).toUpperCase()}
             </Text>
             {faqs
-              .filter(faq => faq.category === category)
+              .filter(faq => faq.categoryKey === category)
               .map((faq, faqIndex) => {
                 const globalIndex = faqs.findIndex(
-                  f => f.question === faq.question,
+                  f => f.questionKey === faq.questionKey,
                 );
                 const isExpanded = expandedId === globalIndex;
 
@@ -144,13 +136,13 @@ const HelpCenterScreen: React.FC<HelpCenterScreenProps> = ({ navigation }) => {
                         </Text>
                       </View>
                       <Text weight="semibold" style={styles.faqQuestion}>
-                        {faq.question}
+                        {t(faq.questionKey)}
                       </Text>
                     </View>
                     {isExpanded && (
                       <View style={styles.faqAnswerContainer}>
                         <Text weight="regular" style={styles.faqAnswer}>
-                          {faq.answer}
+                          {t(faq.answerKey)}
                         </Text>
                       </View>
                     )}
@@ -170,10 +162,10 @@ const HelpCenterScreen: React.FC<HelpCenterScreenProps> = ({ navigation }) => {
             />
             <View style={styles.contactContent}>
               <Text weight="bold" style={styles.contactTitle}>
-                Başka bir sorunuz mu var?
+                {t('helpCenter.contactCard.title')}
               </Text>
               <Text weight="regular" style={styles.contactDescription}>
-                Uzman ekibimiz size yardımcı olmak için hazır
+                {t('helpCenter.contactCard.description')}
               </Text>
             </View>
             <TouchableOpacity
@@ -181,7 +173,7 @@ const HelpCenterScreen: React.FC<HelpCenterScreenProps> = ({ navigation }) => {
               onPress={() => navigation.navigate('Messages')}
             >
               <Text weight="semibold" style={styles.contactButtonText}>
-                İletişime Geç
+                {t('helpCenter.contactCard.button')}
               </Text>
             </TouchableOpacity>
           </View>

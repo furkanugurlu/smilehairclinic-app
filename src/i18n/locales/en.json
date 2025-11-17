@@ -385,5 +385,224 @@
       "unnamedUser": "Unnamed User"
     }
   },
+  "about": {
+    "title": "About Us",
+    "clinicName": "Smile Hair Clinic",
+    "clinicSubtitle": "Turkey's Leading Hair Transplant Clinic",
+    "description1": "Smile Hair Clinic is one of the leading clinics serving in the field of hair transplantation in Istanbul, the jewel of Turkey.",
+    "description2": "At Smile Hair Clinic, which operates under the leadership of Dr. Gökay Bilgin and Dr. Mehmet Erdoğan, who have international recognition in their field, patient satisfaction is always prioritized.",
+    "description3": "All operation processes are followed personally by doctors, and every member of the team consists of professionals with medical training. Successful hair transplant applications have been performed on many patients from all over the world to date.",
+    "doctors": "OUR DOCTORS",
+    "founderDoctor": "Founder Doctor",
+    "hairTransplantSpecialist": "Hair Transplant Specialist",
+    "philosophy": "OUR PHILOSOPHY",
+    "philosophy1Title": "True Philosophy",
+    "philosophy1Description": "We know that every patient is unique. We offer personalized solutions through teamwork and detailed planning. Our hairline design always takes angles into account for natural appearance and aesthetic excellence.",
+    "philosophy2Title": "True Practice",
+    "philosophy2Description": "Operation day is the key milestone for a successful outcome in the entire transformation process. Thanks to our high-level precautions, we do not allow anything to go wrong. We use all our effort and resources to achieve successful operations and results.",
+    "philosophy3Title": "True Innovation",
+    "philosophy3Description": "We see development as the foundation of medicine. We are always looking for better ways to perform the most effective hair transplant operations. The Sapphire Transplant technique is one of the brightest examples of our passion for innovation.",
+    "treatments": "OUR TREATMENTS",
+    "treatment1": "Hair Transplant",
+    "treatment2": "Sapphire Hair Transplant",
+    "treatment3": "DHI Hair Transplant",
+    "treatment4": "Manual FUE Hair Transplant",
+    "treatment5": "Beard Transplant",
+    "treatment6": "Eyebrow Transplant",
+    "treatment7": "Female Hair Transplant",
+    "treatment8": "Afro Hair Transplant",
+    "treatment9": "Shaveless Hair Transplant",
+    "treatment10": "Needle-Free Anesthesia",
+    "treatment11": "Mesotherapy"
+  },
+  "helpCenter": {
+    "title": "Help Center",
+    "faqTitle": "Frequently Asked Questions",
+    "faqDescription": "What you're curious about before and after hair transplant surgery",
+    "category": {
+      "postOperation": "Post-Operation",
+      "care": "Care",
+      "general": "General"
+    },
+    "faqs": {
+      "q1": "How long do I need to use antibiotic cream?",
+      "a1": "If your donor area has healed within 5 days after the operation, you do not need to continue using antibiotic creams.",
+      "q2": "How long should I wear a hat after hair transplant?",
+      "a2": "We recommend that you wear the hat we gave you for 10 days after the hair transplant.",
+      "q3": "When can I exercise after surgery?",
+      "a3": "You should wait at least 1 month after the operation to start exercising.",
+      "q4": "Should I wash my head every day after hair transplant?",
+      "a4": "You should wash your head every day for 1 month after the hair transplant.",
+      "q5": "When can I remove my bandage after hair transplant?",
+      "a5": "You need to wash your head on the second day after the operation. The bandage is removed before washing your head and does not need to be used again afterwards.",
+      "q6": "How long do I need to use special shampoo?",
+      "a6": "You should use the shampoo we recommend for 1 month. After making sure of the health of your hair and head area, you can continue using the shampoo you always use.",
+      "q7": "How long do I need to use Panthenol spray?",
+      "a7": "You need to use it for approximately 15 days, until the scabs are completely removed from the skin.",
+      "q8": "When can I have sexual intercourse after hair transplant?",
+      "a8": "There are no restrictions on sexual intercourse after the operation, but it is recommended that you do not exert too much effort.",
+      "q9": "Can I use a different product other than the recommended products?",
+      "a9": "You should carefully examine the contents of the products you will use and prefer natural products that will not harm you and do not contain parabens.",
+      "q10": "Can I use Panthenol spray in the donor area?",
+      "a10": "You can use it, but this will cause the spray to run out very quickly."
+    },
+    "contactCard": {
+      "title": "Have another question?",
+      "description": "Our expert team is ready to help you",
+      "button": "Contact Us"
+    }
+  },
+  "profileEdit": {
+    "title": "Profile Information",
+    "changePhoto": "Change Photo",
+    "uploading": "Uploading...",
+    "email": "Email",
+    "emailCannotChange": "Email address cannot be changed",
+    "fullName": "Full Name",
+    "fullNamePlaceholder": "Your Full Name",
+    "phone": "Phone",
+    "phonePlaceholder": "5XXXXXXXXX",
+    "update": "Update",
+    "fullNameRequired": "Full name is required",
+    "fullNameMinLength": "Full name must be at least 2 characters",
+    "phoneRequired": "Phone number is required",
+    "phoneInvalid": "Please enter a valid phone number (10 digits)",
+    "updateSuccess": "Success",
+    "updateSuccessMessage": "Your profile information has been updated",
+    "updateError": "Error",
+    "updateErrorMessage": "An error occurred while updating the profile",
+    "avatarUpdateSuccess": "Success",
+    "avatarUpdateSuccessMessage": "Your profile photo has been updated",
+    "avatarUpdateError": "Error",
+    "avatarUpdateErrorMessage": "An error occurred while uploading the photo",
+    "userNotFound": "User not found"
+  },
+  "onboarding": {
+    "skip": "Skip",
+    "next": "Next",
+    "start": "Get Started",
+    "slide1": {
+      "title": "Welcome to Smile Hair Clinic",
+      "description": "Start a new beginning with professional hair transplant and treatment services."
+    },
+    "slide2": {
+      "title": "Our Expert Team",
+      "description": "Be in safe hands with our expert doctors and team in their field."
+    },
+    "slide3": {
+      "title": "Manage Your Appointments Easily",
+      "description": "Book appointments, track them and see your results through our app."
+    }
+  },
+  "adminDashboard": {
+    "greeting": "Admin Panel",
+    "welcome": "Welcome, {{name}}",
+    "overview": "Overview",
+    "pendingAppointment": "Pending Appointment",
+    "pendingCheck": "Pending Check",
+    "unreadMessage": "Unread Message",
+    "totalUsers": "Total Users",
+    "recentAppointments": "Recent Appointments",
+    "recentChecks": "Recent Checks",
+    "quickActions": "Quick Actions",
+    "seeAll": "See All",
+    "noAppointmentsYet": "No appointments yet",
+    "noChecksYet": "No checks yet",
+    "appointments": "Appointments",
+    "checks": "Checks",
+    "messages": "Messages",
+    "hairCheck": "Hair Check",
+    "loadError": "An error occurred while loading data"
+  },
+  "adminAppointments": {
+    "title": "Appointments",
+    "filters": {
+      "all": "All",
+      "pending": "Pending",
+      "confirmed": "Confirmed",
+      "completed": "Completed",
+      "cancelled": "Cancelled"
+    },
+    "status": {
+      "confirmed": "Confirmed",
+      "pending": "Pending",
+      "cancelled": "Cancelled",
+      "completed": "Completed"
+    },
+    "noAppointmentsFound": "No Appointments Found",
+    "noAppointmentsInFilter": "No appointments found in this filter",
+    "confirmAppointment": "Confirm Appointment",
+    "confirmMessage": "Are you sure you want to confirm this appointment?",
+    "cancelAppointment": "Cancel Appointment",
+    "cancelMessage": "Are you sure you want to cancel this appointment?",
+    "markAsCompleted": "Mark as Completed",
+    "confirm": "Confirm",
+    "cancel": "Cancel",
+    "no": "No",
+    "updateSuccess": "Success",
+    "updateSuccessMessage": "Appointment status updated",
+    "updateError": "Error",
+    "updateErrorMessage": "An error occurred while updating the appointment",
+    "loadError": "An error occurred while loading appointments"
+  },
+  "adminHairChecks": {
+    "title": "Hair Checks",
+    "filters": {
+      "all": "All",
+      "pending": "Pending",
+      "analyzing": "Analyzing",
+      "completed": "Completed",
+      "failed": "Failed"
+    },
+    "status": {
+      "completed": "Completed",
+      "pending": "Pending",
+      "analyzing": "Analyzing",
+      "failed": "Failed"
+    },
+    "analysisStatus": {
+      "good": "Good",
+      "warning": "Warning",
+      "critical": "Critical"
+    },
+    "noChecksFound": "No Checks Found",
+    "noChecksInFilter": "No checks found in this filter",
+    "loadError": "An error occurred while loading checks"
+  },
+  "adminHairCheckDetail": {
+    "title": "Review Check",
+    "photos": "Photos",
+    "analysisResult": "Analysis Result",
+    "hairHealthScore": "Hair Health Score (0-100)",
+    "scorePlaceholder": "e.g: 75",
+    "analysisStatus": "Analysis Status",
+    "analysisNotes": "Analysis Notes",
+    "analysisNotesPlaceholder": "Detailed explanation about hair health...",
+    "recommendations": "Recommendations (Optional)",
+    "recommendationsPlaceholder": "Your specific recommendations for the patient...",
+    "saveAndSend": "Save and Send Analysis",
+    "saving": "Saving analysis...",
+    "saveSuccess": "Success",
+    "saveSuccessMessage": "Analysis result successfully saved",
+    "saveError": "Error",
+    "saveErrorMessage": "An error occurred while saving the analysis",
+    "validation": {
+      "scoreRequired": "Please enter a valid score between 0-100",
+      "statusRequired": "Please select the analysis status",
+      "notesRequired": "Please enter the analysis notes"
+    },
+    "photoLabels": {
+      "front": "Front View",
+      "right45": "Right 45°",
+      "left45": "Left 45°",
+      "top": "Top View",
+      "back": "Back View"
+    },
+    "statusLabels": {
+      "good": "Good",
+      "warning": "Warning",
+      "critical": "Critical"
+    }
+  }
 }
 

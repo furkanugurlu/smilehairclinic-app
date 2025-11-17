@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { useTranslation } from 'react-i18next';
 import { Text, LoadingModal } from '../../../../components';
 import { HairCheck, AnalysisStatus } from '../../../../types';
 import { supabase } from '../../../../config/supabase';
@@ -19,6 +20,7 @@ import { supabase } from '../../../../config/supabase';
 const { width } = Dimensions.get('window');
 
 const AdminHairCheckDetailScreen = ({ navigation, route }: any) => {
+  const { t } = useTranslation();
   const { check } = route.params;
   const [selectedPhoto, setSelectedPhoto] = useState<string | null>(null);
   const [analysisScore, setAnalysisScore] = useState(
@@ -38,35 +40,35 @@ const AdminHairCheckDetailScreen = ({ navigation, route }: any) => {
   const photos = [
     {
       id: 'front',
-      label: 'Ön Görünüm',
+      labelKey: 'adminHairCheckDetail.photoLabels.front',
       icon: 'happy-outline',
       iconColor: '#01213D',
       url: check.photo_front,
     },
     {
       id: 'right45',
-      label: 'Sağ 45°',
+      labelKey: 'adminHairCheckDetail.photoLabels.right45',
       icon: 'arrow-redo-outline',
       iconColor: '#10B981',
       url: check.photo_right45,
     },
     {
       id: 'left45',
-      label: 'Sol 45°',
+      labelKey: 'adminHairCheckDetail.photoLabels.left45',
       icon: 'arrow-undo-outline',
       iconColor: '#10B981',
       url: check.photo_left45,
     },
     {
       id: 'top',
-      label: 'Üst Görünüm',
+      labelKey: 'adminHairCheckDetail.photoLabels.top',
       icon: 'arrow-up-outline',
       iconColor: '#F59E0B',
       url: check.photo_top,
     },
     {
       id: 'back',
-      label: 'Arka Görünüm',
+      labelKey: 'adminHairCheckDetail.photoLabels.back',
       icon: 'person-outline',
       iconColor: '#8B5CF6',
       url: check.photo_back,
@@ -91,17 +93,26 @@ const AdminHairCheckDetailScreen = ({ navigation, route }: any) => {
       parseFloat(analysisScore) < 0 ||
       parseFloat(analysisScore) > 100
     ) {
-      Alert.alert('Hata', 'Lütfen 0-100 arasında geçerli bir skor giriniz');
+      Alert.alert(
+        t('common.error'),
+        t('adminHairCheckDetail.validation.scoreRequired'),
+      );
       return;
     }
 
     if (!analysisStatus) {
-      Alert.alert('Hata', 'Lütfen analiz durumunu seçiniz');
+      Alert.alert(
+        t('common.error'),
+        t('adminHairCheckDetail.validation.statusRequired'),
+      );
       return;
     }
 
     if (!analysisNotes.trim()) {
-      Alert.alert('Hata', 'Lütfen analiz notlarını giriniz');
+      Alert.alert(
+        t('common.error'),
+        t('adminHairCheckDetail.validation.notesRequired'),
+      );
       return;
     }
 
@@ -122,15 +133,22 @@ const AdminHairCheckDetailScreen = ({ navigation, route }: any) => {
 
       if (error) throw error;
 
-      Alert.alert('Başarılı', 'Analiz sonucu başarıyla kaydedildi', [
-        {
-          text: 'Tamam',
-          onPress: () => navigation.goBack(),
-        },
-      ]);
+      Alert.alert(
+        t('adminHairCheckDetail.saveSuccess'),
+        t('adminHairCheckDetail.saveSuccessMessage'),
+        [
+          {
+            text: t('common.ok'),
+            onPress: () => navigation.goBack(),
+          },
+        ],
+      );
     } catch (error: any) {
       console.error('❌ Save analysis error:', error);
-      Alert.alert('Hata', 'Analiz kaydedilirken bir hata oluştu');
+      Alert.alert(
+        t('adminHairCheckDetail.saveError'),
+        t('adminHairCheckDetail.saveErrorMessage'),
+      );
     } finally {
       setLoading(false);
     }
@@ -138,7 +156,10 @@ const AdminHairCheckDetailScreen = ({ navigation, route }: any) => {
 
   return (
     <SafeAreaView style={styles.container}>
-      <LoadingModal visible={loading} message="Analiz kaydediliyor..." />
+      <LoadingModal
+        visible={loading}
+        message={t('adminHairCheckDetail.saving')}
+      />
 
       {/* Header */}
       <View style={styles.header}>
@@ -149,7 +170,7 @@ const AdminHairCheckDetailScreen = ({ navigation, route }: any) => {
           <Icon name="chevron-back" size={28} color="#1A1A1A" />
         </TouchableOpacity>
         <Text weight="bold" style={styles.headerTitle}>
-          Kontrol İnceleme
+          {t('adminHairCheckDetail.title')}
         </Text>
         <View style={styles.headerRight} />
       </View>
@@ -169,7 +190,8 @@ const AdminHairCheckDetailScreen = ({ navigation, route }: any) => {
             />
             <View style={styles.patientInfo}>
               <Text weight="semibold" style={styles.patientName}>
-                {check.profiles?.full_name || 'İsimsiz Kullanıcı'}
+                {check.profiles?.full_name ||
+                  t('admin.hairChecks.unnamedUser')}
               </Text>
               <Text weight="regular" style={styles.patientEmail}>
                 {check.profiles?.email}
@@ -184,7 +206,7 @@ const AdminHairCheckDetailScreen = ({ navigation, route }: any) => {
         {/* Fotoğraflar */}
         <View style={styles.section}>
           <Text weight="bold" style={styles.sectionTitle}>
-            Fotoğraflar
+            {t('adminHairCheckDetail.photos')}
           </Text>
           <View style={styles.photosGrid}>
             {photos.map(photo => (
@@ -202,7 +224,7 @@ const AdminHairCheckDetailScreen = ({ navigation, route }: any) => {
                     style={styles.photoIcon}
                   />
                   <Text weight="semibold" style={styles.photoLabel}>
-                    {photo.label}
+                    {t(photo.labelKey)}
                   </Text>
                 </View>
               </TouchableOpacity>
@@ -213,17 +235,17 @@ const AdminHairCheckDetailScreen = ({ navigation, route }: any) => {
         {/* Analiz Formu */}
         <View style={styles.section}>
           <Text weight="bold" style={styles.sectionTitle}>
-            Analiz Sonucu
+            {t('adminHairCheckDetail.analysisResult')}
           </Text>
 
           {/* Skor */}
           <View style={styles.formGroup}>
             <Text weight="semibold" style={styles.label}>
-              Saç Sağlığı Skoru (0-100)
+              {t('adminHairCheckDetail.hairHealthScore')}
             </Text>
             <TextInput
               style={styles.input}
-              placeholder="Örn: 75"
+              placeholder={t('adminHairCheckDetail.scorePlaceholder')}
               placeholderTextColor="#999"
               keyboardType="numeric"
               value={analysisScore}
@@ -235,7 +257,7 @@ const AdminHairCheckDetailScreen = ({ navigation, route }: any) => {
           {/* Durum Seçimi */}
           <View style={styles.formGroup}>
             <Text weight="semibold" style={styles.label}>
-              Analiz Durumu
+              {t('adminHairCheckDetail.analysisStatus')}
             </Text>
             <View style={styles.statusOptions}>
               <TouchableOpacity
@@ -258,7 +280,7 @@ const AdminHairCheckDetailScreen = ({ navigation, route }: any) => {
                     analysisStatus === 'good' && { color: '#10B981' },
                   ]}
                 >
-                  İyi
+                  {t('adminHairCheckDetail.statusLabels.good')}
                 </Text>
               </TouchableOpacity>
 
@@ -282,7 +304,7 @@ const AdminHairCheckDetailScreen = ({ navigation, route }: any) => {
                     analysisStatus === 'warning' && { color: '#F59E0B' },
                   ]}
                 >
-                  Dikkat
+                  {t('adminHairCheckDetail.statusLabels.warning')}
                 </Text>
               </TouchableOpacity>
 
@@ -306,7 +328,7 @@ const AdminHairCheckDetailScreen = ({ navigation, route }: any) => {
                     analysisStatus === 'critical' && { color: '#EF4444' },
                   ]}
                 >
-                  Kritik
+                  {t('adminHairCheckDetail.statusLabels.critical')}
                 </Text>
               </TouchableOpacity>
             </View>
@@ -315,11 +337,11 @@ const AdminHairCheckDetailScreen = ({ navigation, route }: any) => {
           {/* Analiz Notları */}
           <View style={styles.formGroup}>
             <Text weight="semibold" style={styles.label}>
-              Analiz Notları *
+              {t('adminHairCheckDetail.analysisNotes')} *
             </Text>
             <TextInput
               style={[styles.input, styles.textArea]}
-              placeholder="Saç sağlığı hakkında detaylı açıklama..."
+              placeholder={t('adminHairCheckDetail.analysisNotesPlaceholder')}
               placeholderTextColor="#999"
               multiline
               numberOfLines={5}
@@ -332,11 +354,11 @@ const AdminHairCheckDetailScreen = ({ navigation, route }: any) => {
           {/* Öneriler */}
           <View style={styles.formGroup}>
             <Text weight="semibold" style={styles.label}>
-              Öneriler (Opsiyonel)
+              {t('adminHairCheckDetail.recommendations')}
             </Text>
             <TextInput
               style={[styles.input, styles.textArea]}
-              placeholder="Hastaya özel önerileriniz..."
+              placeholder={t('adminHairCheckDetail.recommendationsPlaceholder')}
               placeholderTextColor="#999"
               multiline
               numberOfLines={5}
@@ -364,7 +386,7 @@ const AdminHairCheckDetailScreen = ({ navigation, route }: any) => {
             style={styles.saveButtonIcon}
           />
           <Text weight="bold" style={styles.saveButtonText}>
-            Analizi Kaydet ve Gönder
+            {t('adminHairCheckDetail.saveAndSend')}
           </Text>
         </TouchableOpacity>
       </View>

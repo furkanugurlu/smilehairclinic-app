@@ -11,6 +11,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useFocusEffect } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { useTranslation } from 'react-i18next';
 import { Text, LoadingModal } from '../../../../components';
 import { supabase } from '../../../../config/supabase';
 import { useAuthStore } from '../../../../store/authStore';
@@ -32,6 +33,7 @@ interface DashboardStats {
 const AdminDashboardScreen: React.FC<AdminDashboardScreenProps> = ({
   navigation,
 }) => {
+  const { t } = useTranslation();
   const { user } = useAuthStore();
   const [stats, setStats] = useState<DashboardStats>({
     totalAppointments: 0,
@@ -111,7 +113,7 @@ const AdminDashboardScreen: React.FC<AdminDashboardScreenProps> = ({
       setRecentHairChecks(hairChecks?.slice(0, 5) || []);
     } catch (error: any) {
       console.error('❌ Dashboard data fetch error:', error);
-      Alert.alert('Hata', 'Veriler yüklenirken bir hata oluştu');
+      Alert.alert(t('common.error'), t('adminDashboard.loadError'));
     } finally {
       setLoading(false);
     }
@@ -138,10 +140,10 @@ const AdminDashboardScreen: React.FC<AdminDashboardScreenProps> = ({
       <View style={styles.header}>
         <View>
           <Text weight="regular" style={styles.greeting}>
-            Admin Panel
+            {t('adminDashboard.greeting')}
           </Text>
           <Text weight="bold" style={styles.userName}>
-            Hoş geldiniz, {user?.full_name || 'Admin'}
+            {t('adminDashboard.welcome', { name: user?.full_name || 'Admin' })}
           </Text>
         </View>
       </View>
@@ -160,7 +162,7 @@ const AdminDashboardScreen: React.FC<AdminDashboardScreenProps> = ({
           {/* İstatistikler */}
           <View style={styles.section}>
             <Text weight="bold" style={styles.sectionTitle}>
-              Genel Bakış
+              {t('adminDashboard.overview')}
             </Text>
             <View style={styles.statsGrid}>
               <TouchableOpacity
@@ -179,7 +181,7 @@ const AdminDashboardScreen: React.FC<AdminDashboardScreenProps> = ({
                   {stats.pendingAppointments}
                 </Text>
                 <Text weight="regular" style={styles.statLabel}>
-                  Bekleyen Randevu
+                  {t('adminDashboard.pendingAppointment')}
                 </Text>
               </TouchableOpacity>
 
@@ -199,7 +201,7 @@ const AdminDashboardScreen: React.FC<AdminDashboardScreenProps> = ({
                   {stats.pendingHairChecks}
                 </Text>
                 <Text weight="regular" style={styles.statLabel}>
-                  Bekleyen Kontrol
+                  {t('adminDashboard.pendingCheck')}
                 </Text>
               </TouchableOpacity>
 
@@ -219,7 +221,7 @@ const AdminDashboardScreen: React.FC<AdminDashboardScreenProps> = ({
                   {stats.unreadMessages}
                 </Text>
                 <Text weight="regular" style={styles.statLabel}>
-                  Okunmamış Mesaj
+                  {t('adminDashboard.unreadMessage')}
                 </Text>
               </TouchableOpacity>
 
@@ -236,7 +238,7 @@ const AdminDashboardScreen: React.FC<AdminDashboardScreenProps> = ({
                   {stats.totalUsers}
                 </Text>
                 <Text weight="regular" style={styles.statLabel}>
-                  Toplam Kullanıcı
+                  {t('adminDashboard.totalUsers')}
                 </Text>
               </View>
             </View>
@@ -246,13 +248,13 @@ const AdminDashboardScreen: React.FC<AdminDashboardScreenProps> = ({
           <View style={styles.section}>
             <View style={styles.sectionHeader}>
               <Text weight="bold" style={styles.sectionTitle}>
-                Son Randevular
+                {t('adminDashboard.recentAppointments')}
               </Text>
               <TouchableOpacity
                 onPress={() => navigation.navigate('AdminAppointments')}
               >
                 <Text weight="semibold" style={styles.seeAllText}>
-                  Tümünü Gör
+                  {t('adminDashboard.seeAll')}
                 </Text>
               </TouchableOpacity>
             </View>
@@ -266,7 +268,7 @@ const AdminDashboardScreen: React.FC<AdminDashboardScreenProps> = ({
                   style={styles.emptyIcon}
                 />
                 <Text weight="medium" style={styles.emptyText}>
-                  Henüz randevu yok
+                  {t('adminDashboard.noAppointmentsYet')}
                 </Text>
               </View>
             ) : (
@@ -311,13 +313,13 @@ const AdminDashboardScreen: React.FC<AdminDashboardScreenProps> = ({
           <View style={styles.section}>
             <View style={styles.sectionHeader}>
               <Text weight="bold" style={styles.sectionTitle}>
-                Son Kontroller
+                {t('adminDashboard.recentChecks')}
               </Text>
               <TouchableOpacity
                 onPress={() => navigation.navigate('AdminHairChecks')}
               >
                 <Text weight="semibold" style={styles.seeAllText}>
-                  Tümünü Gör
+                  {t('adminDashboard.seeAll')}
                 </Text>
               </TouchableOpacity>
             </View>
@@ -331,7 +333,7 @@ const AdminDashboardScreen: React.FC<AdminDashboardScreenProps> = ({
                   style={styles.emptyIcon}
                 />
                 <Text weight="medium" style={styles.emptyText}>
-                  Henüz kontrol yok
+                  {t('adminDashboard.noChecksYet')}
                 </Text>
               </View>
             ) : (
@@ -357,12 +359,12 @@ const AdminDashboardScreen: React.FC<AdminDashboardScreenProps> = ({
                     />
                     <View>
                       <Text weight="semibold" style={styles.itemTitle}>
-                        Saç Kontrolü
+                        {t('adminDashboard.hairCheck')}
                       </Text>
                       <Text weight="regular" style={styles.itemSubtitle}>
                         {check.status === 'pending'
-                          ? 'Beklemede'
-                          : 'Tamamlandı'}
+                          ? t('adminHairChecks.status.pending')
+                          : t('adminHairChecks.status.completed')}
                       </Text>
                     </View>
                   </View>
@@ -377,7 +379,7 @@ const AdminDashboardScreen: React.FC<AdminDashboardScreenProps> = ({
           {/* Hızlı Aksiyonlar */}
           <View style={styles.section}>
             <Text weight="bold" style={styles.sectionTitle}>
-              Hızlı İşlemler
+              {t('adminDashboard.quickActions')}
             </Text>
             <View style={styles.quickActions}>
               <TouchableOpacity
@@ -391,7 +393,7 @@ const AdminDashboardScreen: React.FC<AdminDashboardScreenProps> = ({
                   style={styles.actionIcon}
                 />
                 <Text weight="semibold" style={styles.actionText}>
-                  Randevular
+                  {t('adminDashboard.appointments')}
                 </Text>
               </TouchableOpacity>
 
@@ -406,7 +408,7 @@ const AdminDashboardScreen: React.FC<AdminDashboardScreenProps> = ({
                   style={styles.actionIcon}
                 />
                 <Text weight="semibold" style={styles.actionText}>
-                  Kontroller
+                  {t('adminDashboard.checks')}
                 </Text>
               </TouchableOpacity>
 
@@ -421,7 +423,7 @@ const AdminDashboardScreen: React.FC<AdminDashboardScreenProps> = ({
                   style={styles.actionIcon}
                 />
                 <Text weight="semibold" style={styles.actionText}>
-                  Mesajlar
+                  {t('adminDashboard.messages')}
                 </Text>
               </TouchableOpacity>
             </View>

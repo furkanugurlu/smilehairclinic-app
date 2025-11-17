@@ -11,6 +11,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useFocusEffect } from '@react-navigation/native';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { useTranslation } from 'react-i18next';
 import { Text, LoadingModal, FilterTabs, FilterOption } from '../../../../components';
 import { supabase } from '../../../../config/supabase';
 import { Appointment, AppointmentStatus } from '../../../../types';
@@ -22,6 +23,7 @@ interface AdminAppointmentsScreenProps {
 const AdminAppointmentsScreen: React.FC<AdminAppointmentsScreenProps> = ({
   navigation,
 }) => {
+  const { t } = useTranslation();
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [filteredAppointments, setFilteredAppointments] = useState<
     Appointment[]
@@ -62,7 +64,7 @@ const AdminAppointmentsScreen: React.FC<AdminAppointmentsScreenProps> = ({
       setAppointments(data || []);
     } catch (error: any) {
       console.error('❌ Fetch appointments error:', error);
-      Alert.alert('Hata', 'Randevular yüklenirken bir hata oluştu');
+      Alert.alert(t('common.error'), t('adminAppointments.loadError'));
     } finally {
       setLoading(false);
     }
@@ -96,11 +98,17 @@ const AdminAppointmentsScreen: React.FC<AdminAppointmentsScreenProps> = ({
 
       if (error) throw error;
 
-      Alert.alert('Başarılı', 'Randevu durumu güncellendi');
+      Alert.alert(
+        t('adminAppointments.updateSuccess'),
+        t('adminAppointments.updateSuccessMessage'),
+      );
       fetchAppointments();
     } catch (error: any) {
       console.error('❌ Update appointment error:', error);
-      Alert.alert('Hata', 'Randevu güncellenirken bir hata oluştu');
+      Alert.alert(
+        t('adminAppointments.updateError'),
+        t('adminAppointments.updateErrorMessage'),
+      );
     }
   };
 
@@ -120,18 +128,7 @@ const AdminAppointmentsScreen: React.FC<AdminAppointmentsScreenProps> = ({
   };
 
   const getStatusText = (status: AppointmentStatus) => {
-    switch (status) {
-      case 'confirmed':
-        return 'Onaylandı';
-      case 'pending':
-        return 'Beklemede';
-      case 'cancelled':
-        return 'İptal';
-      case 'completed':
-        return 'Tamamlandı';
-      default:
-        return status;
-    }
+    return t(`adminAppointments.status.${status}`);
   };
 
   const formatDate = (dateString: string) => {
@@ -152,35 +149,35 @@ const AdminAppointmentsScreen: React.FC<AdminAppointmentsScreenProps> = ({
   const filterOptions: FilterOption[] = [
     {
       id: 'all',
-      label: 'Tümü',
+      label: t('adminAppointments.filters.all'),
       icon: 'apps',
       color: '#666',
       count: appointments.length,
     },
     {
       id: 'pending',
-      label: 'Bekleyen',
+      label: t('adminAppointments.filters.pending'),
       icon: 'time',
       color: '#F59E0B',
       count: appointments.filter(a => a.status === 'pending').length,
     },
     {
       id: 'confirmed',
-      label: 'Onaylı',
+      label: t('adminAppointments.filters.confirmed'),
       icon: 'checkmark-circle',
       color: '#10B981',
       count: appointments.filter(a => a.status === 'confirmed').length,
     },
     {
       id: 'completed',
-      label: 'Tamamlandı',
+      label: t('adminAppointments.filters.completed'),
       icon: 'checkmark-done',
       color: '#6B7280',
       count: appointments.filter(a => a.status === 'completed').length,
     },
     {
       id: 'cancelled',
-      label: 'İptal',
+      label: t('adminAppointments.filters.cancelled'),
       icon: 'close-circle',
       color: '#EF4444',
       count: appointments.filter(a => a.status === 'cancelled').length,
@@ -194,7 +191,7 @@ const AdminAppointmentsScreen: React.FC<AdminAppointmentsScreenProps> = ({
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
         <Text weight="bold" style={styles.title}>
-          Randevular
+          {t('adminAppointments.title')}
         </Text>
       </View>
 
@@ -227,10 +224,10 @@ const AdminAppointmentsScreen: React.FC<AdminAppointmentsScreenProps> = ({
                 style={styles.emptyIcon}
               />
               <Text weight="semibold" style={styles.emptyTitle}>
-                Randevu Bulunamadı
+                {t('adminAppointments.noAppointmentsFound')}
               </Text>
               <Text weight="regular" style={styles.emptyText}>
-                Bu filtrede randevu bulunmuyor
+                {t('adminAppointments.noAppointmentsInFilter')}
               </Text>
             </View>
           ) : (
@@ -240,7 +237,8 @@ const AdminAppointmentsScreen: React.FC<AdminAppointmentsScreenProps> = ({
                   <View style={styles.appointmentHeader}>
                     <View>
                       <Text weight="semibold" style={styles.patientName}>
-                        {appointment.profiles?.full_name || 'İsimsiz Kullanıcı'}
+                        {appointment.profiles?.full_name ||
+                          t('admin.hairChecks.unnamedUser')}
                       </Text>
                       <Text weight="regular" style={styles.patientEmail}>
                         {appointment.profiles?.email}
@@ -298,12 +296,12 @@ const AdminAppointmentsScreen: React.FC<AdminAppointmentsScreenProps> = ({
                         style={[styles.actionButton, styles.confirmButton]}
                         onPress={() =>
                           Alert.alert(
-                            'Randevuyu Onayla',
-                            'Bu randevuyu onaylamak istediğinize emin misiniz?',
+                            t('adminAppointments.confirmAppointment'),
+                            t('adminAppointments.confirmMessage'),
                             [
-                              { text: 'İptal', style: 'cancel' },
+                              { text: t('common.cancel'), style: 'cancel' },
                               {
-                                text: 'Onayla',
+                                text: t('adminAppointments.confirm'),
                                 onPress: () =>
                                   handleStatusChange(
                                     appointment.id,
@@ -318,19 +316,19 @@ const AdminAppointmentsScreen: React.FC<AdminAppointmentsScreenProps> = ({
                           weight="semibold"
                           style={styles.confirmButtonText}
                         >
-                          Onayla
+                          {t('adminAppointments.confirm')}
                         </Text>
                       </TouchableOpacity>
                       <TouchableOpacity
                         style={[styles.actionButton, styles.cancelButton]}
                         onPress={() =>
                           Alert.alert(
-                            'Randevuyu İptal Et',
-                            'Bu randevuyu iptal etmek istediğinize emin misiniz?',
+                            t('adminAppointments.cancelAppointment'),
+                            t('adminAppointments.cancelMessage'),
                             [
-                              { text: 'Hayır', style: 'cancel' },
+                              { text: t('adminAppointments.no'), style: 'cancel' },
                               {
-                                text: 'İptal Et',
+                                text: t('adminAppointments.cancel'),
                                 style: 'destructive',
                                 onPress: () =>
                                   handleStatusChange(
@@ -343,7 +341,7 @@ const AdminAppointmentsScreen: React.FC<AdminAppointmentsScreenProps> = ({
                         }
                       >
                         <Text weight="semibold" style={styles.cancelButtonText}>
-                          İptal Et
+                          {t('adminAppointments.cancel')}
                         </Text>
                       </TouchableOpacity>
                     </View>
@@ -357,7 +355,7 @@ const AdminAppointmentsScreen: React.FC<AdminAppointmentsScreenProps> = ({
                       }
                     >
                       <Text weight="semibold" style={styles.completeButtonText}>
-                        Tamamlandı Olarak İşaretle
+                        {t('adminAppointments.markAsCompleted')}
                       </Text>
                     </TouchableOpacity>
                   )}

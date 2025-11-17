@@ -384,6 +384,225 @@
       "save": "Kaydet",
       "unnamedUser": "İsimsiz Kullanıcı"
     }
+  },
+  "about": {
+    "title": "Hakkımızda",
+    "clinicName": "Smile Hair Clinic",
+    "clinicSubtitle": "Türkiye'nin Önde Gelen Saç Ekimi Kliniği",
+    "description1": "Smile Hair Clinic, Türkiye'nin göz bebeği İstanbul'da, saç ekimi alanında hizmet veren önde gelen kliniklerden biridir.",
+    "description2": "Alanında uluslararası tanınırlığa sahip Dr. Gökay Bilgin ve Dr. Mehmet Erdoğan'ın liderliğinde faaliyet gösteren Smile Hair Clinic'te hasta memnuniyeti daima ön planda tutulur.",
+    "description3": "Tüm operasyon süreçleri bizzat doktorlar tarafından takip edilir ve ekipte yer alan her bir üye medikal eğitim almış profesyonellerden oluşur. Bugüne kadar dünyanın dört bir yanından gelen çok sayıda hastaya başarılı saç ekimi uygulamaları gerçekleştirilmiştir.",
+    "doctors": "DOKTORLARIMIZ",
+    "founderDoctor": "Kurucu Doktor",
+    "hairTransplantSpecialist": "Saç Ekimi Uzmanı",
+    "philosophy": "FELSEFEMİZ",
+    "philosophy1Title": "Gerçek Felsefe",
+    "philosophy1Description": "Her hastanın benzersiz olduğunu biliyoruz. Ekip çalışması ve detaylı planlama ile kişiye özel çözümler sunuyoruz. Saç çizgisi tasarımımız doğal görünüm ve estetik mükemmellik için her zaman açıları dikkate alır.",
+    "philosophy2Title": "Gerçek Uygulama",
+    "philosophy2Description": "Operasyon günü, tüm dönüşüm sürecinde başarılı bir sonuç için kilit kilometre taşıdır. Yüksek seviyeli önlemlerimiz sayesinde hiçbir şeyin ters gitmesine izin vermeyiz. Başarılı operasyonlar ve sonuçlar elde etmek için tüm çabamızı ve kaynaklarımızı kullanırız.",
+    "philosophy3Title": "Gerçek İnovasyon",
+    "philosophy3Description": "Gelişimi tıbbın temeli olarak görüyoruz. Her zaman en etkili saç ekimi operasyonlarını gerçekleştirmenin daha iyi yollarını arıyoruz. Safir Nakil tekniği, inovasyon tutkumuzun en parlak örneklerinden biridir.",
+    "treatments": "TEDAVİLERİMİZ",
+    "treatment1": "Saç Ekimi",
+    "treatment2": "Safir Saç Ekimi",
+    "treatment3": "DHI Saç Ekimi",
+    "treatment4": "Manuel FUE Saç Ekimi",
+    "treatment5": "Sakal Ekimi",
+    "treatment6": "Kaş Ekimi",
+    "treatment7": "Kadın Saç Ekimi",
+    "treatment8": "Afro Saç Ekimi",
+    "treatment9": "Tıraşsız Saç Ekimi",
+    "treatment10": "İğnesiz Anestezi",
+    "treatment11": "Mezoterapi"
+  },
+  "helpCenter": {
+    "title": "Yardım Merkezi",
+    "faqTitle": "Sıkça Sorulan Sorular",
+    "faqDescription": "Saç ekimi operasyonu öncesi ve sonrası hakkında merak ettikleriniz",
+    "category": {
+      "postOperation": "Operasyon Sonrası",
+      "care": "Bakım",
+      "general": "Genel"
+    },
+    "faqs": {
+      "q1": "Ne kadar süre antibiyotik içeren krem kullanmam gerekir?",
+      "a1": "Operasyondan sonraki 5 gün içinde donör bölgeniz iyileştiyse antibiyotik içeren kremleri kullanmaya devam etmeniz gerekmez.",
+      "q2": "Saç ekimi sonrasında ne kadar süre şapka kullanmalıyım?",
+      "a2": "Saç ekiminden sonra size verdiğimiz şapkayı 10 gün boyunca kullanmanızı öneririz.",
+      "q3": "Ameliyattan sonra ne zaman spor yapabilirim?",
+      "a3": "Operasyondan sonra egzersiz yapmaya başlamak için en az 1 ay beklemelisiniz.",
+      "q4": "Saç ekiminden sonra her gün başımı yıkamalı mıyım?",
+      "a4": "Saç ekiminden sonra 1 ay boyunca her gün başınızı yıkamalısınız.",
+      "q5": "Saç ekimi sonrasında bandajımı ne zaman çıkarabilirim?",
+      "a5": "Operasyondan sonraki ikinci gün başınızı yıkamanız gerekir. Başınızı yıkamadan önce bandaj çıkartılır ve sonrasında tekrar kullanılması gerekmez.",
+      "q6": "Ne kadar süre özel şampuan kullanmam gerekir?",
+      "a6": "1 ay boyunca size önerdiğimiz şampuanı kullanmalısınız. Saçlarınızın ve baş bölgenizin sağlığından emin olduktan sonra her zaman kullandığınız şampuanı kullanmaya devam edebilirsiniz.",
+      "q7": "Ne kadar süre Panthenol sprey kullanmam gerekir?",
+      "a7": "Yaklaşık 15 gün boyunca, kabuklar deriden tamamen atılana kadar kullanmanız gerekir.",
+      "q8": "Saç ekimi sonrası ne zaman cinsel ilişkiye girebilirim?",
+      "a8": "Operasyon sonrası cinsel ilişki konusunda kısıtlama getirilmez, çok efor harcamamanız önerilir.",
+      "q9": "Önerilen ürünler dışında farklı bir ürün kullanabilir miyim?",
+      "a9": "Kullanacağınız ürünlerin içeriğini dikkatle incelemeli, size zarar vermeyecek, paraben içermeyen, doğal ürünleri tercih etmelisiniz.",
+      "q10": "Panthenol spreyi donör bölgede kullanabilir miyim?",
+      "a10": "Kullanabilirsiniz ancak bu spreyin çok hızlı tükenmesine sebep olacaktır."
+    },
+    "contactCard": {
+      "title": "Başka bir sorunuz mu var?",
+      "description": "Uzman ekibimiz size yardımcı olmak için hazır",
+      "button": "İletişime Geç"
+    }
+  },
+  "profileEdit": {
+    "title": "Profil Bilgileri",
+    "changePhoto": "Fotoğraf Değiştir",
+    "uploading": "Yükleniyor...",
+    "email": "E-posta",
+    "emailCannotChange": "E-posta adresi değiştirilemez",
+    "fullName": "Ad Soyad",
+    "fullNamePlaceholder": "Adınız Soyadınız",
+    "phone": "Telefon",
+    "phonePlaceholder": "5XXXXXXXXX",
+    "update": "Güncelle",
+    "fullNameRequired": "Ad Soyad zorunludur",
+    "fullNameMinLength": "Ad Soyad en az 2 karakter olmalıdır",
+    "phoneRequired": "Telefon numarası zorunludur",
+    "phoneInvalid": "Geçerli bir telefon numarası giriniz (10 haneli)",
+    "updateSuccess": "Başarılı",
+    "updateSuccessMessage": "Profil bilgileriniz güncellendi",
+    "updateError": "Hata",
+    "updateErrorMessage": "Profil güncellenirken bir hata oluştu",
+    "avatarUpdateSuccess": "Başarılı",
+    "avatarUpdateSuccessMessage": "Profil fotoğrafınız güncellendi",
+    "avatarUpdateError": "Hata",
+    "avatarUpdateErrorMessage": "Fotoğraf yüklenirken bir hata oluştu",
+    "userNotFound": "Kullanıcı bulunamadı"
+  },
+  "onboarding": {
+    "skip": "Atla",
+    "next": "İleri",
+    "start": "Başla",
+    "slide1": {
+      "title": "Smile Hair Clinic'e Hoş Geldiniz",
+      "description": "Profesyonel saç ekimi ve tedavi hizmetleri ile yeni bir başlangıç yapın."
+    },
+    "slide2": {
+      "title": "Uzman Kadromuz",
+      "description": "Alanında uzman doktorlarımız ve ekibimizle güvenli ellerde olun."
+    },
+    "slide3": {
+      "title": "Randevularınızı Kolayca Yönetin",
+      "description": "Uygulamamız üzerinden randevu alın, takip edin ve sonuçlarınızı görün."
+    }
+  },
+  "adminDashboard": {
+    "greeting": "Admin Panel",
+    "welcome": "Hoş geldiniz, {{name}}",
+    "overview": "Genel Bakış",
+    "pendingAppointment": "Bekleyen Randevu",
+    "pendingCheck": "Bekleyen Kontrol",
+    "unreadMessage": "Okunmamış Mesaj",
+    "totalUsers": "Toplam Kullanıcı",
+    "recentAppointments": "Son Randevular",
+    "recentChecks": "Son Kontroller",
+    "quickActions": "Hızlı İşlemler",
+    "seeAll": "Tümünü Gör",
+    "noAppointmentsYet": "Henüz randevu yok",
+    "noChecksYet": "Henüz kontrol yok",
+    "appointments": "Randevular",
+    "checks": "Kontroller",
+    "messages": "Mesajlar",
+    "hairCheck": "Saç Kontrolü",
+    "loadError": "Veriler yüklenirken bir hata oluştu"
+  },
+  "adminAppointments": {
+    "title": "Randevular",
+    "filters": {
+      "all": "Tümü",
+      "pending": "Bekleyen",
+      "confirmed": "Onaylı",
+      "completed": "Tamamlandı",
+      "cancelled": "İptal"
+    },
+    "status": {
+      "confirmed": "Onaylandı",
+      "pending": "Beklemede",
+      "cancelled": "İptal",
+      "completed": "Tamamlandı"
+    },
+    "noAppointmentsFound": "Randevu Bulunamadı",
+    "noAppointmentsInFilter": "Bu filtrede randevu bulunmuyor",
+    "confirmAppointment": "Randevuyu Onayla",
+    "confirmMessage": "Bu randevuyu onaylamak istediğinize emin misiniz?",
+    "cancelAppointment": "Randevuyu İptal Et",
+    "cancelMessage": "Bu randevuyu iptal etmek istediğinize emin misiniz?",
+    "markAsCompleted": "Tamamlandı Olarak İşaretle",
+    "confirm": "Onayla",
+    "cancel": "İptal Et",
+    "no": "Hayır",
+    "updateSuccess": "Başarılı",
+    "updateSuccessMessage": "Randevu durumu güncellendi",
+    "updateError": "Hata",
+    "updateErrorMessage": "Randevu güncellenirken bir hata oluştu",
+    "loadError": "Randevular yüklenirken bir hata oluştu"
+  },
+  "adminHairChecks": {
+    "title": "Saç Kontrolleri",
+    "filters": {
+      "all": "Tümü",
+      "pending": "Bekleyen",
+      "analyzing": "Analiz Ediliyor",
+      "completed": "Tamamlandı",
+      "failed": "Başarısız"
+    },
+    "status": {
+      "completed": "Tamamlandı",
+      "pending": "Beklemede",
+      "analyzing": "Analiz Ediliyor",
+      "failed": "Başarısız"
+    },
+    "analysisStatus": {
+      "good": "İyi",
+      "warning": "Uyarı",
+      "critical": "Kritik"
+    },
+    "noChecksFound": "Kontrol Bulunamadı",
+    "noChecksInFilter": "Bu filtrede kontrol bulunmuyor",
+    "loadError": "Kontroller yüklenirken bir hata oluştu"
+  },
+  "adminHairCheckDetail": {
+    "title": "Kontrol İnceleme",
+    "photos": "Fotoğraflar",
+    "analysisResult": "Analiz Sonucu",
+    "hairHealthScore": "Saç Sağlığı Skoru (0-100)",
+    "scorePlaceholder": "Örn: 75",
+    "analysisStatus": "Analiz Durumu",
+    "analysisNotes": "Analiz Notları",
+    "analysisNotesPlaceholder": "Saç sağlığı hakkında detaylı açıklama...",
+    "recommendations": "Öneriler (Opsiyonel)",
+    "recommendationsPlaceholder": "Hastaya özel önerileriniz...",
+    "saveAndSend": "Analizi Kaydet ve Gönder",
+    "saving": "Analiz kaydediliyor...",
+    "saveSuccess": "Başarılı",
+    "saveSuccessMessage": "Analiz sonucu başarıyla kaydedildi",
+    "saveError": "Hata",
+    "saveErrorMessage": "Analiz kaydedilirken bir hata oluştu",
+    "validation": {
+      "scoreRequired": "Lütfen 0-100 arasında geçerli bir skor giriniz",
+      "statusRequired": "Lütfen analiz durumunu seçiniz",
+      "notesRequired": "Lütfen analiz notlarını giriniz"
+    },
+    "photoLabels": {
+      "front": "Ön Görünüm",
+      "right45": "Sağ 45°",
+      "left45": "Sol 45°",
+      "top": "Üst Görünüm",
+      "back": "Arka Görünüm"
+    },
+    "statusLabels": {
+      "good": "İyi",
+      "warning": "Dikkat",
+      "critical": "Kritik"
+    }
   }
 }
 

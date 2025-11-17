@@ -12,6 +12,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useFocusEffect } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
+import Icon from 'react-native-vector-icons/Ionicons';
 import { Text, LoadingModal } from '../../../components';
 import { supabase } from '../../../config/supabase';
 import { useAuthStore } from '../../../store/authStore';
@@ -264,8 +265,6 @@ const MessageListScreen: React.FC<MessageListScreenProps> = ({
     navigation.navigate('Chat', { chatUser, isAdmin });
   };
 
-  console.log('chatUsers', chatUsers);
-
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
@@ -287,7 +286,7 @@ const MessageListScreen: React.FC<MessageListScreenProps> = ({
         >
           {chatUsers.length === 0 ? (
             <View style={styles.emptyContainer}>
-              <Text style={styles.emptyIcon}>💬</Text>
+              <Icon name="chatbubbles-outline" size={64} color="#D1D5DB" />
               <Text weight="semibold" style={styles.emptyTitle}>
                 {isAdmin ? t('messages.noMessagesTitle') : t('messages.noMessagesTitle')}
               </Text>
@@ -392,13 +391,10 @@ const styles = StyleSheet.create({
     paddingVertical: 80,
     paddingHorizontal: 40,
   },
-  emptyIcon: {
-    fontSize: 64,
-    marginBottom: 16,
-  },
   emptyTitle: {
     fontSize: 18,
     color: '#1A1A1A',
+    marginTop: 16,
     marginBottom: 8,
   },
   emptyText: {

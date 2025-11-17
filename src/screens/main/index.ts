@@ -7,6 +7,7 @@ export { default as MessageListScreen } from './messages/MessageListScreen';
 export { default as ChatScreen } from './messages/ChatScreen';
 
 // user screens
+export { default as HairCheckCameraScreen } from './hair/HairCheckCameraScreen';
 export { default as HairCheckCaptureScreen } from './hair/HairCheckCaptureScreen';
 export { default as HairCheckDetailScreen } from './hair/HairCheckDetailScreen';
 export { default as AppointmentCreateScreen } from './appointment/AppointmentCreateScreen';

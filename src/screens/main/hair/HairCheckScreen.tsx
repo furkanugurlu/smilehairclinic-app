@@ -56,7 +56,7 @@ const HairCheckScreen: React.FC<HairCheckScreenProps> = ({
     // MainTabs'tan ana stack'e navigate etmek için getParent kullan
     const parentNav = navigation.getParent();
     if (parentNav) {
-      parentNav.navigate('HairCheckCapture');
+      parentNav.navigate('HairCheckCamera');
     }
   };
 

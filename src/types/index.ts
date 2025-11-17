@@ -58,6 +58,10 @@ export interface PhotoStep {
   label: string;
   icon: string;
   description: string;
+  instruction?: string;
+  targetAngle?: { pitch: number; roll: number };
+  requiresFace?: boolean;
+  faceRotation?: number;
 }
 
 // Appointment Types

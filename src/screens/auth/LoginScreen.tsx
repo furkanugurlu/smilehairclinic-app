@@ -52,11 +52,6 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
     password: '1234567',
   }
 
-  const normalUserSecret = {
-    email: 'furkanugurlu5134@gmail.com',
-    password: '123456',
-  }
-
   return (
     <SafeAreaView style={styles.container}>
       <KeyboardAvoidingView
@@ -78,7 +73,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
           </View>
 
           <Formik
-            initialValues={normalUserSecret}
+            initialValues={normalUser}
             validationSchema={LoginSchema}
             onSubmit={handleLogin}
           >

@@ -2,6 +2,7 @@ import { supabase } from '../config/supabase';
 import { launchImageLibrary } from 'react-native-image-picker';
 import ReactNativeBlobUtil from 'react-native-blob-util';
 import { decode as base64Decode } from 'base-64';
+import { Image } from 'react-native-compressor';
 
 export interface ImagePickerResult {
   uri: string;
@@ -57,13 +58,23 @@ export const uploadAvatarToSupabase = async (
       name: imageData.name,
     });
 
+    // Resmi sıkıştır
+    console.log('🗜️ Resim sıkıştırılıyor...', { originalUri: imageData.uri });
+    const compressedUri = await Image.compress(imageData.uri, {
+      compressionMethod: 'auto',
+      quality: 0.8,
+      maxWidth: 1024,
+      maxHeight: 1024,
+    });
+    console.log('✅ Resim sıkıştırıldı:', { originalUri: imageData.uri, compressedUri });
+
     // Dosya uzantısını al
     const fileExt = imageData.name.split('.').pop();
     const fileName = `${userId}_${Date.now()}.${fileExt}`;
     const filePath = `avatars/${fileName}`;
 
     // Dosya path'ini temizle (file:// önekini kaldır)
-    const cleanUri = imageData.uri.replace('file://', '');
+    const cleanUri = compressedUri.replace('file://', '');
     
     console.log('📥 Dosya base64\'e çevriliyor...', { cleanUri });
     
@@ -153,14 +164,24 @@ export const uploadHairCheckPhoto = async (
       name: imageData.name,
     });
 
+    // Resmi sıkıştır - API'ye gönderirken küçült (yatay olsa bile sorun değil)
+    console.log('🗜️ Resim sıkıştırılıyor (API\'ye gönderim için)...', { originalUri: imageData.uri, photoType });
+    const compressedUri = await Image.compress(imageData.uri, {
+      compressionMethod: 'auto', // EXIF orientation bilgisini korur
+      quality: 0.7, // %70 kalite
+      maxWidth: 1280, // Maksimum genişlik
+      maxHeight: 1280, // Maksimum yükseklik
+    });
+    console.log('✅ Resim sıkıştırıldı:', { originalUri: imageData.uri, compressedUri });
+
     // Dosya uzantısını al
     const fileExt = imageData.name.split('.').pop();
     const fileName = `${userId}_${photoType}_${Date.now()}.${fileExt}`;
     const filePath = `hair-checks/${fileName}`;
 
     // Dosya path'ini temizle (file:// önekini kaldır)
-    const cleanUri = imageData.uri.replace('file://', '');
-
+    const cleanUri = compressedUri.replace('file://', '');
+    
     console.log('📥 Dosya base64\'e çevriliyor...', { cleanUri });
 
     // Dosyayı base64 olarak oku

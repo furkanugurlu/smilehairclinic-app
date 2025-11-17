@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   StyleSheet,
@@ -22,17 +22,28 @@ import { supabase } from '../../../config/supabase';
 
 interface HairCheckCaptureScreenProps {
   navigation: any;
+  route?: any;
 }
 
 const HairCheckCaptureScreen: React.FC<HairCheckCaptureScreenProps> = ({
   navigation,
+  route,
 }) => {
   const { user } = useAuthStore();
+  const capturedPhotosFromCamera = route?.params?.capturedPhotos;
+  
   const [selectedPhotos, setSelectedPhotos] = useState<{
     [key: string]: ImagePickerResult;
-  }>({});
+  }>(capturedPhotosFromCamera || {});
   const [uploading, setUploading] = useState(false);
   const [uploadingStep, setUploadingStep] = useState('');
+
+  // Route params'tan gelen fotoğrafları güncelle
+  useEffect(() => {
+    if (capturedPhotosFromCamera) {
+      setSelectedPhotos(capturedPhotosFromCamera);
+    }
+  }, [capturedPhotosFromCamera]);
 
   const photoSteps: PhotoStep[] = [
     {
@@ -85,6 +96,10 @@ const HairCheckCaptureScreen: React.FC<HairCheckCaptureScreenProps> = ({
         'Fotoğraf seçilirken bir hata oluştu. Lütfen tekrar deneyin.',
       );
     }
+  };
+
+  const handleStartCamera = () => {
+    navigation.navigate('HairCheckCamera');
   };
 
   const handleRemovePhoto = (photoId: string) => {
@@ -236,6 +251,21 @@ const HairCheckCaptureScreen: React.FC<HairCheckCaptureScreenProps> = ({
         <View style={{ width: 40 }} />
       </View>
 
+      {/* Start Camera Button - Only show if no photos captured */}
+      {!capturedPhotosFromCamera && (
+        <View style={styles.cameraButtonSection}>
+          <TouchableOpacity
+            style={styles.startCameraButton}
+            onPress={handleStartCamera}
+          >
+            <Icon name="camera" size={24} color="#FFFFFF" />
+            <Text weight="bold" style={styles.startCameraButtonText}>
+              Taramayı Başlat
+            </Text>
+          </TouchableOpacity>
+        </View>
+      )}
+
       {/* Progress Bar */}
       <View style={styles.progressSection}>
         <View style={styles.progressBar}>
@@ -281,13 +311,9 @@ const HairCheckCaptureScreen: React.FC<HairCheckCaptureScreenProps> = ({
           onPress={handleSubmit}
           disabled={!isAllPhotosSelected() || uploading}
         >
-          {uploading ? (
-            <ActivityIndicator color="#FFFFFF" />
-          ) : (
             <Text weight="bold" style={styles.submitButtonText}>
               Kontrolü Gönder
             </Text>
-          )}
         </TouchableOpacity>
       </View>
 
@@ -460,6 +486,34 @@ const styles = StyleSheet.create({
   submitButtonText: {
     color: '#FFFFFF',
     fontSize: 16,
+  },
+  cameraButtonSection: {
+    paddingHorizontal: 24,
+    paddingVertical: 16,
+    backgroundColor: '#FFFFFF',
+    borderBottomWidth: 1,
+    borderBottomColor: '#E5E7EB',
+  },
+  startCameraButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#01213D',
+    paddingVertical: 14,
+    borderRadius: 12,
+    shadowColor: '#01213D',
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 4,
+  },
+  startCameraButtonText: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    marginLeft: 8,
   },
 });
 

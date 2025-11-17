@@ -10,7 +10,7 @@ import SplashScreen from '../screens/SplashScreen';
 import OnboardingScreen from '../screens/onboarding/OnboardingScreen';
 import AuthStack from './AuthStack';
 import MainTabs from './MainTabs';
-import { AdminHairCheckDetailScreen, AppointmentCreateScreen, HairCheckCaptureScreen, HairCheckDetailScreen } from '../screens/main';
+import { AdminHairCheckDetailScreen, AppointmentCreateScreen, HairCheckCaptureScreen, HairCheckDetailScreen, HairCheckCameraScreen } from '../screens/main';
 
 
 import { ChatScreen } from '../screens/main';
@@ -182,6 +182,10 @@ const RootNavigator: React.FC = () => {
               <Stack.Screen 
                 name="Chat" 
                 component={ChatScreen}
+              />
+              <Stack.Screen 
+                name="HairCheckCamera" 
+                component={HairCheckCameraScreen}
               />
               <Stack.Screen 
                 name="HairCheckCapture" 

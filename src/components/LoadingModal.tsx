@@ -35,6 +35,7 @@ const LoadingModal: React.FC<LoadingModalProps> = ({
               resizeMode="contain"
             />
             <ActivityIndicator size="small" color="#01213D" />
+            <Text style={styles.message}>{message}</Text>
           </View>
         </View>
       </View>

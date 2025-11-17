@@ -165,7 +165,6 @@ const RootNavigator: React.FC = () => {
   }
 
   const isLoading = loading || showOnboarding === null;
-  
 
   return (
     <>

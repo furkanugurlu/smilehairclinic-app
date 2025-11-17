@@ -73,10 +73,14 @@ export const uploadAvatarToSupabase = async (
     const fileName = `${userId}_${Date.now()}.${fileExt}`;
     const filePath = `avatars/${fileName}`;
 
-    // Dosya path'ini temizle (file:// önekini kaldır)
-    const cleanUri = compressedUri.replace('file://', '');
+    // Dosya path'ini temizle (tüm file:// öneklerini kaldır)
+    // Bazı durumlarda double file:// olabilir, bu yüzden tümünü kaldırıyoruz
+    let cleanUri = compressedUri;
+    while (cleanUri.startsWith('file://')) {
+      cleanUri = cleanUri.replace('file://', '');
+    }
     
-    console.log('📥 Dosya base64\'e çevriliyor...', { cleanUri });
+    console.log('📥 Dosya base64\'e çevriliyor...', { cleanUri, originalCompressedUri: compressedUri });
     
     // Dosyayı base64 olarak oku (Native module kullanarak - Android uyumlu)
     const base64Data = await ReactNativeBlobUtil.fs.readFile(cleanUri, 'base64');
@@ -151,6 +155,44 @@ export const deleteAvatarFromSupabase = async (avatarUrl: string): Promise<void>
   }
 };
 
+// Retry helper function
+const retryWithBackoff = async <T>(
+  fn: () => Promise<T>,
+  maxRetries: number = 3,
+  baseDelay: number = 1000
+): Promise<T> => {
+  let lastError: any;
+  
+  for (let attempt = 0; attempt < maxRetries; attempt++) {
+    try {
+      return await fn();
+    } catch (error: any) {
+      lastError = error;
+      
+      // Network timeout veya connection error ise retry yap
+      const isRetryableError = 
+        error.message?.includes('timeout') ||
+        error.message?.includes('Network') ||
+        error.name === 'StorageUnknownError' ||
+        error.statusCode === 408 ||
+        error.statusCode === 500 ||
+        error.statusCode === 502 ||
+        error.statusCode === 503;
+      
+      if (!isRetryableError || attempt === maxRetries - 1) {
+        throw error;
+      }
+      
+      // Exponential backoff: 1s, 2s, 4s
+      const delay = baseDelay * Math.pow(2, attempt);
+      console.log(`⚠️ Yükleme hatası (deneme ${attempt + 1}/${maxRetries}), ${delay}ms sonra tekrar denenecek...`);
+      await new Promise<void>(resolve => setTimeout(() => resolve(), delay));
+    }
+  }
+  
+  throw lastError;
+};
+
 // Hair Check Photo Upload Functions
 export const uploadHairCheckPhoto = async (
   userId: string,
@@ -164,13 +206,13 @@ export const uploadHairCheckPhoto = async (
       name: imageData.name,
     });
 
-    // Resmi sıkıştır - API'ye gönderirken küçült (yatay olsa bile sorun değil)
-    console.log('🗜️ Resim sıkıştırılıyor (API\'ye gönderim için)...', { originalUri: imageData.uri, photoType });
+    // Resmi daha agresif sıkıştır - network timeout'ları önlemek için
+    console.log('🗜️ Resim sıkıştırılıyor (optimize edilmiş ayarlar)...', { originalUri: imageData.uri, photoType });
     const compressedUri = await Image.compress(imageData.uri, {
       compressionMethod: 'auto', // EXIF orientation bilgisini korur
-      quality: 0.7, // %70 kalite
-      maxWidth: 1280, // Maksimum genişlik
-      maxHeight: 1280, // Maksimum yükseklik
+      quality: 0.6, // %60 kalite (daha küçük dosya boyutu)
+      maxWidth: 1024, // Maksimum genişlik (1280'den 1024'e düşürüldü)
+      maxHeight: 1024, // Maksimum yükseklik (1280'den 1024'e düşürüldü)
     });
     console.log('✅ Resim sıkıştırıldı:', { originalUri: imageData.uri, compressedUri });
 
@@ -179,15 +221,20 @@ export const uploadHairCheckPhoto = async (
     const fileName = `${userId}_${photoType}_${Date.now()}.${fileExt}`;
     const filePath = `hair-checks/${fileName}`;
 
-    // Dosya path'ini temizle (file:// önekini kaldır)
-    const cleanUri = compressedUri.replace('file://', '');
+    // Dosya path'ini temizle (tüm file:// öneklerini kaldır)
+    // Bazı durumlarda double file:// olabilir, bu yüzden tümünü kaldırıyoruz
+    let cleanUri = compressedUri;
+    while (cleanUri.startsWith('file://')) {
+      cleanUri = cleanUri.replace('file://', '');
+    }
     
-    console.log('📥 Dosya base64\'e çevriliyor...', { cleanUri });
+    console.log('📥 Dosya base64\'e çevriliyor...', { cleanUri, originalCompressedUri: compressedUri });
 
     // Dosyayı base64 olarak oku
     const base64Data = await ReactNativeBlobUtil.fs.readFile(cleanUri, 'base64');
 
-    console.log('📦 Base64 hazırlandı, boyut:', base64Data.length);
+    const fileSizeKB = Math.round(base64Data.length * 0.75 / 1024); // Approximate KB
+    console.log('📦 Base64 hazırlandı, yaklaşık boyut:', `${fileSizeKB} KB`);
 
     // Base64'ü ArrayBuffer'a çevir
     const binaryString = base64Decode(base64Data);
@@ -198,17 +245,25 @@ export const uploadHairCheckPhoto = async (
     const arrayBuffer = bytes.buffer;
 
     console.log('⬆️ Supabase Storage\'a yükleniyor...', {
-      size: arrayBuffer.byteLength,
+      size: `${Math.round(arrayBuffer.byteLength / 1024)} KB`,
       type: imageData.type,
     });
 
-    // Supabase Storage'a yükle
-    const { data, error } = await supabase.storage
-      .from('hair-check-photos')
-      .upload(filePath, arrayBuffer, {
-        contentType: imageData.type || 'image/jpeg',
-        upsert: false,
-      });
+    // Retry mekanizması ile Supabase Storage'a yükle
+    const { data, error } = await retryWithBackoff(async () => {
+      const result = await supabase.storage
+        .from('hair-check-photos')
+        .upload(filePath, arrayBuffer, {
+          contentType: imageData.type || 'image/jpeg',
+          upsert: false,
+        });
+      
+      if (result.error) {
+        throw result.error;
+      }
+      
+      return result;
+    });
 
     if (error) {
       console.error('❌ Storage yükleme hatası:', error);
@@ -243,17 +298,24 @@ export const uploadMultipleHairCheckPhotos = async (
   try {
     console.log('📤 Tüm hair check fotoğrafları yükleniyor...', Object.keys(photos));
 
-    const uploadPromises = Object.entries(photos).map(async ([photoType, imageData]) => {
-      const url = await uploadHairCheckPhoto(userId, imageData, photoType);
-      return { photoType, url };
-    });
-
-    const results = await Promise.all(uploadPromises);
-
+    // Paralel yükleme yerine sıralı yükleme yapıyoruz
+    // Bu, network timeout'larını azaltır ve daha stabil çalışır
     const photoUrls: { [key: string]: string } = {};
-    results.forEach(({ photoType, url }) => {
-      photoUrls[photoType] = url;
-    });
+    const photoEntries = Object.entries(photos);
+    
+    for (let i = 0; i < photoEntries.length; i++) {
+      const [photoType, imageData] = photoEntries[i];
+      console.log(`📤 Fotoğraf ${i + 1}/${photoEntries.length} yükleniyor: ${photoType}`);
+      
+      try {
+        const url = await uploadHairCheckPhoto(userId, imageData, photoType);
+        photoUrls[photoType] = url;
+        console.log(`✅ ${photoType} fotoğrafı yüklendi`);
+      } catch (error: any) {
+        console.error(`❌ ${photoType} fotoğrafı yüklenirken hata:`, error);
+        throw error;
+      }
+    }
 
     console.log('✅ Tüm fotoğraflar yüklendi:', photoUrls);
 

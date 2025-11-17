@@ -313,7 +313,11 @@ const HairCheckCameraScreen: React.FC<HairCheckCameraScreenProps> = ({
       
 
       // Fotoğrafı sıkıştır
-      const originalUri = `file://${photo.path}`;      
+      // photo.path zaten absolute path, file:// eklememize gerek yok
+      // Eğer zaten file:// varsa, tekrar eklemeyelim
+      const originalUri = photo.path.startsWith('file://') 
+        ? photo.path 
+        : `file://${photo.path}`;      
       // Orientation bilgisini korumak için compressionMethod: 'auto' kullanıyoruz
       // Bu, EXIF orientation bilgisini dikkate alır
       // Ancak Vision Camera'dan gelen fotoğraflar genellikle doğru orientation'a sahiptir
@@ -361,9 +365,7 @@ const HairCheckCameraScreen: React.FC<HairCheckCameraScreenProps> = ({
     }
   };
 
-  const handleAllPhotosCaptured = async () => {
-    setIsProcessing(true);
-    
+  const handleAllPhotosCaptured = async () => {    
     // Fotoğrafları HairCheckCaptureScreen'e gönder
     navigation.navigate('HairCheckCapture', {
       capturedPhotos: capturedPhotos,

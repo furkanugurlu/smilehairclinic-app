@@ -75,7 +75,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
           </View>
 
           <Formik
-            initialValues={normalUser}
+            initialValues={adminUser}
             validationSchema={LoginSchema}
             onSubmit={handleLogin}
           >

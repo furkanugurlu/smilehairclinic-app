@@ -7,6 +7,7 @@ import React from 'react';
 import { StatusBar, useColorScheme } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import './src/i18n'; // Initialize i18n
 import RootNavigator from './src/navigation/RootNavigator';
 
 function App() {

@@ -2,6 +2,7 @@ import React from 'react';
 import { View, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { useTranslation } from 'react-i18next';
 import { Text } from '../../../components';
 
 interface PhotoStep {
@@ -18,34 +19,36 @@ interface HairCheckScreenProps {
 const HairCheckScreen: React.FC<HairCheckScreenProps> = ({
   navigation,
 }) => {
+  const { t } = useTranslation();
+  
   const photoSteps: PhotoStep[] = [
     {
       id: 'front',
-      label: 'Ön Görünüm',
+      label: t('hairCheck.photoTypes.front'),
       icon: 'happy-outline',
       iconColor: '#01213D',
     },
     {
       id: 'right45',
-      label: 'Sağ 45°',
+      label: t('hairCheck.photoTypes.right45'),
       icon: 'arrow-redo-outline',
       iconColor: '#10B981',
     },
     {
       id: 'left45',
-      label: 'Sol 45°',
+      label: t('hairCheck.photoTypes.left45'),
       icon: 'arrow-undo-outline',
       iconColor: '#10B981',
     },
     {
       id: 'top',
-      label: 'Üst Görünüm',
+      label: t('hairCheck.photoTypes.top'),
       icon: 'arrow-up-outline',
       iconColor: '#F59E0B',
     },
     {
       id: 'back',
-      label: 'Arka Görünüm',
+      label: t('hairCheck.photoTypes.back'),
       icon: 'person-outline',
       iconColor: '#8B5CF6',
     },
@@ -79,7 +82,7 @@ const HairCheckScreen: React.FC<HairCheckScreenProps> = ({
           {/* Title */}
           <View style={styles.titleSection}>
             <Text weight="bold" style={styles.title}>
-              Uzman değerlendirmesi{'\n'}için fotoğraflarınızı{'\n'}çekelim.
+              {t('hairCheck.expertEvaluation')}
             </Text>
           </View>
 
@@ -140,11 +143,11 @@ const HairCheckScreen: React.FC<HairCheckScreenProps> = ({
             onPress={handleStartCapture}
           >
             <Text weight="bold" style={styles.scanButtonText}>
-              Taramayı Başlat
+              {t('hairCheck.startScan')}
             </Text>
           </TouchableOpacity>
           <Text weight="regular" style={styles.helperText}>
-            İyi aydınlatılmış bir ortamda olduğunuzdan emin olun.
+            {t('hairCheck.helperText')}
           </Text>
         </View>
       </View>

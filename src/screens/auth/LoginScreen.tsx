@@ -14,6 +14,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
+import { useTranslation } from 'react-i18next';
 import { useAuthStore } from '../../store/authStore';
 import { Text } from '../../components';
 
@@ -21,18 +22,19 @@ interface LoginScreenProps {
   navigation: any;
 }
 
-const LoginSchema = Yup.object().shape({
-  email: Yup.string()
-    .email('Geçerli bir e-posta adresi giriniz')
-    .required('E-posta adresi zorunludur'),
-  password: Yup.string()
-    .min(6, 'Şifre en az 6 karakter olmalıdır')
-    .required('Şifre zorunludur'),
-});
-
 const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
+  const { t } = useTranslation();
   const { signIn, loading } = useAuthStore();
   const [showPassword, setShowPassword] = useState(false);
+
+  const LoginSchema = Yup.object().shape({
+    email: Yup.string()
+      .email(t('auth.login.emailInvalid'))
+      .required(t('auth.login.emailRequired')),
+    password: Yup.string()
+      .min(6, t('auth.login.passwordMinLength'))
+      .required(t('auth.login.passwordRequired')),
+  });
 
   const handleLogin = async (values: { email: string; password: string }) => {
     try {
@@ -68,8 +70,8 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
               style={styles.logo}
               resizeMode="contain"
             />
-            <Text weight="bold" style={styles.title}>Smile Hair Clinic</Text>
-            <Text weight="regular" style={styles.subtitle}>Hesabınıza giriş yapın</Text>
+            <Text weight="bold" style={styles.title}>{t('auth.login.title')}</Text>
+            <Text weight="regular" style={styles.subtitle}>{t('auth.login.subtitle')}</Text>
           </View>
 
           <Formik
@@ -87,13 +89,13 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
             }) => (
               <View style={styles.form}>
                 <View style={styles.inputContainer}>
-                  <Text weight="semibold" style={styles.label}>E-posta</Text>
+                  <Text weight="semibold" style={styles.label}>{t('auth.login.email')}</Text>
                   <TextInput
                     style={[
                       styles.input,
                       touched.email && errors.email && styles.inputError,
                     ]}
-                    placeholder="ornek@email.com"
+                    placeholder={t('auth.login.emailPlaceholder')}
                     placeholderTextColor="#999"
                     onChangeText={handleChange('email')}
                     onBlur={handleBlur('email')}
@@ -108,7 +110,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
                 </View>
 
                 <View style={styles.inputContainer}>
-                  <Text weight="semibold" style={styles.label}>Şifre</Text>
+                  <Text weight="semibold" style={styles.label}>{t('auth.login.password')}</Text>
                   <View style={styles.passwordContainer}>
                     <TextInput
                       style={[
@@ -116,7 +118,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
                         styles.passwordInput,
                         touched.password && errors.password && styles.inputError,
                       ]}
-                      placeholder="••••••••"
+                      placeholder={t('auth.login.passwordPlaceholder')}
                       placeholderTextColor="#999"
                       onChangeText={handleChange('password')}
                       onBlur={handleBlur('password')}
@@ -145,7 +147,7 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
                   style={styles.forgotPassword}
                   onPress={() => navigation.navigate('ForgotPassword')}
                 >
-                  <Text weight="semibold" style={styles.forgotPasswordText}>Şifremi Unuttum</Text>
+                  <Text weight="semibold" style={styles.forgotPasswordText}>{t('auth.login.forgotPassword')}</Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity
@@ -153,15 +155,15 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
                   onPress={() => handleSubmit()}
                   disabled={loading}
                 >
-                    <Text weight="semibold" style={styles.buttonText}>Giriş Yap</Text>
+                  <Text weight="semibold" style={styles.buttonText}>{t('auth.login.loginButton')}</Text>
                 </TouchableOpacity>
 
                 <View style={styles.footer}>
-                  <Text weight="regular" style={styles.footerText}>Hesabınız yok mu? </Text>
+                  <Text weight="regular" style={styles.footerText}>{t('auth.login.noAccount')} </Text>
                   <TouchableOpacity
                     onPress={() => navigation.navigate('Register')}
                   >
-                    <Text weight="semibold" style={styles.footerLink}>Kayıt Ol</Text>
+                    <Text weight="semibold" style={styles.footerLink}>{t('auth.login.register')}</Text>
                   </TouchableOpacity>
                 </View>
               </View>

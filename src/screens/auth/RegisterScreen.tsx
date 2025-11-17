@@ -14,6 +14,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
+import { useTranslation } from 'react-i18next';
 import { useAuthStore } from '../../store/authStore';
 import { Text } from '../../components';
 
@@ -21,28 +22,29 @@ interface RegisterScreenProps {
   navigation: any;
 }
 
-const RegisterSchema = Yup.object().shape({
-  fullName: Yup.string()
-    .min(2, 'Ad Soyad en az 2 karakter olmalıdır')
-    .required('Ad Soyad zorunludur'),
-  phone: Yup.string()
-    .matches(/^[0-9]{10}$/, 'Geçerli bir telefon numarası giriniz (10 haneli)')
-    .required('Telefon numarası zorunludur'),
-  email: Yup.string()
-    .email('Geçerli bir e-posta adresi giriniz')
-    .required('E-posta adresi zorunludur'),
-  password: Yup.string()
-    .min(6, 'Şifre en az 6 karakter olmalıdır')
-    .required('Şifre zorunludur'),
-  confirmPassword: Yup.string()
-    .oneOf([Yup.ref('password')], 'Şifreler eşleşmiyor')
-    .required('Şifre tekrarı zorunludur'),
-});
-
 const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
+  const { t } = useTranslation();
   const { signUp, loading } = useAuthStore();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  const RegisterSchema = Yup.object().shape({
+    fullName: Yup.string()
+      .min(2, t('auth.register.fullNameMinLength'))
+      .required(t('auth.register.fullNameRequired')),
+    phone: Yup.string()
+      .matches(/^[0-9]{10}$/, t('auth.register.phoneInvalid'))
+      .required(t('auth.register.phoneRequired')),
+    email: Yup.string()
+      .email(t('auth.login.emailInvalid'))
+      .required(t('auth.login.emailRequired')),
+    password: Yup.string()
+      .min(6, t('auth.login.passwordMinLength'))
+      .required(t('auth.login.passwordRequired')),
+    confirmPassword: Yup.string()
+      .oneOf([Yup.ref('password')], t('auth.register.passwordMismatch'))
+      .required(t('auth.register.confirmPasswordRequired')),
+  });
 
   const handleRegister = async (values: {
     fullName: string;
@@ -83,8 +85,8 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
               style={styles.logo}
               resizeMode="contain"
             />
-            <Text weight="bold" style={styles.title}>Hesap Oluştur</Text>
-            <Text weight="regular" style={styles.subtitle}>Smile Hair Clinic'e katılın</Text>
+            <Text weight="bold" style={styles.title}>{t('auth.register.title')}</Text>
+            <Text weight="regular" style={styles.subtitle}>{t('auth.register.subtitle')}</Text>
           </View>
 
           <Formik
@@ -108,13 +110,13 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
             }) => (
               <View style={styles.form}>
                 <View style={styles.inputContainer}>
-                  <Text weight="semibold" style={styles.label}>Ad Soyad</Text>
+                  <Text weight="semibold" style={styles.label}>{t('auth.register.fullName')}</Text>
                   <TextInput
                     style={[
                       styles.input,
                       touched.fullName && errors.fullName && styles.inputError,
                     ]}
-                    placeholder="Adınız Soyadınız"
+                    placeholder={t('auth.register.fullNamePlaceholder')}
                     placeholderTextColor="#999"
                     onChangeText={handleChange('fullName')}
                     onBlur={handleBlur('fullName')}
@@ -128,13 +130,13 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
                 </View>
 
                 <View style={styles.inputContainer}>
-                  <Text weight="semibold" style={styles.label}>Telefon</Text>
+                  <Text weight="semibold" style={styles.label}>{t('auth.register.phone')}</Text>
                   <TextInput
                     style={[
                       styles.input,
                       touched.phone && errors.phone && styles.inputError,
                     ]}
-                    placeholder="5XXXXXXXXX"
+                    placeholder={t('auth.register.phonePlaceholder')}
                     placeholderTextColor="#999"
                     onChangeText={handleChange('phone')}
                     onBlur={handleBlur('phone')}
@@ -149,13 +151,13 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
                 </View>
 
                 <View style={styles.inputContainer}>
-                  <Text weight="semibold" style={styles.label}>E-posta</Text>
+                  <Text weight="semibold" style={styles.label}>{t('auth.register.email')}</Text>
                   <TextInput
                     style={[
                       styles.input,
                       touched.email && errors.email && styles.inputError,
                     ]}
-                    placeholder="ornek@email.com"
+                    placeholder={t('auth.login.emailPlaceholder')}
                     placeholderTextColor="#999"
                     onChangeText={handleChange('email')}
                     onBlur={handleBlur('email')}
@@ -170,7 +172,7 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
                 </View>
 
                 <View style={styles.inputContainer}>
-                  <Text weight="semibold" style={styles.label}>Şifre</Text>
+                  <Text weight="semibold" style={styles.label}>{t('auth.register.password')}</Text>
                   <View style={styles.passwordContainer}>
                     <TextInput
                       style={[
@@ -178,7 +180,7 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
                         styles.passwordInput,
                         touched.password && errors.password && styles.inputError,
                       ]}
-                      placeholder="••••••••"
+                      placeholder={t('auth.login.passwordPlaceholder')}
                       placeholderTextColor="#999"
                       onChangeText={handleChange('password')}
                       onBlur={handleBlur('password')}
@@ -204,7 +206,7 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
                 </View>
 
                 <View style={styles.inputContainer}>
-                  <Text weight="semibold" style={styles.label}>Şifre Tekrar</Text>
+                  <Text weight="semibold" style={styles.label}>{t('auth.register.confirmPassword')}</Text>
                   <View style={styles.passwordContainer}>
                     <TextInput
                       style={[
@@ -214,7 +216,7 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
                           errors.confirmPassword &&
                           styles.inputError,
                       ]}
-                      placeholder="••••••••"
+                      placeholder={t('auth.login.passwordPlaceholder')}
                       placeholderTextColor="#999"
                       onChangeText={handleChange('confirmPassword')}
                       onBlur={handleBlur('confirmPassword')}
@@ -249,7 +251,7 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
                   {loading ? (
                     <ActivityIndicator color="#FFFFFF" />
                   ) : (
-                    <Text weight="semibold" style={styles.buttonText}>Kayıt Ol</Text>
+                    <Text weight="semibold" style={styles.buttonText}>{t('auth.register.registerButton')}</Text>
                   )}
                 </TouchableOpacity>
 
@@ -259,7 +261,7 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
                 >
                   <Icon name="arrow-back" size={18} color="#01213D" />
                   <Text weight="semibold" style={styles.backToLoginText}>
-                    Giriş Ekranına Dön
+                    {t('auth.register.hasAccount')} {t('auth.register.login')}
                   </Text>
                 </TouchableOpacity>
               </View>

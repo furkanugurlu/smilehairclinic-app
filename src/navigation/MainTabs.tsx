@@ -3,6 +3,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { StyleSheet, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { useTranslation } from 'react-i18next';
 import { useAuthStore } from '../store/authStore';
 
 import {
@@ -20,6 +21,7 @@ import ProfileStack from './ProfileStack';
 const Tab = createBottomTabNavigator();
 
 const MainTabs: React.FC = () => {
+  const { t } = useTranslation();
   const insets = useSafeAreaInsets();
   const { user } = useAuthStore();
   const isAdmin = user?.is_admin || false;
@@ -46,7 +48,7 @@ const MainTabs: React.FC = () => {
         name={isAdmin ? 'AdminDashboard' : 'Home'}
         component={isAdmin ? AdminDashboardScreen : HomeScreen}
         options={{
-          tabBarLabel: 'Ana Sayfa',
+          tabBarLabel: t('tabs.home'),
           tabBarIcon: ({ color, focused }) => (
             <Icon
               name={focused ? 'home' : 'home-outline'}
@@ -62,7 +64,7 @@ const MainTabs: React.FC = () => {
         name={isAdmin ? 'AdminAppointments' : 'Appointments'}
         component={isAdmin ? AdminAppointmentsScreen : AppointmentsScreen}
         options={{
-          tabBarLabel: 'Randevular',
+          tabBarLabel: t('tabs.appointments'),
           tabBarIcon: ({ color, focused }) => (
             <Icon
               name={focused ? 'calendar' : 'calendar-outline'}
@@ -129,7 +131,7 @@ const MainTabs: React.FC = () => {
         name={isAdmin ? 'AdminMessages' : 'Messages'}
         component={MessageListScreen}
         options={{
-          tabBarLabel: isAdmin ? 'Mesajlar' : 'Destek',
+          tabBarLabel: isAdmin ? t('tabs.adminMessages') : t('tabs.messages'),
           tabBarIcon: ({ color, focused }) => (
             <Icon
               name={focused ? 'chatbubbles' : 'chatbubbles-outline'}
@@ -145,7 +147,7 @@ const MainTabs: React.FC = () => {
         name={isAdmin ? 'AdminProfile' : 'Profile'}
         component={ProfileStack}
         options={{
-          tabBarLabel: 'Profil',
+          tabBarLabel: t('tabs.profile'),
           tabBarIcon: ({ color, focused }) => (
             <Icon
               name={focused ? 'person' : 'person-outline'}

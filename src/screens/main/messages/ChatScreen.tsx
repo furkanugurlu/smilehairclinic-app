@@ -16,6 +16,8 @@ import {
   useSafeAreaInsets,
 } from 'react-native-safe-area-context';
 import { useFocusEffect } from '@react-navigation/native';
+import { useTranslation } from 'react-i18next';
+import i18n from '../../../i18n';
 import { Text } from '../../../components';
 import { supabase } from '../../../config/supabase';
 import { useAuthStore } from '../../../store/authStore';
@@ -32,6 +34,7 @@ interface ChatScreenProps {
 }
 
 const ChatScreen: React.FC<ChatScreenProps> = ({ navigation, route }) => {
+  const { t } = useTranslation();
   const { user } = useAuthStore();
   const insets = useSafeAreaInsets();
   const chatUser = route?.params?.chatUser;
@@ -160,7 +163,7 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ navigation, route }) => {
       setTimeout(scrollToBottom, 100);
     } catch (error: any) {
       console.error('❌ Fetch messages error:', error);
-      Alert.alert('Hata', 'Mesajlar yüklenirken bir hata oluştu');
+      Alert.alert(t('messages.chat.loadError'), t('messages.chat.loadErrorMessage'));
     } finally {
       setLoading(false);
     }
@@ -205,7 +208,7 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ navigation, route }) => {
       scrollToBottom();
     } catch (error: any) {
       console.error('❌ Send message error:', error);
-      Alert.alert('Hata', 'Mesaj gönderilemedi');
+      Alert.alert(t('messages.chat.sendError'), t('messages.chat.sendErrorMessage'));
       setNewMessage(messageText);
     } finally {
       setSending(false);
@@ -220,7 +223,8 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ navigation, route }) => {
 
   const formatTime = (dateString: string) => {
     const date = new Date(dateString);
-    return date.toLocaleTimeString('tr-TR', {
+    const locale = i18n.language === 'en' ? 'en-US' : 'tr-TR';
+    return date.toLocaleTimeString(locale, {
       hour: '2-digit',
       minute: '2-digit',
     });
@@ -233,11 +237,12 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ navigation, route }) => {
     yesterday.setDate(yesterday.getDate() - 1);
 
     if (date.toDateString() === today.toDateString()) {
-      return 'Bugün';
+      return t('messages.chat.today');
     } else if (date.toDateString() === yesterday.toDateString()) {
-      return 'Dün';
+      return t('messages.chat.yesterday');
     } else {
-      return date.toLocaleDateString('tr-TR', {
+      const locale = i18n.language === 'en' ? 'en-US' : 'tr-TR';
+      return date.toLocaleDateString(locale, {
         day: 'numeric',
         month: 'long',
       });
@@ -326,7 +331,7 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ navigation, route }) => {
               <View style={styles.emptyContainer}>
                 <Text style={styles.emptyIcon}>💬</Text>
                 <Text weight="medium" style={styles.emptyText}>
-                  Henüz mesaj yok. İlk mesajı gönderin!
+                  {t('messages.chat.emptyChat')}
                 </Text>
               </View>
             ) : (
@@ -349,7 +354,7 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ navigation, route }) => {
                       >
                         {!isMine && !isAdmin && (
                           <Text weight="semibold" style={styles.senderName}>
-                            Uzman Destek
+                            {t('messages.support')}
                           </Text>
                         )}
                         <Text
@@ -388,7 +393,7 @@ const ChatScreen: React.FC<ChatScreenProps> = ({ navigation, route }) => {
         >
           <TextInput
             style={styles.input}
-            placeholder="Mesajınızı yazın..."
+            placeholder={t('messages.chat.typeMessagePlaceholder')}
             placeholderTextColor="#999"
             value={newMessage}
             onChangeText={setNewMessage}

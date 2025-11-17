@@ -15,6 +15,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
+import { useTranslation } from 'react-i18next';
 import { supabase } from '../../config/supabase';
 import { Text } from '../../components';
 
@@ -22,17 +23,18 @@ interface ForgotPasswordScreenProps {
   navigation: any;
 }
 
-const ForgotPasswordSchema = Yup.object().shape({
-  email: Yup.string()
-    .email('Geçerli bir e-posta adresi giriniz')
-    .required('E-posta adresi zorunludur'),
-});
-
 const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({
   navigation,
 }) => {
+  const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
   const [emailSent, setEmailSent] = useState(false);
+
+  const ForgotPasswordSchema = Yup.object().shape({
+    email: Yup.string()
+      .email(t('auth.login.emailInvalid'))
+      .required(t('auth.login.emailRequired')),
+  });
 
   const handleForgotPassword = async (values: { email: string }) => {
     setLoading(true);
@@ -48,11 +50,11 @@ const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({
 
       setEmailSent(true);
       Alert.alert(
-        'Email Gönderildi',
-        `${values.email} adresine şifre sıfırlama linki gönderildi. Lütfen e-postanızı kontrol edin.`,
+        t('auth.forgotPassword.emailSent'),
+        t('auth.forgotPassword.emailSentMessage', { email: values.email }),
         [
           {
-            text: 'Tamam',
+            text: t('common.ok'),
             onPress: () => navigation.goBack(),
           },
         ],
@@ -60,8 +62,8 @@ const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({
     } catch (error: any) {
       console.error('Şifre sıfırlama hatası:', error);
       Alert.alert(
-        'Hata',
-        error.message || 'Şifre sıfırlama linki gönderilemedi.',
+        t('common.error'),
+        error.message || t('auth.forgotPassword.sendError'),
       );
     } finally {
       setLoading(false);
@@ -93,10 +95,10 @@ const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({
               <Icon name="lock-closed" size={48} color="#01213D" />
             </View>
             <Text weight="bold" style={styles.title}>
-              Şifremi Unuttum
+              {t('auth.forgotPassword.title')}
             </Text>
             <Text weight="regular" style={styles.subtitle}>
-              E-posta adresinizi girin, size şifre sıfırlama linki gönderelim
+              {t('auth.forgotPassword.subtitle')}
             </Text>
           </View>
 
@@ -117,7 +119,7 @@ const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({
                 <View style={styles.form}>
                   <View style={styles.inputContainer}>
                     <Text weight="semibold" style={styles.label}>
-                      E-posta Adresi
+                      {t('auth.forgotPassword.email')}
                     </Text>
                     <View style={styles.inputWrapper}>
                       <Icon
@@ -131,7 +133,7 @@ const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({
                           styles.input,
                           touched.email && errors.email && styles.inputError,
                         ]}
-                        placeholder="ornek@email.com"
+                        placeholder={t('auth.forgotPassword.emailPlaceholder')}
                         placeholderTextColor="#999"
                         onChangeText={handleChange('email')}
                         onBlur={handleBlur('email')}
@@ -155,8 +157,7 @@ const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({
                       color="#3B82F6"
                     />
                     <Text weight="regular" style={styles.infoText}>
-                      Kayıtlı e-posta adresinize şifre sıfırlama linki
-                      göndereceğiz. Link 1 saat geçerli olacaktır.
+                      {t('auth.forgotPassword.infoText')}
                     </Text>
                   </View>
 
@@ -169,7 +170,7 @@ const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({
                       <ActivityIndicator color="#FFFFFF" />
                     ) : (
                       <Text weight="semibold" style={styles.buttonText}>
-                        Sıfırlama Linki Gönder
+                        {t('auth.forgotPassword.sendButton')}
                       </Text>
                     )}
                   </TouchableOpacity>
@@ -180,7 +181,7 @@ const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({
                   >
                     <Icon name="arrow-back" size={18} color="#01213D" />
                     <Text weight="semibold" style={styles.backToLoginText}>
-                      Giriş Ekranına Dön
+                      {t('auth.forgotPassword.backToLogin')}
                     </Text>
                   </TouchableOpacity>
                 </View>
@@ -192,18 +193,17 @@ const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({
                 <Icon name="checkmark-circle" size={80} color="#10B981" />
               </View>
               <Text weight="bold" style={styles.successTitle}>
-                Email Gönderildi!
+                {t('auth.forgotPassword.emailSentTitle')}
               </Text>
               <Text weight="regular" style={styles.successText}>
-                Şifre sıfırlama talimatları e-posta adresinize gönderildi.
-                Lütfen gelen kutunuzu kontrol edin.
+                {t('auth.forgotPassword.emailSentDescription')}
               </Text>
               <TouchableOpacity
                 style={styles.button}
                 onPress={() => navigation.goBack()}
               >
                 <Text weight="semibold" style={styles.buttonText}>
-                  Giriş Ekranına Dön
+                  {t('auth.forgotPassword.backToLogin')}
                 </Text>
               </TouchableOpacity>
             </View>

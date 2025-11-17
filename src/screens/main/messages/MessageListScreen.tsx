@@ -11,10 +11,12 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useFocusEffect } from '@react-navigation/native';
+import { useTranslation } from 'react-i18next';
 import { Text, LoadingModal } from '../../../components';
 import { supabase } from '../../../config/supabase';
 import { useAuthStore } from '../../../store/authStore';
 import { ChatUser } from '../../../types';
+import i18n from '../../../i18n';
 
 interface MessageListScreenProps {
   navigation: any;
@@ -23,6 +25,7 @@ interface MessageListScreenProps {
 const MessageListScreen: React.FC<MessageListScreenProps> = ({
   navigation,
 }) => {
+  const { t } = useTranslation();
   const { user } = useAuthStore();
   const isAdmin = user?.is_admin || false;
   const [chatUsers, setChatUsers] = useState<ChatUser[]>([]);
@@ -127,7 +130,7 @@ const MessageListScreen: React.FC<MessageListScreenProps> = ({
 
             return {
               user_id: user.id,
-              full_name: user.full_name || 'İsimsiz Kullanıcı',
+              full_name: user.full_name || t('messages.unnamedUser'),
               email: user.email,
               avatar_url: user.avatar_url,
               last_message: lastMessage?.message,
@@ -208,7 +211,7 @@ const MessageListScreen: React.FC<MessageListScreenProps> = ({
         setChatUsers([
           {
             user_id: adminProfile?.id || 'admin',
-            full_name: 'Uzman Destek',
+            full_name: t('messages.support'),
             email: adminProfile?.email || '',
             avatar_url: adminProfile?.avatar_url,
             last_message: lastMessage?.message,
@@ -219,7 +222,7 @@ const MessageListScreen: React.FC<MessageListScreenProps> = ({
       }
     } catch (error: any) {
       console.error('❌ Fetch chat users error:', error);
-      Alert.alert('Hata', 'Kullanıcılar yüklenirken bir hata oluştu');
+      Alert.alert(t('common.error'), t('messages.loadError'));
     } finally {
       if (showLoader) {
         setLoading(false);
@@ -243,16 +246,17 @@ const MessageListScreen: React.FC<MessageListScreenProps> = ({
     const diffDays = Math.floor(diffHours / 24);
 
     if (diffDays > 7) {
-      return date.toLocaleDateString('tr-TR', {
+      const locale = i18n.language === 'en' ? 'en-US' : 'tr-TR';
+      return date.toLocaleDateString(locale, {
         day: 'numeric',
         month: 'short',
       });
     } else if (diffDays > 0) {
-      return `${diffDays} gün önce`;
+      return t('messages.chat.daysAgo', { count: diffDays });
     } else if (diffHours > 0) {
-      return `${diffHours} saat önce`;
+      return t('messages.chat.hoursAgo', { count: diffHours });
     } else {
-      return 'Az önce';
+      return t('messages.chat.justNow');
     }
   };
 
@@ -266,7 +270,7 @@ const MessageListScreen: React.FC<MessageListScreenProps> = ({
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
         <Text weight="bold" style={styles.title}>
-          {isAdmin ? 'Mesajlar' : 'Destek'}
+          {isAdmin ? t('tabs.adminMessages') : t('tabs.messages')}
         </Text>
       </View>
 
@@ -285,12 +289,12 @@ const MessageListScreen: React.FC<MessageListScreenProps> = ({
             <View style={styles.emptyContainer}>
               <Text style={styles.emptyIcon}>💬</Text>
               <Text weight="semibold" style={styles.emptyTitle}>
-                {isAdmin ? 'Henüz Mesaj Yok' : 'Mesaj Bulunamadı'}
+                {isAdmin ? t('messages.noMessagesTitle') : t('messages.noMessagesTitle')}
               </Text>
               <Text weight="regular" style={styles.emptyText}>
                 {isAdmin
-                  ? 'Kullanıcılar size mesaj gönderdiğinde burada görünecek'
-                  : 'Henüz bir mesajınız bulunmuyor. Uzman ekibimizle iletişime geçmek için mesaj gönderebilirsiniz.'}
+                  ? t('messages.noMessagesDescription')
+                  : t('messages.noMessagesDescription')}
               </Text>
             </View>
           ) : (
@@ -343,7 +347,7 @@ const MessageListScreen: React.FC<MessageListScreenProps> = ({
                       ]}
                       numberOfLines={1}
                     >
-                      {chatUser.last_message || 'Henüz mesaj yok'}
+                      {chatUser.last_message || t('messages.noMessages')}
                     </Text>
                   </View>
                 </TouchableOpacity>

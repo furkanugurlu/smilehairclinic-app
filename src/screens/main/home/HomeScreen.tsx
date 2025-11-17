@@ -11,11 +11,13 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useFocusEffect } from '@react-navigation/native';
+import { useTranslation } from 'react-i18next';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useAuthStore } from '../../../store/authStore';
 import { Text, LoadingModal } from '../../../components';
 import { supabase } from '../../../config/supabase';
 import { HairCheck, AnalysisStatus } from '../../../types';
+import i18n from '../../../i18n';
 
 const { width } = Dimensions.get('window');
 
@@ -25,6 +27,7 @@ interface HomeScreenProps {
 }
 
 const HomeScreen: React.FC<HomeScreenProps> = ({ navigation, route }) => {
+  const { t } = useTranslation();
   const { user } = useAuthStore();
   const [hairChecks, setHairChecks] = useState<HairCheck[]>([]);
   const [loading, setLoading] = useState(true);
@@ -94,7 +97,8 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation, route }) => {
     let lastCheckDate = '';
     if (checks.length > 0) {
       const lastDate = new Date(checks[0].created_at);
-      lastCheckDate = lastDate.toLocaleDateString('tr-TR', {
+      const locale = i18n.language === 'en' ? 'en-US' : 'tr-TR';
+      lastCheckDate = lastDate.toLocaleDateString(locale, {
         day: 'numeric',
         month: 'long',
       });
@@ -143,21 +147,14 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation, route }) => {
   };
 
   const getStatusText = (status?: AnalysisStatus) => {
-    switch (status) {
-      case 'good':
-        return 'İyi';
-      case 'warning':
-        return 'Dikkat';
-      case 'critical':
-        return 'Kritik';
-      default:
-        return 'Bilinmiyor';
-    }
+    if (!status) return t('home.status.unknown');
+    return t(`home.status.${status}`);
   };
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString('tr-TR', {
+    const locale = i18n.language === 'en' ? 'en-US' : 'tr-TR';
+    return date.toLocaleDateString(locale, {
       day: 'numeric',
       month: 'long',
       year: 'numeric',
@@ -183,10 +180,10 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation, route }) => {
           <View style={styles.header}>
             <View>
               <Text weight="regular" style={styles.greeting}>
-                Merhaba,
+                {t('home.hello')}
               </Text>
               <Text weight="bold" style={styles.userName}>
-                {user?.full_name || 'Kullanıcı'}
+                {user?.full_name || t('profile.user')}
               </Text>
             </View>
             <TouchableOpacity onPress={handleProfilePress} activeOpacity={0.7}>
@@ -212,18 +209,17 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation, route }) => {
                 <Icon name="analytics-outline" size={40} color="#FFFFFF" />
               </View>
               <Text weight="bold" style={styles.heroTitle}>
-                Saç Durumu Kontrolü
+                {t('home.hairCheckTitle')}
               </Text>
               <Text weight="regular" style={styles.heroDescription}>
-                Yapay zeka destekli saç analizi ile saç sağlığınızı hemen
-                kontrol edin
+                {t('home.hairCheckDescription')}
               </Text>
               <TouchableOpacity
                 style={styles.heroButton}
                 onPress={handleStartCheck}
               >
                 <Text weight="bold" style={styles.heroButtonText}>
-                  Kontrol Başlat
+                  {t('home.startCheck')}
                 </Text>
                 <Icon name="arrow-forward" size={18} color="#01213D" />
               </TouchableOpacity>
@@ -234,7 +230,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation, route }) => {
           {lastCheck && lastCheck.status === 'completed' ? (
             <View style={styles.section}>
               <Text weight="bold" style={styles.sectionTitle}>
-                Son Kontrol Sonucu
+                {t('home.lastCheckResult')}
               </Text>
               <View style={styles.resultCard}>
                 <View style={styles.resultHeader}>
@@ -274,14 +270,14 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation, route }) => {
                   </View>
                 </View>
                 <Text weight="regular" style={styles.resultNotes}>
-                  {lastCheck.analysis_notes || 'Analiz notları bekleniyor...'}
+                  {lastCheck.analysis_notes || t('home.analysisNotes')}
                 </Text>
                 <TouchableOpacity
                   style={styles.resultButton}
                   onPress={() => handleViewCheckDetail(lastCheck)}
                 >
                   <Text weight="semibold" style={styles.resultButtonText}>
-                    Detayları Gör
+                    {t('home.viewDetails')}
                   </Text>
                 </TouchableOpacity>
               </View>
@@ -289,7 +285,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation, route }) => {
           ) : hairChecks.length > 0 ? (
             <View style={styles.section}>
               <Text weight="bold" style={styles.sectionTitle}>
-                Kontrollerim
+                {t('home.myChecks')}
               </Text>
               {hairChecks.map(check => (
                 <TouchableOpacity
@@ -319,7 +315,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation, route }) => {
                               weight="medium"
                               style={styles.checkStatusText}
                             >
-                              İnceleniyor
+                              {t('home.status.pending')}
                             </Text>
                           </>
                         )}
@@ -335,7 +331,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation, route }) => {
                               weight="medium"
                               style={styles.checkStatusText}
                             >
-                              Analiz Ediliyor
+                              {t('home.status.analyzing')}
                             </Text>
                           </>
                         )}
@@ -397,7 +393,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation, route }) => {
           ) : (
             <View style={styles.section}>
               <Text weight="bold" style={styles.sectionTitle}>
-                Kontrol Geçmişi
+                {t('home.checkHistory')}
               </Text>
               <View style={styles.emptyCard}>
                 <Icon
@@ -407,11 +403,10 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation, route }) => {
                   style={styles.emptyIcon}
                 />
                 <Text weight="medium" style={styles.emptyTitle}>
-                  Henüz kontrol yapılmadı
+                  {t('home.noCheckYet')}
                 </Text>
                 <Text weight="regular" style={styles.emptyDescription}>
-                  İlk saç durumu kontrolünüzü yaparak saç sağlığınızı takip
-                  etmeye başlayın
+                  {t('home.noCheckDescription')}
                 </Text>
               </View>
             </View>
@@ -421,7 +416,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation, route }) => {
           {hairChecks.length > 0 && (
             <View style={styles.section}>
               <Text weight="bold" style={styles.sectionTitle}>
-                İstatistikler
+                {t('home.stats')}
               </Text>
               <View style={styles.statsGrid}>
                 <View style={styles.statCard}>
@@ -435,7 +430,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation, route }) => {
                     {stats.totalChecks}
                   </Text>
                   <Text weight="regular" style={styles.statLabel}>
-                    Toplam Kontrol
+                    {t('home.totalChecks')}
                   </Text>
                 </View>
                 <View style={styles.statCard}>
@@ -476,7 +471,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation, route }) => {
                       : '-'}
                   </Text>
                   <Text weight="regular" style={styles.statLabel}>
-                    İyileşme
+                    {t('home.improvement')}
                   </Text>
                 </View>
                 <View style={styles.statCard}>
@@ -490,7 +485,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation, route }) => {
                     {stats.lastCheckDate || '-'}
                   </Text>
                   <Text weight="regular" style={styles.statLabel}>
-                    Son Kontrol
+                    {t('home.lastCheck')}
                   </Text>
                 </View>
                 <View style={styles.statCard}>
@@ -504,7 +499,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation, route }) => {
                     {stats.averageScore || '-'}
                   </Text>
                   <Text weight="regular" style={styles.statLabel}>
-                    Ortalama Skor
+                    {t('home.averageScore')}
                   </Text>
                 </View>
               </View>
@@ -514,7 +509,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation, route }) => {
           {/* Öneriler */}
           <View style={styles.section}>
             <Text weight="bold" style={styles.sectionTitle}>
-              Öneriler
+              {t('home.recommendations')}
             </Text>
             <View style={styles.tipCard}>
               <Icon
@@ -525,11 +520,10 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation, route }) => {
               />
               <View style={styles.tipContent}>
                 <Text weight="semibold" style={styles.tipTitle}>
-                  Düzenli Kontrol
+                  {t('home.regularCheck')}
                 </Text>
                 <Text weight="regular" style={styles.tipDescription}>
-                  Saç sağlığınızı ayda bir kez kontrol ederek değişimleri takip
-                  edin
+                  {t('home.regularCheckDesc')}
                 </Text>
               </View>
             </View>
@@ -542,10 +536,10 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation, route }) => {
               />
               <View style={styles.tipContent}>
                 <Text weight="semibold" style={styles.tipTitle}>
-                  Güneş Koruması
+                  {t('home.sunProtection')}
                 </Text>
                 <Text weight="regular" style={styles.tipDescription}>
-                  Saç derinizi güneşin zararlı etkilerinden koruyun
+                  {t('home.sunProtectionDesc')}
                 </Text>
               </View>
             </View>
@@ -558,10 +552,10 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation, route }) => {
               />
               <View style={styles.tipContent}>
                 <Text weight="semibold" style={styles.tipTitle}>
-                  Yeterli Su Tüketimi
+                  {t('home.waterIntake')}
                 </Text>
                 <Text weight="regular" style={styles.tipDescription}>
-                  Günde en az 2 litre su tüketerek saç sağlığınızı destekleyin
+                  {t('home.waterIntakeDesc')}
                 </Text>
               </View>
             </View>
@@ -570,7 +564,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation, route }) => {
           {/* Quick Actions */}
           <View style={styles.section}>
             <Text weight="bold" style={styles.sectionTitle}>
-              Hızlı İşlemler
+              {t('home.quickActions')}
             </Text>
             <View style={styles.quickActions}>
               <TouchableOpacity
@@ -584,7 +578,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation, route }) => {
                   style={styles.actionIcon}
                 />
                 <Text weight="semibold" style={styles.actionText}>
-                  Randevu Al
+                  {t('home.bookAppointment')}
                 </Text>
               </TouchableOpacity>
               <TouchableOpacity
@@ -598,7 +592,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation, route }) => {
                   style={styles.actionIcon}
                 />
                 <Text weight="semibold" style={styles.actionText}>
-                  Uzman Desteği
+                  {t('home.expertSupport')}
                 </Text>
               </TouchableOpacity>
             </View>

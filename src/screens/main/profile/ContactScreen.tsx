@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { useTranslation } from 'react-i18next';
 import { Text } from '../../../components';
 
 interface ContactScreenProps {
@@ -16,6 +17,7 @@ interface ContactScreenProps {
 }
 
 const ContactScreen: React.FC<ContactScreenProps> = ({ navigation }) => {
+  const { t } = useTranslation();
   const handleCall = () => {
     Linking.openURL('tel:+905491492400');
   };
@@ -47,7 +49,7 @@ const ContactScreen: React.FC<ContactScreenProps> = ({ navigation }) => {
           <Icon name="chevron-back" size={28} color="#1A1A1A" />
         </TouchableOpacity>
         <Text weight="bold" style={styles.headerTitle}>
-          İletişim
+          {t('contact.title')}
         </Text>
         <View style={styles.headerRight} />
       </View>
@@ -58,16 +60,16 @@ const ContactScreen: React.FC<ContactScreenProps> = ({ navigation }) => {
             <Icon name="medical-outline" size={40} color="#FFFFFF" />
           </View>
           <Text weight="bold" style={styles.clinicName}>
-            Smile Hair Clinic
+            {t('contact.clinicName')}
           </Text>
           <Text weight="regular" style={styles.clinicSubtitle}>
-            Saç Ekimi ve Saç Sağlığı Uzmanı
+            {t('contact.clinicSubtitle')}
           </Text>
         </View>
 
         <View style={styles.section}>
           <Text weight="semibold" style={styles.sectionTitle}>
-            İLETİŞİM BİLGİLERİ
+            {t('contact.contactInfo')}
           </Text>
 
           <TouchableOpacity style={styles.contactCard} onPress={handleCall}>
@@ -76,7 +78,7 @@ const ContactScreen: React.FC<ContactScreenProps> = ({ navigation }) => {
             </View>
             <View style={styles.contactInfo}>
               <Text weight="semibold" style={styles.contactLabel}>
-                Telefon
+                {t('contact.phone')}
               </Text>
               <Text weight="regular" style={styles.contactValue}>
                 +90 549 149 24 00
@@ -91,7 +93,7 @@ const ContactScreen: React.FC<ContactScreenProps> = ({ navigation }) => {
             </View>
             <View style={styles.contactInfo}>
               <Text weight="semibold" style={styles.contactLabel}>
-                E-Posta
+                {t('contact.email')}
               </Text>
               <Text weight="regular" style={styles.contactValue}>
                 info@smilehairclinic.com
@@ -106,7 +108,7 @@ const ContactScreen: React.FC<ContactScreenProps> = ({ navigation }) => {
             </View>
             <View style={styles.contactInfo}>
               <Text weight="semibold" style={styles.contactLabel}>
-                WhatsApp
+                {t('contact.whatsapp')}
               </Text>
               <Text weight="regular" style={styles.contactValue}>
                 +90 549 149 24 00
@@ -121,11 +123,10 @@ const ContactScreen: React.FC<ContactScreenProps> = ({ navigation }) => {
             </View>
             <View style={styles.contactInfo}>
               <Text weight="semibold" style={styles.contactLabel}>
-                Adres
+                {t('contact.address')}
               </Text>
               <Text weight="regular" style={styles.contactValue}>
-                Tatlısu, Alptekin Cd. No:15, {'\n'}
-                34774 Ümraniye/İstanbul, Türkiye
+                {t('contact.addressValue')}
               </Text>
             </View>
             <Icon name="chevron-forward" size={24} color="#D1D5DB" />
@@ -134,12 +135,12 @@ const ContactScreen: React.FC<ContactScreenProps> = ({ navigation }) => {
 
         <View style={styles.section}>
           <Text weight="semibold" style={styles.sectionTitle}>
-            ÇALIŞMA SAATLERİ
+            {t('contact.workingHours')}
           </Text>
           <View style={styles.infoCard}>
             <View style={styles.infoRow}>
               <Text weight="regular" style={styles.infoLabel}>
-                Pazartesi - Cumartesi
+                {t('contact.weekdays')}
               </Text>
               <Text weight="semibold" style={styles.infoValue}>
                 09:00 - 18:00
@@ -148,10 +149,10 @@ const ContactScreen: React.FC<ContactScreenProps> = ({ navigation }) => {
             <View style={styles.infoDivider} />
             <View style={styles.infoRow}>
               <Text weight="regular" style={styles.infoLabel}>
-                Pazar
+                {t('contact.sunday')}
               </Text>
               <Text weight="semibold" style={styles.infoValue}>
-                Kapalı
+                {t('contact.closed')}
               </Text>
             </View>
           </View>
@@ -159,19 +160,19 @@ const ContactScreen: React.FC<ContactScreenProps> = ({ navigation }) => {
 
         <View style={styles.section}>
           <Text weight="semibold" style={styles.sectionTitle}>
-            SOSYAL MEDYA
+            {t('contact.socialMedia')}
           </Text>
           <View style={styles.socialButtons}>
             <TouchableOpacity style={styles.socialButton}>
               <Icon name="logo-facebook" size={20} color="#1877F2" />
               <Text weight="medium" style={styles.socialText}>
-                Facebook
+                {t('contact.facebook')}
               </Text>
             </TouchableOpacity>
             <TouchableOpacity style={styles.socialButton}>
               <Icon name="logo-instagram" size={20} color="#E4405F" />
               <Text weight="medium" style={styles.socialText}>
-                Instagram
+                {t('contact.instagram')}
               </Text>
             </TouchableOpacity>
           </View>

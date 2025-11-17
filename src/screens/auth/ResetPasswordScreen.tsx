@@ -14,6 +14,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { Formik } from 'formik';
 import * as Yup from 'yup';
+import { useTranslation } from 'react-i18next';
 import { supabase } from '../../config/supabase';
 import { Text } from '../../components';
 
@@ -21,21 +22,22 @@ interface ResetPasswordScreenProps {
   navigation: any;
 }
 
-const ResetPasswordSchema = Yup.object().shape({
-  password: Yup.string()
-    .min(6, 'Şifre en az 6 karakter olmalıdır')
-    .required('Şifre zorunludur'),
-  confirmPassword: Yup.string()
-    .oneOf([Yup.ref('password')], 'Şifreler eşleşmiyor')
-    .required('Şifre tekrarı zorunludur'),
-});
-
 const ResetPasswordScreen: React.FC<ResetPasswordScreenProps> = ({
   navigation,
 }) => {
+  const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  const ResetPasswordSchema = Yup.object().shape({
+    password: Yup.string()
+      .min(6, t('auth.login.passwordMinLength'))
+      .required(t('auth.login.passwordRequired')),
+    confirmPassword: Yup.string()
+      .oneOf([Yup.ref('password')], t('auth.register.passwordMismatch'))
+      .required(t('auth.register.confirmPasswordRequired')),
+  });
 
   const handleResetPassword = async (values: { password: string }) => {
     setLoading(true);
@@ -51,11 +53,11 @@ const ResetPasswordScreen: React.FC<ResetPasswordScreenProps> = ({
       }
 
       Alert.alert(
-        'Başarılı',
-        'Şifreniz başarıyla sıfırlandı. Artık yeni şifrenizle giriş yapabilirsiniz.',
+        t('auth.resetPassword.resetSuccess'),
+        t('auth.resetPassword.resetSuccessMessage'),
         [
           {
-            text: 'Tamam',
+            text: t('common.ok'),
             onPress: () => navigation.navigate('Login'),
           },
         ],
@@ -63,8 +65,8 @@ const ResetPasswordScreen: React.FC<ResetPasswordScreenProps> = ({
     } catch (error: any) {
       console.error('Şifre sıfırlama hatası:', error);
       Alert.alert(
-        'Hata',
-        error.message || 'Şifre sıfırlama sırasında bir hata oluştu.',
+        t('common.error'),
+        error.message || t('auth.resetPassword.resetError'),
       );
     } finally {
       setLoading(false);
@@ -86,10 +88,10 @@ const ResetPasswordScreen: React.FC<ResetPasswordScreenProps> = ({
               <Icon name="key" size={48} color="#01213D" />
             </View>
             <Text weight="bold" style={styles.title}>
-              Yeni Şifre Belirle
+              {t('auth.resetPassword.title')}
             </Text>
             <Text weight="regular" style={styles.subtitle}>
-              Hesabınız için yeni bir şifre oluşturun
+              {t('auth.resetPassword.subtitle')}
             </Text>
           </View>
 
@@ -110,7 +112,7 @@ const ResetPasswordScreen: React.FC<ResetPasswordScreenProps> = ({
                 {/* New Password */}
                 <View style={styles.inputContainer}>
                   <Text weight="semibold" style={styles.label}>
-                    Yeni Şifre
+                    {t('auth.resetPassword.newPassword')}
                   </Text>
                   <View style={styles.passwordContainer}>
                     <View style={styles.inputWrapper}>
@@ -127,7 +129,7 @@ const ResetPasswordScreen: React.FC<ResetPasswordScreenProps> = ({
                             errors.password &&
                             styles.inputError,
                         ]}
-                        placeholder="Yeni şifrenizi girin"
+                        placeholder={t('auth.resetPassword.newPasswordPlaceholder')}
                         placeholderTextColor="#999"
                         onChangeText={handleChange('password')}
                         onBlur={handleBlur('password')}
@@ -159,7 +161,7 @@ const ResetPasswordScreen: React.FC<ResetPasswordScreenProps> = ({
                 {/* Confirm Password */}
                 <View style={styles.inputContainer}>
                   <Text weight="semibold" style={styles.label}>
-                    Yeni Şifre (Tekrar)
+                    {t('auth.resetPassword.confirmPassword')}
                   </Text>
                   <View style={styles.passwordContainer}>
                     <View style={styles.inputWrapper}>
@@ -176,7 +178,7 @@ const ResetPasswordScreen: React.FC<ResetPasswordScreenProps> = ({
                             errors.confirmPassword &&
                             styles.inputError,
                         ]}
-                        placeholder="Şifrenizi tekrar girin"
+                        placeholder={t('auth.resetPassword.confirmPasswordPlaceholder')}
                         placeholderTextColor="#999"
                         onChangeText={handleChange('confirmPassword')}
                         onBlur={handleBlur('confirmPassword')}
@@ -214,7 +216,7 @@ const ResetPasswordScreen: React.FC<ResetPasswordScreenProps> = ({
                 {/* Password Requirements */}
                 <View style={styles.requirementsCard}>
                   <Text weight="semibold" style={styles.requirementsTitle}>
-                    Şifre Gereksinimleri:
+                    {t('auth.resetPassword.passwordRequirements')}
                   </Text>
                   <View style={styles.requirement}>
                     <Icon
@@ -233,7 +235,7 @@ const ResetPasswordScreen: React.FC<ResetPasswordScreenProps> = ({
                         values.password.length >= 6 && styles.requirementMet,
                       ]}
                     >
-                      En az 6 karakter
+                      {t('auth.resetPassword.minLength')}
                     </Text>
                   </View>
                   <View style={styles.requirement}>
@@ -261,7 +263,7 @@ const ResetPasswordScreen: React.FC<ResetPasswordScreenProps> = ({
                           styles.requirementMet,
                       ]}
                     >
-                      Şifreler eşleşiyor
+                      {t('auth.resetPassword.passwordsMatch')}
                     </Text>
                   </View>
                 </View>
@@ -275,7 +277,7 @@ const ResetPasswordScreen: React.FC<ResetPasswordScreenProps> = ({
                     <ActivityIndicator color="#FFFFFF" />
                   ) : (
                     <Text weight="semibold" style={styles.buttonText}>
-                      Şifreyi Sıfırla
+                      {t('auth.resetPassword.resetButton')}
                     </Text>
                   )}
                 </TouchableOpacity>
@@ -285,7 +287,7 @@ const ResetPasswordScreen: React.FC<ResetPasswordScreenProps> = ({
                   onPress={() => navigation.navigate('Login')}
                 >
                   <Text weight="regular" style={styles.cancelText}>
-                    İptal
+                    {t('common.cancel')}
                   </Text>
                 </TouchableOpacity>
               </View>

@@ -13,7 +13,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { useTranslation } from 'react-i18next';
 import i18n from '../../../i18n';
-import { Text, LoadingModal, BottomSheet } from '../../../components';
+import { Text, LoadingModal, DateTimeModal } from '../../../components';
 import { supabase } from '../../../config/supabase';
 import { useAuthStore } from '../../../store/authStore';
 import { ServiceType, ServiceOption } from '../../../types';
@@ -80,21 +80,19 @@ const AppointmentCreateScreen: React.FC<AppointmentCreateScreenProps> = ({
   const [loading, setLoading] = useState(false);
 
   const handleDateChange = (event: any, date?: Date) => {
-    if (Platform.OS === 'android') {
-      setShowDatePicker(false);
-    }
     if (date) {
       setSelectedDate(date);
     }
+    // Android'de modal içinde gösterdiğimiz için burada kapatmıyoruz
+    // Modal'ın onConfirm butonunda kapatacağız
   };
 
   const handleTimeChange = (event: any, time?: Date) => {
-    if (Platform.OS === 'android') {
-      setShowTimePicker(false);
-    }
     if (time) {
       setSelectedTime(time);
     }
+    // Android'de modal içinde gösterdiğimiz için burada kapatmıyoruz
+    // Modal'ın onConfirm butonunda kapatacağız
   };
 
   const confirmDateSelection = () => {
@@ -186,7 +184,13 @@ const AppointmentCreateScreen: React.FC<AppointmentCreateScreenProps> = ({
         [
           {
             text: t('common.ok'),
-            onPress: () => navigation.goBack(),
+            onPress: () => {
+              // Randevular ekranına dön ve refresh parametresi gönder
+              navigation.navigate('MainTabs', {
+                screen: 'Appointments',
+                params: { refresh: true },
+              });
+            },
           },
         ],
       );
@@ -363,60 +367,49 @@ const AppointmentCreateScreen: React.FC<AppointmentCreateScreenProps> = ({
             </TouchableOpacity>
           </View>
 
-          {/* iOS Bottom Sheet for Date Picker */}
-          <BottomSheet
-            visible={showDatePicker && Platform.OS === 'ios'}
+          {/* Date Picker Modal */}
+          <DateTimeModal
+            visible={showDatePicker}
             onClose={() => setShowDatePicker(false)}
             onConfirm={confirmDateSelection}
             title={t('appointments.create.selectDate')}
+            confirmText={t('common.ok')}
+            cancelText={t('common.cancel')}
           >
             <DateTimePicker
               value={selectedDate}
               mode="date"
-              display="spinner"
+              display={Platform.OS === 'ios' ? 'spinner' : 'calendar'}
               onChange={handleDateChange}
               minimumDate={new Date()}
               style={styles.datePicker}
+              textColor={Platform.OS === 'ios' ? '#1A1A1A' : undefined}
+              accentColor={Platform.OS === 'ios' ? '#01213D' : undefined}
+              themeVariant="light"
             />
-          </BottomSheet>
+          </DateTimeModal>
 
-          {/* iOS Bottom Sheet for Time Picker */}
-          <BottomSheet
-            visible={showTimePicker && Platform.OS === 'ios'}
+          {/* Time Picker Modal */}
+          <DateTimeModal
+            visible={showTimePicker}
             onClose={() => setShowTimePicker(false)}
             onConfirm={confirmTimeSelection}
             title={t('appointments.create.selectTime')}
+            confirmText={t('common.ok')}
+            cancelText={t('common.cancel')}
           >
             <DateTimePicker
               value={selectedTime}
               mode="time"
-              display="spinner"
+              display={Platform.OS === 'ios' ? 'spinner' : 'clock'}
               onChange={handleTimeChange}
               minuteInterval={15}
               style={styles.datePicker}
+              textColor={Platform.OS === 'ios' ? '#1A1A1A' : undefined}
+              accentColor={Platform.OS === 'ios' ? '#01213D' : undefined}
+              themeVariant="light"
             />
-          </BottomSheet>
-
-          {/* Android Default Picker */}
-          {Platform.OS === 'android' && showDatePicker && (
-            <DateTimePicker
-              value={selectedDate}
-              mode="date"
-              display="default"
-              onChange={handleDateChange}
-              minimumDate={new Date()}
-            />
-          )}
-
-          {Platform.OS === 'android' && showTimePicker && (
-            <DateTimePicker
-              value={selectedTime}
-              mode="time"
-              display="default"
-              onChange={handleTimeChange}
-              minuteInterval={15}
-            />
-          )}
+          </DateTimeModal>
         </View>
 
         {/* Notlar */}

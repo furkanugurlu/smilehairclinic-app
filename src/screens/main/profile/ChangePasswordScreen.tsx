@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { useTranslation } from 'react-i18next';
 import { Text } from '../../../components';
 import { supabase } from '../../../config/supabase';
 
@@ -22,6 +23,7 @@ interface ChangePasswordScreenProps {
 const ChangePasswordScreen: React.FC<ChangePasswordScreenProps> = ({
   navigation,
 }) => {
+  const { t } = useTranslation();
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -32,7 +34,10 @@ const ChangePasswordScreen: React.FC<ChangePasswordScreenProps> = ({
 
   const validatePassword = (password: string): boolean => {
     if (password.length < 6) {
-      Alert.alert('Hata', 'Şifre en az 6 karakter olmalıdır.');
+      Alert.alert(
+        t('profile.changePassword.minLengthError'),
+        t('profile.changePassword.minLengthErrorMessage'),
+      );
       return false;
     }
     return true;
@@ -41,7 +46,10 @@ const ChangePasswordScreen: React.FC<ChangePasswordScreenProps> = ({
   const handleChangePassword = async () => {
     // Validasyonlar
     if (!currentPassword || !newPassword || !confirmPassword) {
-      Alert.alert('Hata', 'Lütfen tüm alanları doldurun.');
+      Alert.alert(
+        t('common.error'),
+        t('common.fillAllFields'),
+      );
       return;
     }
 
@@ -50,12 +58,18 @@ const ChangePasswordScreen: React.FC<ChangePasswordScreenProps> = ({
     }
 
     if (newPassword !== confirmPassword) {
-      Alert.alert('Hata', 'Yeni şifreler eşleşmiyor.');
+      Alert.alert(
+        t('profile.changePassword.mismatchError'),
+        t('profile.changePassword.mismatchErrorMessage'),
+      );
       return;
     }
 
     if (currentPassword === newPassword) {
-      Alert.alert('Hata', 'Yeni şifre mevcut şifre ile aynı olamaz.');
+      Alert.alert(
+        t('profile.changePassword.samePasswordError'),
+        t('profile.changePassword.samePasswordErrorMessage'),
+      );
       return;
     }
 
@@ -66,7 +80,7 @@ const ChangePasswordScreen: React.FC<ChangePasswordScreenProps> = ({
       const { data: userData, error: userError } = await supabase.auth.getUser();
       
       if (userError || !userData.user) {
-        throw new Error('Kullanıcı bilgileri alınamadı.');
+        throw new Error(t('profile.changePassword.changeErrorMessage'));
       }
 
       // Mevcut şifreyi doğrulamak için tekrar giriş yap
@@ -76,7 +90,10 @@ const ChangePasswordScreen: React.FC<ChangePasswordScreenProps> = ({
       });
 
       if (signInError) {
-        Alert.alert('Hata', 'Mevcut şifre yanlış.');
+        Alert.alert(
+          t('profile.changePassword.wrongPasswordError'),
+          t('profile.changePassword.wrongPasswordErrorMessage'),
+        );
         setLoading(false);
         return;
       }
@@ -91,11 +108,11 @@ const ChangePasswordScreen: React.FC<ChangePasswordScreenProps> = ({
       }
 
       Alert.alert(
-        'Başarılı',
-        'Şifreniz başarıyla değiştirildi.',
+        t('profile.changePassword.changeSuccess'),
+        t('profile.changePassword.changeSuccessMessage'),
         [
           {
-            text: 'Tamam',
+            text: t('common.ok'),
             onPress: () => navigation.goBack(),
           },
         ],
@@ -103,8 +120,8 @@ const ChangePasswordScreen: React.FC<ChangePasswordScreenProps> = ({
     } catch (error: any) {
       console.error('Şifre değiştirme hatası:', error);
       Alert.alert(
-        'Hata',
-        error.message || 'Şifre değiştirme sırasında bir hata oluştu.',
+        t('profile.changePassword.changeError'),
+        error.message || t('profile.changePassword.changeErrorMessage'),
       );
     } finally {
       setLoading(false);
@@ -130,7 +147,7 @@ const ChangePasswordScreen: React.FC<ChangePasswordScreenProps> = ({
               <Icon name="arrow-back" size={24} color="#01213D" />
             </TouchableOpacity>
             <Text weight="bold" style={styles.headerTitle}>
-              Şifre Değiştir
+              {t('profile.changePassword.title')}
             </Text>
             <View style={styles.backButton} />
           </View>
@@ -139,7 +156,7 @@ const ChangePasswordScreen: React.FC<ChangePasswordScreenProps> = ({
           <View style={styles.infoCard}>
             <Icon name="information-circle" size={24} color="#3B82F6" />
             <Text weight="regular" style={styles.infoText}>
-              Güvenliğiniz için şifreniz en az 6 karakter uzunluğunda olmalıdır.
+              {t('profile.changePassword.securityInfo')}
             </Text>
           </View>
 
@@ -148,7 +165,7 @@ const ChangePasswordScreen: React.FC<ChangePasswordScreenProps> = ({
             {/* Current Password */}
             <View style={styles.inputGroup}>
               <Text weight="semibold" style={styles.label}>
-                Mevcut Şifre
+                {t('profile.changePassword.currentPassword')}
               </Text>
               <View style={styles.inputContainer}>
                 <Icon
@@ -159,7 +176,7 @@ const ChangePasswordScreen: React.FC<ChangePasswordScreenProps> = ({
                 />
                 <TextInput
                   style={styles.input}
-                  placeholder="Mevcut şifrenizi girin"
+                  placeholder={t('profile.changePassword.currentPasswordPlaceholder')}
                   placeholderTextColor="#9CA3AF"
                   value={currentPassword}
                   onChangeText={setCurrentPassword}
@@ -183,7 +200,7 @@ const ChangePasswordScreen: React.FC<ChangePasswordScreenProps> = ({
             {/* New Password */}
             <View style={styles.inputGroup}>
               <Text weight="semibold" style={styles.label}>
-                Yeni Şifre
+                {t('profile.changePassword.newPassword')}
               </Text>
               <View style={styles.inputContainer}>
                 <Icon
@@ -194,7 +211,7 @@ const ChangePasswordScreen: React.FC<ChangePasswordScreenProps> = ({
                 />
                 <TextInput
                   style={styles.input}
-                  placeholder="Yeni şifrenizi girin"
+                  placeholder={t('profile.changePassword.newPasswordPlaceholder')}
                   placeholderTextColor="#9CA3AF"
                   value={newPassword}
                   onChangeText={setNewPassword}
@@ -218,7 +235,7 @@ const ChangePasswordScreen: React.FC<ChangePasswordScreenProps> = ({
             {/* Confirm Password */}
             <View style={styles.inputGroup}>
               <Text weight="semibold" style={styles.label}>
-                Yeni Şifre (Tekrar)
+                {t('profile.changePassword.confirmPassword')}
               </Text>
               <View style={styles.inputContainer}>
                 <Icon
@@ -229,7 +246,7 @@ const ChangePasswordScreen: React.FC<ChangePasswordScreenProps> = ({
                 />
                 <TextInput
                   style={styles.input}
-                  placeholder="Yeni şifrenizi tekrar girin"
+                  placeholder={t('profile.changePassword.confirmPasswordPlaceholder')}
                   placeholderTextColor="#9CA3AF"
                   value={confirmPassword}
                   onChangeText={setConfirmPassword}
@@ -253,7 +270,7 @@ const ChangePasswordScreen: React.FC<ChangePasswordScreenProps> = ({
             {/* Password Requirements */}
             <View style={styles.requirementsCard}>
               <Text weight="semibold" style={styles.requirementsTitle}>
-                Şifre Gereksinimleri:
+                {t('profile.changePassword.passwordRequirements')}
               </Text>
               <View style={styles.requirement}>
                 <Icon
@@ -268,7 +285,7 @@ const ChangePasswordScreen: React.FC<ChangePasswordScreenProps> = ({
                     newPassword.length >= 6 && styles.requirementMet,
                   ]}
                 >
-                  En az 6 karakter
+                  {t('profile.changePassword.minLength')}
                 </Text>
               </View>
               <View style={styles.requirement}>
@@ -294,7 +311,7 @@ const ChangePasswordScreen: React.FC<ChangePasswordScreenProps> = ({
                       styles.requirementMet,
                   ]}
                 >
-                  Şifreler eşleşiyor
+                  {t('profile.changePassword.passwordsMatch')}
                 </Text>
               </View>
             </View>
@@ -309,7 +326,7 @@ const ChangePasswordScreen: React.FC<ChangePasswordScreenProps> = ({
                 <ActivityIndicator color="#FFFFFF" />
               ) : (
                 <Text weight="bold" style={styles.saveButtonText}>
-                  Şifreyi Değiştir
+                  {t('profile.changePassword.changeButton')}
                 </Text>
               )}
             </TouchableOpacity>

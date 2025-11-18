@@ -18,7 +18,8 @@
     "search": "Ara",
     "filter": "Filtrele",
     "refresh": "Yenile",
-    "noData": "Veri bulunamadı"
+    "noData": "Veri bulunamadı",
+    "fillAllFields": "Lütfen tüm alanları doldurun."
   },
   "auth": {
     "login": {
@@ -233,20 +234,124 @@
       "capture": "Fotoğraf Çek",
       "retake": "Yeniden Çek",
       "continue": "Devam Et",
-      "finish": "Bitir"
+      "finish": "Bitir",
+      "exit": "Çıkış",
+      "exitConfirm": "Fotoğraf çekimini iptal etmek istediğinize emin misiniz?",
+      "exitCancel": "İptal",
+      "exitConfirmButton": "Çık",
+      "cameraPermission": "Fotoğraf çekmek için kamera iznine ihtiyacımız var.",
+      "cameraPermissionButton": "İzin Ver",
+      "cameraNotFound": "Kamera bulunamadı",
+      "photoError": "Fotoğraf çekilirken bir hata oluştu. Lütfen tekrar deneyin.",
+      "processing": "Fotoğraflar işleniyor...",
+      "instructions": {
+        "front": {
+          "label": "Ön Görünüm",
+          "description": "Kameraya doğru bakın",
+          "instruction": "KAMERAYA DOĞRU BAKIN",
+          "subInstruction": ""
+        },
+        "right45": {
+          "label": "Sağ 45°",
+          "description": "Başınızı sağa 45 derece çevirin",
+          "instruction": "BAŞINIZI SAĞA ÇEVİRİN",
+          "subInstruction": ""
+        },
+        "left45": {
+          "label": "Sol 45°",
+          "description": "Başınızı sola 45 derece çevirin",
+          "instruction": "BAŞINIZI SOLA ÇEVİRİN",
+          "subInstruction": ""
+        },
+        "top": {
+          "label": "Üst Görünüm",
+          "description": "Başınızı yukarıdan çekin",
+          "instruction": "KAFANZI ÖNE EĞİNİZ",
+          "subInstruction": "(Tepeyi Gösterin)"
+        },
+        "back": {
+          "label": "Arka Görünüm",
+          "description": "Başınızın arka kısmını çekin",
+          "instruction": "ARKANIZI ÇEVİRİN",
+          "subInstruction": ""
+        }
+      }
     },
     "detail": {
+      "title": "Kontrol Detayı",
+      "date": "Tarih",
+      "checkDate": "Kontrol Tarihi",
+      "status": {
+        "good": "İyi",
+        "warning": "Dikkat",
+        "critical": "Kritik",
+        "unknown": "Bilinmiyor"
+      },
+      "statusDescriptions": {
+        "pending": "Kontrolünüz uzmanlarımız tarafından incelenmek üzere sıraya alındı.",
+        "analyzing": "Fotoğraflarınız yapay zeka destekli sistemimiz tarafından analiz ediliyor.",
+        "completed": "Analiz tamamlandı.",
+        "unknown": "İşlem durumu bilinmiyor."
+      },
+      "statusTitles": {
+        "pending": "İnceleme Aşamasında",
+        "analyzing": "Analiz Ediliyor",
+        "pendingShort": "İnceleniyor",
+        "analyzingShort": "Analiz Ediliyor"
+      },
+      "analysisResult": "Analiz Sonucu",
       "hairHealthScore": "Saç Sağlığı Skoru",
+      "photos": "Fotoğraflar",
+      "recommendations": "Öneriler",
+      "generalRecommendations": "Genel Öneriler",
+      "tips": {
+        "water": {
+          "title": "Yeterli Su Tüketimi",
+          "description": "Günde en az 2 litre su tüketerek saç sağlığınızı destekleyin"
+        },
+        "nutrition": {
+          "title": "Dengeli Beslenme",
+          "description": "Protein, vitamin ve mineral açısından zengin beslenerek saçlarınızı güçlendirin"
+        },
+        "sun": {
+          "title": "Güneş Koruması",
+          "description": "Saç derinizi güneşin zararlı etkilerinden koruyun"
+        }
+      },
       "supportHairHealth": "Günde en az 2 litre su tüketerek saç sağlığınızı destekleyin",
       "strengthenHair": "saçlarınızı güçlendirin",
       "protectScalp": "Saç derinizi güneşin zararlı etkilerinden koruyun"
     },
     "capture": {
+      "title": "Fotoğraf Çekimi",
+      "startScan": "Taramayı Başlat",
+      "photo": "Fotoğraf",
+      "importantNotes": "Önemli Notlar",
+      "instructionText": "• İyi aydınlatılmış bir ortamda çekim yapın\n• Saçlarınızı arkaya doğru toplayın\n• Net ve odaklı fotoğraflar çekin\n• Her açıdan farklı fotoğraf gereklidir",
+      "selectPhoto": "Fotoğraf Seç",
+      "submitCheck": "Kontrolü Gönder",
+      "warning": "Uyarı",
       "saveSuccess": "Başarılı",
       "saveSuccessMessage": "Saç kontrolü başarıyla kaydedildi. Uzmanlarımız en kısa sürede değerlendirecek.",
       "saveError": "Hata",
       "saveErrorMessage": "Veritabanı kayıt hatası",
-      "tips": "Daha İyi Fotoğraflar İçin İpuçları:\n• İyi aydınlatılmış bir ortamda çekim yapın\n• Saçlarınızı"
+      "userNotFound": "Kullanıcı bilgisi bulunamadı",
+      "selectAllPhotos": "Lütfen tüm fotoğrafları seçin",
+      "uploadingPhotos": "Fotoğraflar yükleniyor...",
+      "savingCheck": "Kontrol kaydediliyor...",
+      "saveErrorGeneric": "Kontrol kaydedilirken bir hata oluştu. Lütfen tekrar deneyin.",
+      "photoSelectError": "Fotoğraf seçilirken bir hata oluştu. Lütfen tekrar deneyin.",
+      "tips": "Daha İyi Fotoğraflar İçin İpuçları:\n• İyi aydınlatılmış bir ortamda çekim yapın\n• Saçlarınızı",
+      "photoDescriptions": {
+        "front": "Yüzünüzü kameraya bakacak şekilde",
+        "right45": "Başınızı sağa 45 derece çevirin",
+        "left45": "Başınızı sola 45 derece çevirin",
+        "top": "Başınızı yukarıdan çekin",
+        "back": "Başınızın arka kısmını çekin"
+      }
+    },
+    "modal": {
+      "importantInfo": "Önemli Bilgi"
     }
   },
   "messages": {
@@ -279,7 +384,6 @@
     "title": "Profil",
     "editProfile": "Profili Düzenle",
     "profileInfo": "Profil Bilgileri",
-    "changePassword": "Şifre Değiştir",
     "language": "Dil",
     "helpCenter": "Yardım Merkezi",
     "contact": "İletişim",

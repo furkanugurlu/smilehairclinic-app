@@ -7,6 +7,9 @@ import {
   ActivityIndicator,
   Alert,
   Image,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -188,20 +191,29 @@ const ProfileEditScreen: React.FC<ProfileEditScreenProps> = ({
 
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
-        <TouchableOpacity
-          onPress={() => navigation.goBack()}
-          style={styles.backButton}
-        >
-          <Icon name="chevron-back" size={28} color="#01213D" />
-        </TouchableOpacity>
-        <Text weight="bold" style={styles.title}>
-          {t('profileEdit.title')}
-        </Text>
-        <View style={styles.placeholder} />
-      </View>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={styles.keyboardView}
+      >
+        <View style={styles.header}>
+          <TouchableOpacity
+            onPress={() => navigation.goBack()}
+            style={styles.backButton}
+          >
+            <Icon name="chevron-back" size={28} color="#01213D" />
+          </TouchableOpacity>
+          <Text weight="bold" style={styles.title}>
+            {t('profileEdit.title')}
+          </Text>
+          <View style={styles.placeholder} />
+        </View>
 
-      <View style={styles.content}>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={styles.scrollContent}
+          keyboardShouldPersistTaps="handled"
+        >
+          <View style={styles.content}>
         {/* Avatar Section */}
         <View style={styles.avatarSection}>
           <View style={styles.avatarContainer}>
@@ -324,7 +336,9 @@ const ProfileEditScreen: React.FC<ProfileEditScreenProps> = ({
             </View>
           )}
         </Formik>
-      </View>
+          </View>
+        </ScrollView>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };
@@ -333,6 +347,13 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#F9FAFB',
+  },
+  keyboardView: {
+    flex: 1,
+  },
+  scrollContent: {
+    flexGrow: 1,
+    paddingBottom: 24,
   },
   header: {
     flexDirection: 'row',
@@ -360,9 +381,7 @@ const styles = StyleSheet.create({
     width: 40,
   },
   content: {
-    flex: 1,
     padding: 24,
-    justifyContent: 'center',
   },
   avatarSection: {
     alignItems: 'center',

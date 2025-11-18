@@ -36,7 +36,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.container} edges={['top', 'left', 'right']}>
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.header}>
           {user?.avatar_url ? (
@@ -88,7 +88,7 @@ const ProfileScreen: React.FC<ProfileScreenProps> = ({ navigation }) => {
               style={styles.menuIcon}
             />
             <Text weight="regular" style={styles.menuText}>
-              {t('profile.changePassword')}
+              {t('profile.changePassword.title')}
             </Text>
             <Icon name="chevron-forward" size={24} color="#D1D5DB" />
           </TouchableOpacity>

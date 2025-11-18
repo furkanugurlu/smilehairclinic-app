@@ -18,7 +18,8 @@
     "search": "Search",
     "filter": "Filter",
     "refresh": "Refresh",
-    "noData": "No data found"
+    "noData": "No data found",
+    "fillAllFields": "Please fill in all fields."
   },
   "auth": {
     "login": {
@@ -233,20 +234,124 @@
       "capture": "Capture Photo",
       "retake": "Retake",
       "continue": "Continue",
-      "finish": "Finish"
+      "finish": "Finish",
+      "exit": "Exit",
+      "exitConfirm": "Are you sure you want to cancel photo capture?",
+      "exitCancel": "Cancel",
+      "exitConfirmButton": "Exit",
+      "cameraPermission": "We need camera permission to take photos.",
+      "cameraPermissionButton": "Grant Permission",
+      "cameraNotFound": "Camera not found",
+      "photoError": "An error occurred while taking the photo. Please try again.",
+      "processing": "Processing photos...",
+      "instructions": {
+        "front": {
+          "label": "Front View",
+          "description": "Look at the camera",
+          "instruction": "LOOK AT THE CAMERA",
+          "subInstruction": ""
+        },
+        "right45": {
+          "label": "Right 45°",
+          "description": "Turn your head 45 degrees to the right",
+          "instruction": "TURN YOUR HEAD TO THE RIGHT",
+          "subInstruction": ""
+        },
+        "left45": {
+          "label": "Left 45°",
+          "description": "Turn your head 45 degrees to the left",
+          "instruction": "TURN YOUR HEAD TO THE LEFT",
+          "subInstruction": ""
+        },
+        "top": {
+          "label": "Top View",
+          "description": "Take a photo from above",
+          "instruction": "TILT YOUR HEAD FORWARD",
+          "subInstruction": "(Show the Top)"
+        },
+        "back": {
+          "label": "Back View",
+          "description": "Take a photo of the back of your head",
+          "instruction": "TURN YOUR BACK",
+          "subInstruction": ""
+        }
+      }
     },
     "detail": {
+      "title": "Check Details",
+      "date": "Date",
+      "checkDate": "Check Date",
+      "status": {
+        "good": "Good",
+        "warning": "Warning",
+        "critical": "Critical",
+        "unknown": "Unknown"
+      },
+      "statusDescriptions": {
+        "pending": "Your check has been queued for review by our experts.",
+        "analyzing": "Your photos are being analyzed by our AI-powered system.",
+        "completed": "Analysis completed.",
+        "unknown": "Process status is unknown."
+      },
+      "statusTitles": {
+        "pending": "Under Review",
+        "analyzing": "Analyzing",
+        "pendingShort": "Pending",
+        "analyzingShort": "Analyzing"
+      },
+      "analysisResult": "Analysis Result",
       "hairHealthScore": "Hair Health Score",
+      "photos": "Photos",
+      "recommendations": "Recommendations",
+      "generalRecommendations": "General Recommendations",
+      "tips": {
+        "water": {
+          "title": "Adequate Water Intake",
+          "description": "Support your hair health by consuming at least 2 liters of water per day"
+        },
+        "nutrition": {
+          "title": "Balanced Nutrition",
+          "description": "Strengthen your hair by eating a diet rich in protein, vitamins and minerals"
+        },
+        "sun": {
+          "title": "Sun Protection",
+          "description": "Protect your scalp from the harmful effects of the sun"
+        }
+      },
       "supportHairHealth": "Support your hair health by consuming at least 2 liters of water per day",
       "strengthenHair": "strengthen your hair",
       "protectScalp": "Protect your scalp from the harmful effects of the sun"
     },
     "capture": {
+      "title": "Photo Capture",
+      "startScan": "Start Scan",
+      "photo": "Photo",
+      "importantNotes": "Important Notes",
+      "instructionText": "• Take photos in a well-lit environment\n• Pull your hair back\n• Take clear and focused photos\n• Different photos from each angle are required",
+      "selectPhoto": "Select Photo",
+      "submitCheck": "Submit Check",
+      "warning": "Warning",
       "saveSuccess": "Success",
       "saveSuccessMessage": "Hair check successfully saved. Our experts will evaluate it as soon as possible.",
       "saveError": "Error",
       "saveErrorMessage": "Database save error",
-      "tips": "Tips for Better Photos:\n• Take photos in a well-lit environment\n• Your hair"
+      "userNotFound": "User information not found",
+      "selectAllPhotos": "Please select all photos",
+      "uploadingPhotos": "Uploading photos...",
+      "savingCheck": "Saving check...",
+      "saveErrorGeneric": "An error occurred while saving the check. Please try again.",
+      "photoSelectError": "An error occurred while selecting the photo. Please try again.",
+      "tips": "Tips for Better Photos:\n• Take photos in a well-lit environment\n• Your hair",
+      "photoDescriptions": {
+        "front": "Look at the camera",
+        "right45": "Turn your head 45 degrees to the right",
+        "left45": "Turn your head 45 degrees to the left",
+        "top": "Take a photo from above",
+        "back": "Take a photo of the back of your head"
+      }
+    },
+    "modal": {
+      "importantInfo": "Important Information"
     }
   },
   "messages": {
@@ -279,7 +384,6 @@
     "title": "Profile",
     "editProfile": "Edit Profile",
     "profileInfo": "Profile Information",
-    "changePassword": "Change Password",
     "language": "Language",
     "helpCenter": "Help Center",
     "contact": "Contact",

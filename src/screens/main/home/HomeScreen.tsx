@@ -39,11 +39,25 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation, route }) => {
     improvement: 0,
   });
 
-  // Sayfa focus olduğunda (geri dönüldüğünde veya refresh parametresi ile) verileri yenile
+  // İlk yüklemede verileri getir
+  useEffect(() => {
+    if (user?.id) {
+      fetchHairChecks();
+    }
+  }, [user?.id]);
+
+  // Sadece refresh parametresi geldiğinde güncelle (POST isteklerinden sonra)
   useFocusEffect(
     useCallback(() => {
-      fetchHairChecks();
-    }, [user?.id]),
+      // Route params'tan refresh parametresini kontrol et
+      const refreshParam = route?.params?.refresh;
+      if (refreshParam === true) {
+        console.log('🔄 Home sayfası refresh parametresi ile güncelleniyor');
+        fetchHairChecks();
+        // Parametreyi temizle (tekrar aynı sayfaya gelindiğinde tekrar güncellemesin)
+        navigation.setParams({ refresh: false });
+      }
+    }, [route?.params?.refresh, user?.id]),
   );
 
   const fetchHairChecks = async () => {
@@ -164,7 +178,7 @@ const HomeScreen: React.FC<HomeScreenProps> = ({ navigation, route }) => {
   const lastCheck = hairChecks.length > 0 ? hairChecks[0] : null;
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.container} edges={['top', 'left', 'right']}>
       {loading && !refreshing ? (
         <View style={styles.loadingContainer}>
           <ActivityIndicator size="small" color="#01213D" />

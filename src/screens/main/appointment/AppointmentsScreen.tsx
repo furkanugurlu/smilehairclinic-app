@@ -9,7 +9,6 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useFocusEffect } from '@react-navigation/native';
 import { useTranslation } from 'react-i18next';
 import i18n from '../../../i18n';
 import Icon from 'react-native-vector-icons/Ionicons';
@@ -20,23 +19,36 @@ import { Appointment, AppointmentStatus } from '../../../types';
 
 interface AppointmentsScreenProps {
   navigation: any;
+  route?: any;
 }
 
 const AppointmentsScreen: React.FC<AppointmentsScreenProps> = ({
   navigation,
+  route,
 }) => {
   const { t } = useTranslation();
   const { user } = useAuthStore();
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const [isInitialLoad, setIsInitialLoad] = useState(true);
 
-  // Sayfa focus olduğunda (geri dönüldüğünde) verileri yenile
-  useFocusEffect(
-    useCallback(() => {
+  // İlk yüklemede fetch at
+  useEffect(() => {
+    if (user?.id && isInitialLoad) {
       fetchAppointments();
-    }, [user?.id]),
-  );
+      setIsInitialLoad(false);
+    }
+  }, [user?.id, isInitialLoad]);
+
+  // POST isteği sonrası (refresh parametresi ile) güncelle
+  useEffect(() => {
+    if (route?.params?.refresh && user?.id) {
+      fetchAppointments();
+      // Refresh parametresini temizle
+      navigation.setParams({ refresh: undefined });
+    }
+  }, [route?.params?.refresh, user?.id]);
 
   const fetchAppointments = async () => {
     if (!user?.id) return;
@@ -179,7 +191,7 @@ const AppointmentsScreen: React.FC<AppointmentsScreenProps> = ({
   });
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.container} edges={['top', 'left', 'right']}>
       <View style={styles.header}>
         <Text weight="bold" style={styles.title}>
           {t('appointments.title')}

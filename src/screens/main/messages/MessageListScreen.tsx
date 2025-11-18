@@ -266,7 +266,7 @@ const MessageListScreen: React.FC<MessageListScreenProps> = ({
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.container} edges={['top', 'left', 'right']}>
       <View style={styles.header}>
         <Text weight="bold" style={styles.title}>
           {isAdmin ? t('tabs.adminMessages') : t('tabs.messages')}

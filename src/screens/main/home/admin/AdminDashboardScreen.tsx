@@ -136,7 +136,7 @@ const AdminDashboardScreen: React.FC<AdminDashboardScreenProps> = ({
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.container} edges={['top', 'left', 'right']}>
       <View style={styles.header}>
         <View>
           <Text weight="regular" style={styles.greeting}>

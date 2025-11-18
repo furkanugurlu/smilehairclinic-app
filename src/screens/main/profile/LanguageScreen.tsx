@@ -30,8 +30,16 @@ const LanguageScreen: React.FC<LanguageScreenProps> = ({ navigation }) => {
   }, [i18n.language]);
 
   const handleLanguageSelect = async (languageId: 'tr' | 'en') => {
+    // Eğer seçilen dil zaten mevcut dil ise, sadece geri dön
+    if (selectedLanguage === languageId) {
+      navigation.goBack();
+      return;
+    }
+    
     setSelectedLanguage(languageId);
     await changeLanguage(languageId);
+    // Dil değiştirildikten sonra otomatik geri dön
+    navigation.goBack();
   };
 
   return (

@@ -41,36 +41,26 @@ const AdminHairCheckDetailScreen = ({ navigation, route }: any) => {
     {
       id: 'front',
       labelKey: 'adminHairCheckDetail.photoLabels.front',
-      icon: 'happy-outline',
-      iconColor: '#01213D',
       url: check.photo_front,
     },
     {
       id: 'right45',
       labelKey: 'adminHairCheckDetail.photoLabels.right45',
-      icon: 'arrow-redo-outline',
-      iconColor: '#10B981',
       url: check.photo_right45,
     },
     {
       id: 'left45',
       labelKey: 'adminHairCheckDetail.photoLabels.left45',
-      icon: 'arrow-undo-outline',
-      iconColor: '#10B981',
       url: check.photo_left45,
     },
     {
       id: 'top',
       labelKey: 'adminHairCheckDetail.photoLabels.top',
-      icon: 'arrow-up-outline',
-      iconColor: '#F59E0B',
       url: check.photo_top,
     },
     {
       id: 'back',
       labelKey: 'adminHairCheckDetail.photoLabels.back',
-      icon: 'person-outline',
-      iconColor: '#8B5CF6',
       url: check.photo_back,
     },
   ];
@@ -167,7 +157,7 @@ const AdminHairCheckDetailScreen = ({ navigation, route }: any) => {
           onPress={() => navigation.goBack()}
           style={styles.backButton}
         >
-          <Icon name="chevron-back" size={28} color="#1A1A1A" />
+          <Icon name="chevron-back" size={24} color="#1A1A1A" />
         </TouchableOpacity>
         <Text weight="bold" style={styles.headerTitle}>
           {t('adminHairCheckDetail.title')}
@@ -175,34 +165,36 @@ const AdminHairCheckDetailScreen = ({ navigation, route }: any) => {
         <View style={styles.headerRight} />
       </View>
 
+      {/* Hasta Bilgileri */}
+      <View style={styles.patientSection}>
+        <View style={styles.patientCard}>
+          <Icon
+            name="person-circle"
+            size={48}
+            color="#666"
+            style={styles.patientIcon}
+          />
+          <View style={styles.patientInfo}>
+            <Text weight="semibold" style={styles.patientName}>
+              {check.profiles?.full_name ||
+                t('admin.hairChecks.unnamedUser')}
+            </Text>
+            <Text weight="regular" style={styles.patientEmail}>
+              {check.profiles?.email}
+            </Text>
+            <Text weight="regular" style={styles.patientDate}>
+              {formatDate(check.created_at)}
+            </Text>
+          </View>
+        </View>
+      </View>
+
+      {/* Content */}
       <ScrollView
         style={styles.scrollView}
         showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.scrollContent}
       >
-        {/* Hasta Bilgileri */}
-        <View style={styles.section}>
-          <View style={styles.patientCard}>
-            <Icon
-              name="person-circle"
-              size={48}
-              color="#01213D"
-              style={styles.patientIcon}
-            />
-            <View style={styles.patientInfo}>
-              <Text weight="semibold" style={styles.patientName}>
-                {check.profiles?.full_name ||
-                  t('admin.hairChecks.unnamedUser')}
-              </Text>
-              <Text weight="regular" style={styles.patientEmail}>
-                {check.profiles?.email}
-              </Text>
-              <Text weight="regular" style={styles.patientDate}>
-                {formatDate(check.created_at)}
-              </Text>
-            </View>
-          </View>
-        </View>
-
         {/* Fotoğraflar */}
         <View style={styles.section}>
           <Text weight="bold" style={styles.sectionTitle}>
@@ -214,15 +206,10 @@ const AdminHairCheckDetailScreen = ({ navigation, route }: any) => {
                 key={photo.id}
                 style={styles.photoCard}
                 onPress={() => setSelectedPhoto(photo.url)}
+                activeOpacity={0.8}
               >
                 <Image source={{ uri: photo.url }} style={styles.photoImage} />
                 <View style={styles.photoOverlay}>
-                  <Icon
-                    name={photo.icon}
-                    size={20}
-                    color="#FFFFFF"
-                    style={styles.photoIcon}
-                  />
                   <Text weight="semibold" style={styles.photoLabel}>
                     {t(photo.labelKey)}
                   </Text>
@@ -368,23 +355,15 @@ const AdminHairCheckDetailScreen = ({ navigation, route }: any) => {
             />
           </View>
         </View>
-
-        <View style={{ height: 40 }} />
       </ScrollView>
 
       {/* Kaydet Butonu */}
       <View style={styles.footer}>
         <TouchableOpacity
-          style={styles.saveButton}
+          style={[styles.saveButton, loading && styles.saveButtonDisabled]}
           onPress={handleSaveAnalysis}
           disabled={loading}
         >
-          <Icon
-            name="checkmark-circle"
-            size={20}
-            color="#FFFFFF"
-            style={styles.saveButtonIcon}
-          />
           <Text weight="bold" style={styles.saveButtonText}>
             {t('adminHairCheckDetail.saveAndSend')}
           </Text>
@@ -456,41 +435,46 @@ const styles = StyleSheet.create({
   headerRight: {
     width: 40,
   },
+  patientSection: {
+    paddingHorizontal: 20,
+    paddingTop: 16,
+    paddingBottom: 12,
+    backgroundColor: '#FFFFFF',
+    borderBottomWidth: 1,
+    borderBottomColor: '#E5E7EB',
+  },
   scrollView: {
     flex: 1,
   },
+  scrollContent: {
+    paddingBottom: 20,
+  },
   section: {
-    paddingHorizontal: 24,
+    paddingHorizontal: 20,
     marginTop: 20,
   },
   sectionTitle: {
-    fontSize: 18,
+    fontSize: 16,
     color: '#1A1A1A',
-    marginBottom: 16,
+    marginBottom: 12,
   },
   patientCard: {
     backgroundColor: '#FFFFFF',
-    borderRadius: 16,
-    padding: 20,
+    borderRadius: 12,
+    padding: 16,
     flexDirection: 'row',
     alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.05,
-    shadowRadius: 8,
-    elevation: 2,
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
   },
   patientIcon: {
-    marginRight: 16,
+    marginRight: 12,
   },
   patientInfo: {
     flex: 1,
   },
   patientName: {
-    fontSize: 18,
+    fontSize: 16,
     color: '#1A1A1A',
     marginBottom: 4,
   },
@@ -512,17 +496,11 @@ const styles = StyleSheet.create({
     width: '48%',
     aspectRatio: 1,
     marginBottom: 12,
-    borderRadius: 12,
+    borderRadius: 8,
     overflow: 'hidden',
     backgroundColor: '#FFFFFF',
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.05,
-    shadowRadius: 8,
-    elevation: 2,
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
   },
   photoImage: {
     width: '100%',
@@ -536,9 +514,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.6)',
     padding: 8,
     alignItems: 'center',
-  },
-  photoIcon: {
-    marginBottom: 2,
   },
   photoLabel: {
     fontSize: 11,
@@ -556,64 +531,53 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     borderWidth: 1,
     borderColor: '#E5E7EB',
-    borderRadius: 12,
+    borderRadius: 8,
     paddingHorizontal: 16,
-    paddingVertical: 14,
+    paddingVertical: 12,
     fontSize: 16,
     color: '#1A1A1A',
   },
   textArea: {
     minHeight: 120,
-    paddingTop: 14,
+    paddingTop: 12,
   },
   statusOptions: {
     flexDirection: 'row',
-    gap: 12,
+    gap: 8,
   },
   statusOption: {
     flex: 1,
     flexDirection: 'column',
     alignItems: 'center',
     backgroundColor: '#FFFFFF',
-    borderWidth: 2,
-    borderColor: '#E5E7EB',
-    borderRadius: 12,
-    paddingVertical: 16,
-    gap: 8,
+    borderWidth: 1,
+    borderRadius: 8,
+    paddingVertical: 12,
+    gap: 6,
   },
   statusOptionActive: {
-    backgroundColor: '#F9FAFB',
+    borderWidth: 2,
   },
   statusOptionText: {
-    fontSize: 14,
+    fontSize: 12,
     color: '#666',
   },
   footer: {
     backgroundColor: '#FFFFFF',
-    paddingHorizontal: 24,
+    paddingHorizontal: 20,
     paddingVertical: 16,
     borderTopWidth: 1,
     borderTopColor: '#E5E7EB',
   },
   saveButton: {
-    backgroundColor: '#10B981',
-    flexDirection: 'row',
+    backgroundColor: '#1A1A1A',
+    paddingVertical: 14,
+    borderRadius: 8,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 16,
-    borderRadius: 12,
-    shadowColor: '#10B981',
-    shadowOffset: {
-      width: 0,
-      height: 4,
-    },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 4,
-    gap: 8,
   },
-  saveButtonIcon: {
-    marginRight: 4,
+  saveButtonDisabled: {
+    opacity: 0.5,
   },
   saveButtonText: {
     fontSize: 16,
@@ -638,9 +602,9 @@ const styles = StyleSheet.create({
     top: -40,
     right: 0,
     zIndex: 10,
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+    width: 36,
+    height: 36,
+    borderRadius: 18,
     backgroundColor: 'rgba(255, 255, 255, 0.2)',
     justifyContent: 'center',
     alignItems: 'center',
@@ -648,7 +612,7 @@ const styles = StyleSheet.create({
   fullImage: {
     width: '100%',
     height: '100%',
-    borderRadius: 12,
+    borderRadius: 8,
   },
 });
 

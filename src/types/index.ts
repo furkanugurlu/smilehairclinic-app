@@ -59,6 +59,7 @@ export interface PhotoStep {
   icon: string;
   description: string;
   instruction?: string;
+  subInstruction?: string;
   targetAngle?: { pitch: number; roll: number };
   requiresFace?: boolean;
   faceRotation?: number;

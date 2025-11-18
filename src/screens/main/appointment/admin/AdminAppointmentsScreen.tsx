@@ -188,7 +188,7 @@ const AdminAppointmentsScreen: React.FC<AdminAppointmentsScreenProps> = ({
   console.log('filteredAppointments', filteredAppointments);
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.container} edges={['top', 'left', 'right']}>
       <View style={styles.header}>
         <Text weight="bold" style={styles.title}>
           {t('adminAppointments.title')}

@@ -8,6 +8,7 @@ import {
   Image,
 } from 'react-native';
 import Text from './Text';
+import { useTranslation } from 'react-i18next';
 
 interface LoadingModalProps {
   visible: boolean;
@@ -16,8 +17,9 @@ interface LoadingModalProps {
 
 const LoadingModal: React.FC<LoadingModalProps> = ({ 
   visible, 
-  message = 'Yükleniyor...' 
 }) => {
+  const { t } = useTranslation();
+  const message = t('common.loading');
   return (
     <Modal
       transparent

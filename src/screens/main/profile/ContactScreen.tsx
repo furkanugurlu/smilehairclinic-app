@@ -38,6 +38,17 @@ const ContactScreen: React.FC<ContactScreenProps> = ({ navigation }) => {
     )}`;
     Linking.openURL(url);
   };
+  const handleInstagram = () => {
+    const username = 'smilehairclinic';
+    const url = `https://instagram.com/${username}`;
+    Linking.openURL(url);
+  };
+  
+  const handleFacebook = () => {
+    const username = 'smilehairclinic';
+    const url = `https://facebook.com/${username}`;
+    Linking.openURL(url);
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -163,13 +174,13 @@ const ContactScreen: React.FC<ContactScreenProps> = ({ navigation }) => {
             {t('contact.socialMedia')}
           </Text>
           <View style={styles.socialButtons}>
-            <TouchableOpacity style={styles.socialButton}>
+            <TouchableOpacity style={styles.socialButton} onPress={handleFacebook}>
               <Icon name="logo-facebook" size={20} color="#1877F2" />
               <Text weight="medium" style={styles.socialText}>
                 {t('contact.facebook')}
               </Text>
             </TouchableOpacity>
-            <TouchableOpacity style={styles.socialButton}>
+            <TouchableOpacity style={styles.socialButton} onPress={handleInstagram}>
               <Icon name="logo-instagram" size={20} color="#E4405F" />
               <Text weight="medium" style={styles.socialText}>
                 {t('contact.instagram')}

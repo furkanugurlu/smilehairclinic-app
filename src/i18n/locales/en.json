@@ -85,7 +85,10 @@
       "passwordsMatch": "Passwords match",
       "resetSuccess": "Success",
       "resetSuccessMessage": "Your password has been successfully reset. You can now sign in with your new password.",
-      "resetError": "An error occurred while resetting the password."
+      "resetError": "An error occurred while resetting the password.",
+      "sessionExpired": "Session Expired",
+      "sessionExpiredMessage": "Your password reset link has expired. Please request a new password reset link.",
+      "requestNewLink": "Request New Link"
     }
   },
   "tabs": {

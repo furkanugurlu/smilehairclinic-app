@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { Linking } from 'react-native';
+import { Linking, Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useAuthStore } from '../store/authStore';
 import { supabase } from '../config/supabase';
@@ -92,44 +92,76 @@ const RootNavigator: React.FC = () => {
             
             if (error) {
               console.error('❌ Session set hatası:', error);
+              Alert.alert(
+                'Hata',
+                'Şifre sıfırlama linki geçersiz veya süresi dolmuş. Lütfen yeni bir link isteyin.',
+              );
+              return;
             } else {
               console.log('✅ Session başarıyla set edildi:', data?.user?.email);
+              
+              // Session'ın gerçekten set edildiğini doğrula
+              const { data: { session: verifySession } } = await supabase.auth.getSession();
+              if (!verifySession) {
+                console.error('❌ Session doğrulama başarısız');
+                Alert.alert(
+                  'Hata',
+                  'Session oluşturulamadı. Lütfen yeni bir şifre sıfırlama linki isteyin.',
+                );
+                return;
+              }
+              
+              // Navigation hazır olana kadar bekle
+              const navigateToResetPassword = async () => {
+                console.log('🧭 Navigation ref durumu:', !!navigationRef.current);
+                
+                if (navigationRef.current) {
+                  try {
+                    console.log('➡️ ResetPassword ekranına yönlendiriliyor...');
+                    
+                    // Eğer kullanıcı giriş yapmışsa (MainTabs'daysa), önce çıkış yap
+                    if (user) {
+                      console.log('⚠️ Kullanıcı giriş yapmış, önce çıkış yapılıyor...');
+                      await useAuthStore.getState().signOut();
+                    }
+                    
+                    navigationRef.current.navigate('Auth', {
+                      screen: 'ResetPassword',
+                    });
+                    console.log('✅ Navigation başarılı');
+                  } catch (error) {
+                    console.error('❌ Navigation hatası:', error);
+                  }
+                } else {
+                  console.log('⏳ Navigation ref henüz hazır değil, tekrar deneniyor...');
+                  setTimeout(navigateToResetPassword, 500);
+                }
+              };
+              
+              // Splash ve onboarding tamamlanana kadar bekle
+              setTimeout(navigateToResetPassword, showSplash ? 3000 : (showOnboarding ? 1000 : 500));
             }
+          } else {
+            console.error('❌ Token bulunamadı');
+            Alert.alert(
+              'Hata',
+              'Şifre sıfırlama linki geçersiz. Lütfen yeni bir link isteyin.',
+            );
           }
+        } else {
+          console.error('❌ URL formatı geçersiz');
+          Alert.alert(
+            'Hata',
+            'Şifre sıfırlama linki geçersiz. Lütfen yeni bir link isteyin.',
+          );
         }
       } catch (error) {
         console.error('❌ Token parse hatası:', error);
+        Alert.alert(
+          'Hata',
+          'Şifre sıfırlama linki işlenirken bir hata oluştu. Lütfen yeni bir link isteyin.',
+        );
       }
-      
-      // Navigation hazır olana kadar bekle
-      const navigateToResetPassword = async () => {
-        console.log('🧭 Navigation ref durumu:', !!navigationRef.current);
-        
-        if (navigationRef.current) {
-          try {
-            console.log('➡️ ResetPassword ekranına yönlendiriliyor...');
-            
-            // Eğer kullanıcı giriş yapmışsa (MainTabs'daysa), önce çıkış yap
-            if (user) {
-              console.log('⚠️ Kullanıcı giriş yapmış, önce çıkış yapılıyor...');
-              await useAuthStore.getState().signOut();
-            }
-            
-            navigationRef.current.navigate('Auth', {
-              screen: 'ResetPassword',
-            });
-            console.log('✅ Navigation başarılı');
-          } catch (error) {
-            console.error('❌ Navigation hatası:', error);
-          }
-        } else {
-          console.log('⏳ Navigation ref henüz hazır değil, tekrar deneniyor...');
-          setTimeout(navigateToResetPassword, 500);
-        }
-      };
-      
-      // Splash ve onboarding tamamlanana kadar bekle
-      setTimeout(navigateToResetPassword, showSplash ? 3000 : (showOnboarding ? 1000 : 500));
     }
   };
 

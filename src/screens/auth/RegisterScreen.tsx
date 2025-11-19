@@ -59,6 +59,22 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
     }
   };
 
+  const emptyUser = {
+    fullName: '',
+    phone: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+  }
+
+  const realUser = {
+    fullName: 'Temel Ülgen',
+    phone: '5412345678',
+    email: 'temel1231@gmail.com',
+    password: '123456',
+    confirmPassword: '123456',
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       <KeyboardAvoidingView
@@ -90,24 +106,11 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({ navigation }) => {
           </View>
 
           <Formik
-            initialValues={{
-              fullName:'Temel Ülgen',
-              phone: '5412345678',
-              email: 'temel1231@gmail.com',
-              password: '123456',
-              confirmPassword: '123456',
-            }}
+            initialValues={emptyUser}
             validationSchema={RegisterSchema}
             onSubmit={handleRegister}
           >
-            {({
-              handleChange,
-              handleBlur,
-              handleSubmit,
-              values,
-              errors,
-              touched,
-            }) => (
+            {({ handleChange, handleBlur, handleSubmit, values, errors, touched }) => (
               <View style={styles.form}>
                 <View style={styles.inputContainer}>
                   <Text weight="semibold" style={styles.label}>{t('auth.register.fullName')}</Text>

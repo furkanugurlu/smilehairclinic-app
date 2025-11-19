@@ -104,7 +104,7 @@ const ForgotPasswordScreen: React.FC<ForgotPasswordScreenProps> = ({
 
           {!emailSent ? (
             <Formik
-              initialValues={{ email: 'furkanugurlu5134@gmail.com' }}
+              initialValues={{ email: 'furkanugurlu3451@gmail.com' }}
               validationSchema={ForgotPasswordSchema}
               onSubmit={handleForgotPassword}
             >

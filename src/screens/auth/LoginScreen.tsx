@@ -51,7 +51,17 @@ const LoginScreen: React.FC<LoginScreenProps> = ({ navigation }) => {
 
   const normalUser = {
     email: 'furkancelik@gmail.com',
-    password: '1234567',
+    password: '12345678',
+  }
+
+  const realUser = {
+    email: 'furkanugurlu3451@gmail.com',
+    password: '12345678',
+  }
+
+  const emptyUser = {
+    email: '',
+    password: '',
   }
 
   return (

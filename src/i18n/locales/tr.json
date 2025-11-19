@@ -85,7 +85,10 @@
       "passwordsMatch": "Şifreler eşleşiyor",
       "resetSuccess": "Başarılı",
       "resetSuccessMessage": "Şifreniz başarıyla sıfırlandı. Artık yeni şifrenizle giriş yapabilirsiniz.",
-      "resetError": "Şifre sıfırlama sırasında bir hata oluştu."
+      "resetError": "Şifre sıfırlama sırasında bir hata oluştu.",
+      "sessionExpired": "Session Süresi Doldu",
+      "sessionExpiredMessage": "Şifre sıfırlama linkinizin süresi dolmuş. Lütfen yeni bir şifre sıfırlama talebinde bulunun.",
+      "requestNewLink": "Yeni Link İste"
     }
   },
   "tabs": {

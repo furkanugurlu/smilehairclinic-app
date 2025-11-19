@@ -21,12 +21,16 @@ import i18n from '../../../i18n';
 import Tts from 'react-native-tts';
 import { Text, LoadingModal } from '../../../components';
 import { PhotoStep } from '../../../types';
+import LottieView from 'lottie-react-native';
 
 import ImageResizer from 'react-native-image-resizer';
 
 
 const { width, height } = Dimensions.get('window');
-const CIRCLE_SIZE = Math.min(width * 0.75, height * 0.5);
+// Oval frame için width ve height'i ayrı tanımla
+const FRAME_WIDTH = Math.min(width * 0.8, height * 0.55);
+const FRAME_HEIGHT = Math.min(width * 0.7, height * 0.45);
+const CIRCLE_SIZE = Math.min(FRAME_WIDTH, FRAME_HEIGHT); // Geriye uyumluluk için
 const CIRCLE_CENTER_X = width / 2;
 const CIRCLE_CENTER_Y = height / 2;
 
@@ -58,7 +62,6 @@ const HairCheckCameraScreen: React.FC<HairCheckCameraScreenProps> = ({
     [key: string]: { uri: string; type: string; name: string; size: number };
   }>({});
   const [isCapturing, setIsCapturing] = useState(false);
-  const [isProcessing, setIsProcessing] = useState(false);
   const [phoneAngle, setPhoneAngle] = useState({ pitch: 0, roll: 0, yaw: 0 });
   const [isPositionValid, setIsPositionValid] = useState(false);
   const [positionStableTime, setPositionStableTime] = useState(0);
@@ -646,34 +649,47 @@ const HairCheckCameraScreen: React.FC<HairCheckCameraScreenProps> = ({
       };
 
       console.log('📦 Fotoğraf verisi hazırlandı:', photoData);
-      // Fotoğrafı state'e ekle
-
-      setCapturedPhotos(prev => ({
-        ...prev,
-        [currentStep.id]: photoData,
-      }));
-
-      console.log('✅ Fotoğraf state\'e eklendi');
       
-      // Fotoğraf çekildiğinde sesli bildirim
-      speak(t('hairCheck.camera.tts.photoCaptured'), true);
-      
-      // Eğer son adım değilse, bir sonraki adımın talimatını sesli olarak söyle
-      const currentIsLastStep = currentStepIndex === photoSteps.length - 1;
-      if (!currentIsLastStep) {
-        const nextStepIndex = currentStepIndex + 1;
-        const nextStep = photoSteps[nextStepIndex];
-        if (nextStep && nextStep.tts) {
+      // Fotoğrafı state'e ekle ve callback ile işlemi devam ettir
+      setCapturedPhotos(prev => {
+        const updatedPhotos = {
+          ...prev,
+          [currentStep.id]: photoData,
+        };
+        
+        console.log('✅ Fotoğraf state\'e eklendi:', updatedPhotos);
+        
+        // Fotoğraf çekildiğinde sesli bildirim
+        speak(t('hairCheck.camera.tts.photoCaptured'), true);
+        
+        // Otomatik çekim modunu sıfırla
+        setAutoCaptureEnabled(false);
+        stablePositionStartRef.current = null;
+        setPositionStableTime(0);
+        
+        // Eğer son adım ise, güncellenmiş fotoğraflarla preview ekranına geç
+        const currentIsLastStep = currentStepIndex === photoSteps.length - 1;
+        if (currentIsLastStep) {
+          // Son adım ise, tüm fotoğrafları göster (güncellenmiş state ile)
           setTimeout(() => {
-            speak(nextStep.tts!, true);
-          }, 1500); // Fotoğraf çekildi mesajından sonra 1.5 saniye bekle
+            handleAllPhotosCaptured(updatedPhotos);
+          }, 800);
+        } else {
+          // Son adım değilse, bir sonraki adıma geç
+          setTimeout(() => {
+            setCurrentStepIndex(prev => prev + 1);
+            const nextStepIndex = currentStepIndex + 1;
+            const nextStep = photoSteps[nextStepIndex];
+            if (nextStep && nextStep.tts) {
+              setTimeout(() => {
+                speak(nextStep.tts!, true);
+              }, 500); // Adım değişikliğinden sonra 0.5 saniye bekle
+            }
+          }, 800); // Fotoğraf çekildikten 0.8 saniye sonra geçiş yap
         }
-      }
-      
-      // Otomatik çekim modunu sıfırla
-      setAutoCaptureEnabled(false);
-      stablePositionStartRef.current = null;
-      setPositionStableTime(0);
+        
+        return updatedPhotos;
+      });
     } catch (error: any) {
       console.error('❌ Fotoğraf çekme hatası:', error);
       console.error('❌ Hata detayları:', {
@@ -694,13 +710,19 @@ const HairCheckCameraScreen: React.FC<HairCheckCameraScreenProps> = ({
     }
   };
 
-  const handleAllPhotosCaptured = async () => {
+  const handleAllPhotosCaptured = async (photos?: typeof capturedPhotos) => {
     // Tüm fotoğraflar çekildiğinde sesli bildirim
     speak(t('hairCheck.camera.tts.allPhotosCaptured'), true);
     
     // Fotoğrafları HairCheckCaptureScreen'e gönder
+    // Eğer photos parametresi varsa onu kullan, yoksa state'ten al
+    const photosToSend = photos || capturedPhotos;
+    
+    console.log('📤 Preview ekranına gönderilen fotoğraflar:', photosToSend);
+    console.log('📊 Fotoğraf sayısı:', Object.keys(photosToSend).length);
+    
     navigation.navigate('HairCheckCapture', {
-      capturedPhotos: capturedPhotos,
+      capturedPhotos: photosToSend,
     });
   };
 
@@ -870,92 +892,49 @@ const HairCheckCameraScreen: React.FC<HairCheckCameraScreenProps> = ({
 
       {/* Camera Preview */}
       <View style={styles.cameraContainer}>
-        {hasCurrentPhoto ? (
-          <View style={styles.previewContainer}>
-            <Image
-              source={{ uri: capturedPhotos[currentStep.id].uri }}
-              style={styles.previewImage}
-              resizeMode="cover"
+        <View style={styles.cameraWrapper}>
+          <Camera
+            ref={camera}
+            style={styles.camera}
+            device={device}
+            isActive={hasPermission}
+            photo={true}
+          />
+          
+          {/* Lottie Face Scan Animation */}
+          <View style={styles.lottieContainer}>
+            <LottieView
+              source={require('../../../assets/lottie/face-scan.json')}
+              autoPlay
+              loop
+              style={styles.lottieAnimation}
             />
-            <View style={styles.previewOverlay} />
           </View>
-        ) : (
-          <View style={styles.cameraWrapper}>
-            <Camera
-              ref={camera}
-              style={styles.camera}
-              device={device}
-              isActive={hasPermission && !!device}
-              photo={true}
-            />
-            
-            {/* Dark Overlay with Circular Cutout */}
-            <View style={styles.overlayContainer}>
-              <View style={styles.overlayTop} />
-              <View style={styles.overlayBottom} />
-              <View style={styles.overlayLeft} />
-              <View style={styles.overlayRight} />
-            </View>
-
-            {/* Circular Frame Guide */}
-            <View style={styles.circularFrame} />
-
-            {/* Yüz algılama devre dışı - Face Detection Indicator kaldırıldı */}
-          </View>
-        )}
+        </View>
       </View>
 
       {/* Bottom Controls */}
       <View style={styles.bottomControls}>
-        {hasCurrentPhoto ? (
-          <View style={styles.reviewControls}>
-            <TouchableOpacity
-              style={styles.retakeButton}
-              onPress={handleRetake}
-            >
-              <Text weight="semibold" style={styles.retakeButtonText}>
-                {t('hairCheck.camera.retake')}
-              </Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.continueButton}
-              onPress={() => {
-                if (!isLastStep) {
-                  setCurrentStepIndex(prev => prev + 1);
-                } else {
-                  handleAllPhotosCaptured();
-                }
-              }}
-            >
-              <Text weight="bold" style={styles.continueButtonText}>
-                {isLastStep ? t('hairCheck.camera.finish') : t('hairCheck.camera.continue')}
-              </Text>
-            </TouchableOpacity>
-          </View>
-        ) : (
-          <View style={styles.captureControls}>
-            {/* Capture Button */}
-            <TouchableOpacity
-              style={[styles.captureButton, isCapturing && styles.captureButtonDisabled]}
-              onPress={handleCapture}
-              disabled={isCapturing || !hasPermission || !device}
-              activeOpacity={0.8}
-            >
-              {isCapturing ? (
-                <ActivityIndicator color="#FFFFFF" />
-              ) : (
-                <Icon name="camera" size={28} color="#FFFFFF" />
-              )}
-            </TouchableOpacity>
-          </View>
-        )}
+        <View style={styles.captureControls}>
+          {/* Capture Button */}
+          <TouchableOpacity
+            style={[
+              styles.captureButton,
+              isCapturing && styles.captureButtonDisabled
+            ]}
+            onPress={handleCapture}
+            disabled={isCapturing || !hasPermission || !device}
+            activeOpacity={0.8}
+          >
+            {isCapturing ? (
+              <ActivityIndicator color="#FFFFFF" />
+            ) : (
+              <Icon name="camera" size={28} color="#FFFFFF" />
+            )}
+          </TouchableOpacity>
+        </View>
       </View>
 
-      {/* Processing Modal */}
-      <LoadingModal
-        visible={isProcessing}
-        message={t('hairCheck.camera.processing')}
-      />
     </SafeAreaView>
   );
 };
@@ -963,6 +942,7 @@ const HairCheckCameraScreen: React.FC<HairCheckCameraScreenProps> = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#000000',
   },
   permissionContainer: {
     flex: 1,
@@ -1086,6 +1066,22 @@ const styles = StyleSheet.create({
     height: height,
     position: 'absolute',
   },
+  // Lottie Animation
+  lottieContainer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 2,
+    pointerEvents: 'none',
+  },
+  lottieAnimation: {
+    width: width,
+    height: height * 0.8,
+  },
   // Circular Overlay with Cutout
   overlayContainer: {
     position: 'absolute',
@@ -1098,44 +1094,44 @@ const styles = StyleSheet.create({
     top: 0,
     left: 0,
     right: 0,
-    height: (height - CIRCLE_SIZE) / 2,
+    height: (height - FRAME_HEIGHT) / 2,
     backgroundColor: '#000000',
-    opacity: 0.7,
+    opacity: 0.3,
   },
   overlayBottom: {
     position: 'absolute',
     bottom: 0,
     left: 0,
     right: 0,
-    height: (height - CIRCLE_SIZE) / 2,
+    height: (height - FRAME_HEIGHT) / 2,
     backgroundColor: '#000000',
-    opacity: 0.7,
+    opacity: 0.3,
   },
   overlayLeft: {
     position: 'absolute',
-    top: (height - CIRCLE_SIZE) / 2,
+    top: (height - FRAME_HEIGHT) / 2,
     left: 0,
-    width: (width - CIRCLE_SIZE) / 2,
-    height: CIRCLE_SIZE,
+    width: (width - FRAME_WIDTH) / 2,
+    height: FRAME_HEIGHT,
     backgroundColor: '#000000',
-    opacity: 0.7,
+    opacity: 0.3,
   },
   overlayRight: {
     position: 'absolute',
-    top: (height - CIRCLE_SIZE) / 2,
+    top: (height - FRAME_HEIGHT) / 2,
     right: 0,
-    width: (width - CIRCLE_SIZE) / 2,
-    height: CIRCLE_SIZE,
+    width: (width - FRAME_WIDTH) / 2,
+    height: FRAME_HEIGHT,
     backgroundColor: '#000000',
-    opacity: 0.7,
+    opacity: 0.3,
   },
   circularFrame: {
     position: 'absolute',
-    top: (height - CIRCLE_SIZE) / 2,
-    left: (width - CIRCLE_SIZE) / 2,
-    width: CIRCLE_SIZE,
-    height: CIRCLE_SIZE,
-    borderRadius: CIRCLE_SIZE / 2,
+    top: (height - FRAME_HEIGHT) / 2,
+    left: (width - FRAME_WIDTH) / 2,
+    width: FRAME_WIDTH,
+    height: FRAME_HEIGHT,
+    borderRadius: FRAME_HEIGHT / 2,
     borderWidth: 2,
     borderColor: '#FFFFFF',
     backgroundColor: 'transparent',
@@ -1188,7 +1184,7 @@ const styles = StyleSheet.create({
     height: height,
     position: 'absolute',
     backgroundColor: '#000000',
-    opacity: 0.7,
+    opacity: 0.15,
   },
   // Status Message
   statusContainer: {
@@ -1205,7 +1201,6 @@ const styles = StyleSheet.create({
   bottomControls: {
     paddingVertical: 32,
     paddingHorizontal: 24,
-    backgroundColor: '#000000',
     alignItems: 'center',
     zIndex: 10,
   },

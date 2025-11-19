@@ -249,32 +249,55 @@
           "label": "Ön Görünüm",
           "description": "Kameraya doğru bakın",
           "instruction": "KAMERAYA DOĞRU BAKIN",
-          "subInstruction": ""
+          "subInstruction": "",
+          "tts": "Ön görünüm için kameraya doğru bakın. Yüzünüzü çember içine yerleştirin."
         },
         "right45": {
           "label": "Sağ 45°",
           "description": "Başınızı sağa 45 derece çevirin",
           "instruction": "BAŞINIZI SAĞA ÇEVİRİN",
-          "subInstruction": ""
+          "subInstruction": "",
+          "tts": "Başınızı sağa 45 derece çevirin."
         },
         "left45": {
           "label": "Sol 45°",
           "description": "Başınızı sola 45 derece çevirin",
           "instruction": "BAŞINIZI SOLA ÇEVİRİN",
-          "subInstruction": ""
+          "subInstruction": "",
+          "tts": "Başınızı sola 45 derece çevirin."
         },
         "top": {
           "label": "Üst Görünüm",
           "description": "Başınızı yukarıdan çekin",
           "instruction": "KAFANZI ÖNE EĞİNİZ",
-          "subInstruction": "(Tepeyi Gösterin)"
+          "subInstruction": "(Tepeyi Gösterin)",
+          "tts": "Kafanızı öne eğin ve tepeyi gösterin."
         },
         "back": {
           "label": "Arka Görünüm",
           "description": "Başınızın arka kısmını çekin",
           "instruction": "ARKANIZI ÇEVİRİN",
-          "subInstruction": ""
+          "subInstruction": "",
+          "tts": "Arkanızı çevirin ve başınızın arka kısmını gösterin."
         }
+      },
+      "tts": {
+        "stepChanged": "Yeni adım başladı",
+        "faceDetected": "Yüz algılandı",
+        "faceNotDetected": "Yüz algılanamadı. Lütfen kameraya bakın.",
+        "faceTooClose": "Daha yakına gelin",
+        "faceTooFar": "Biraz uzaklaşın",
+        "faceMoveRight": "Sağa kayın",
+        "faceMoveLeft": "Sola kayın",
+        "faceMoveUp": "Yukarı kayın",
+        "faceMoveDown": "Aşağı kayın",
+        "faceInPosition": "Pozisyon doğru",
+        "positionCorrect": "Pozisyon doğru, fotoğraf çekilebilir",
+        "positionWaiting": "Pozisyon ayarlanıyor",
+        "photoCaptured": "Fotoğraf çekildi",
+        "photoError": "Fotoğraf çekilirken hata oluştu",
+        "countdown": "{{count}}",
+        "allPhotosCaptured": "Tüm fotoğraflar çekildi"
       }
     },
     "detail": {

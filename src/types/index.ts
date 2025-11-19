@@ -63,6 +63,7 @@ export interface PhotoStep {
   targetAngle?: { pitch: number; roll: number };
   requiresFace?: boolean;
   faceRotation?: number;
+  tts?: string;
 }
 
 // Appointment Types

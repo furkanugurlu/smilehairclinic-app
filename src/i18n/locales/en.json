@@ -249,32 +249,55 @@
           "label": "Front View",
           "description": "Look at the camera",
           "instruction": "LOOK AT THE CAMERA",
-          "subInstruction": ""
+          "subInstruction": "",
+          "tts": "For front view, look at the camera. Place your face inside the circle."
         },
         "right45": {
           "label": "Right 45°",
           "description": "Turn your head 45 degrees to the right",
           "instruction": "TURN YOUR HEAD TO THE RIGHT",
-          "subInstruction": ""
+          "subInstruction": "",
+          "tts": "Turn your head 45 degrees to the right."
         },
         "left45": {
           "label": "Left 45°",
           "description": "Turn your head 45 degrees to the left",
           "instruction": "TURN YOUR HEAD TO THE LEFT",
-          "subInstruction": ""
+          "subInstruction": "",
+          "tts": "Turn your head 45 degrees to the left."
         },
         "top": {
           "label": "Top View",
           "description": "Take a photo from above",
           "instruction": "TILT YOUR HEAD FORWARD",
-          "subInstruction": "(Show the Top)"
+          "subInstruction": "(Show the Top)",
+          "tts": "Tilt your head forward and show the top."
         },
         "back": {
           "label": "Back View",
           "description": "Take a photo of the back of your head",
           "instruction": "TURN YOUR BACK",
-          "subInstruction": ""
+          "subInstruction": "",
+          "tts": "Turn your back and show the back of your head."
         }
+      },
+      "tts": {
+        "stepChanged": "New step started",
+        "faceDetected": "Face detected",
+        "faceNotDetected": "Face not detected. Please look at the camera.",
+        "faceTooClose": "Come closer",
+        "faceTooFar": "Move back a bit",
+        "faceMoveRight": "Move right",
+        "faceMoveLeft": "Move left",
+        "faceMoveUp": "Move up",
+        "faceMoveDown": "Move down",
+        "faceInPosition": "Position correct",
+        "positionCorrect": "Position correct, photo can be taken",
+        "positionWaiting": "Adjusting position",
+        "photoCaptured": "Photo captured",
+        "photoError": "Error occurred while taking photo",
+        "countdown": "{{count}}",
+        "allPhotosCaptured": "All photos captured"
       }
     },
     "detail": {

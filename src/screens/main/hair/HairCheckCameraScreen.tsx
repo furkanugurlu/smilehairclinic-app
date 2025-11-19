@@ -10,11 +10,15 @@ import {
   DeviceEventEmitter,
   Platform,
   Animated,
+  StatusBar,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Camera, useCameraDevice, useCameraPermission } from 'react-native-vision-camera';
 import Icon from 'react-native-vector-icons/Ionicons';
 import { useTranslation } from 'react-i18next';
+import { useFocusEffect } from '@react-navigation/native';
+import i18n from '../../../i18n';
+import Tts from 'react-native-tts';
 import { Text, LoadingModal } from '../../../components';
 import { PhotoStep } from '../../../types';
 
@@ -72,6 +76,9 @@ const HairCheckCameraScreen: React.FC<HairCheckCameraScreenProps> = ({
   const faceCheckIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const stableFaceStartRef = useRef<number | null>(null);
   const faceDetectionAnimation = useRef(new Animated.Value(0)).current;
+  const lastTtsMessageRef = useRef<string>('');
+  const ttsQueueRef = useRef<boolean>(false);
+  const isInitialMountRef = useRef<boolean>(true);
 
   const photoSteps: PhotoStep[] = [
     {
@@ -83,6 +90,7 @@ const HairCheckCameraScreen: React.FC<HairCheckCameraScreenProps> = ({
       subInstruction: t('hairCheck.camera.instructions.front.subInstruction'),
       targetAngle: { pitch: 0, roll: 0 },
       requiresFace: true,
+      tts: t('hairCheck.camera.instructions.front.tts'),
     },
     {
       id: 'right45',
@@ -94,6 +102,7 @@ const HairCheckCameraScreen: React.FC<HairCheckCameraScreenProps> = ({
       targetAngle: { pitch: 0, roll: 0 },
       requiresFace: true,
       faceRotation: 45,
+      tts: t('hairCheck.camera.instructions.right45.tts'),
     },
     {
       id: 'left45',
@@ -105,6 +114,7 @@ const HairCheckCameraScreen: React.FC<HairCheckCameraScreenProps> = ({
       targetAngle: { pitch: 0, roll: 0 },
       requiresFace: true,
       faceRotation: -45,
+      tts: t('hairCheck.camera.instructions.left45.tts'),
     },
     {
       id: 'top',
@@ -115,6 +125,7 @@ const HairCheckCameraScreen: React.FC<HairCheckCameraScreenProps> = ({
       subInstruction: t('hairCheck.camera.instructions.top.subInstruction'),
       targetAngle: { pitch: 90, roll: 0 },
       requiresFace: false,
+      tts: t('hairCheck.camera.instructions.top.tts'),
     },
     {
       id: 'back',
@@ -125,6 +136,7 @@ const HairCheckCameraScreen: React.FC<HairCheckCameraScreenProps> = ({
       subInstruction: t('hairCheck.camera.instructions.back.subInstruction'),
       targetAngle: { pitch: 0, roll: 180 },
       requiresFace: false,
+      tts: t('hairCheck.camera.instructions.back.tts'),
     },
   ];
 
@@ -132,28 +144,116 @@ const HairCheckCameraScreen: React.FC<HairCheckCameraScreenProps> = ({
   const isLastStep = currentStepIndex === photoSteps.length - 1;
   const allPhotosCaptured = Object.keys(capturedPhotos).length === photoSteps.length;
 
+  // TTS fonksiyonu - aynı mesajı tekrar okumayı önler
+  const speak = useCallback((text: string, force: boolean = false) => {
+    if (!text || text.trim() === '') return;
+    
+    // Aynı mesajı tekrar okumayı önle (force true ise zorla oku)
+    if (!force && lastTtsMessageRef.current === text) {
+      return;
+    }
+    
+    // TTS sırası varsa bekle
+    if (ttsQueueRef.current) {
+      setTimeout(() => speak(text, force), 500);
+      return;
+    }
+    
+    lastTtsMessageRef.current = text;
+    ttsQueueRef.current = true;
+    
+    try {
+      // iOS'ta stop() fonksiyonu sorun çıkarabiliyor, sadece Android'de kullan
+      if (Platform.OS === 'android') {
+        Tts.stop();
+      }
+      
+      Tts.speak(text);
+      
+      // Konuşma bittiğinde queue'yu temizle
+      setTimeout(() => {
+        ttsQueueRef.current = false;
+      }, 2000);
+    } catch (error: any) {
+      console.log('⚠️ TTS hatası:', error);
+      ttsQueueRef.current = false;
+    }
+  }, []);
+
+  // Ekrandan çıkıldığında direkt TTS'i durdur
+  useFocusEffect(
+    useCallback(() => {
+      // Ekrana geldiğinde TTS'i başlat
+      const currentLanguage = i18n.language || 'tr';
+      const ttsLanguage = currentLanguage === 'tr' ? 'tr-TR' : 'en-US';
+      
+      try {
+        Tts.setDefaultLanguage(ttsLanguage);
+        // iOS'ta setDefaultRate ve setDefaultPitch sorun çıkarabiliyor, sadece Android'de kullan
+        if (Platform.OS === 'android') {
+          Tts.setDefaultRate(0.5);
+          Tts.setDefaultPitch(1.0);
+        }
+      } catch (error) {
+        console.log('⚠️ TTS başlatma hatası:', error);
+      }
+      
+      // Ekrandan çıkıldığında direkt TTS'i durdur
+      return () => {
+        try {
+          Tts.stop();
+        } catch (error) {
+          console.log('⚠️ TTS stop hatası:', error);
+        }
+      };
+    }, [])
+  );
+
   useEffect(() => {
     checkCameraPermission();
     startPositionMonitoring();
-    startFaceDetection();
+    // Yüz algılama devre dışı - startFaceDetection() kaldırıldı
+    
     return () => {
+      // Component unmount olduğunda da TTS'i durdur
+      try {
+        Tts.stop();
+      } catch (error) {
+        console.log('⚠️ TTS stop hatası:', error);
+      }
       stopPositionMonitoring();
       stopCountdown();
-      stopFaceDetection();
+      // stopFaceDetection() kaldırıldı
     };
   }, []);
 
-  useEffect(() => {
-    // Yüz pozisyonu değiştiğinde kontrol et
-    checkFacePosition();
-  }, [facePosition, faceDetected, currentStepIndex]);
+  // Yüz algılama devre dışı - useEffect'ler kaldırıldı
+  // useEffect(() => {
+  //   // Yüz pozisyonu değiştiğinde kontrol et
+  //   checkFacePosition();
+  // }, [facePosition, faceDetected, currentStepIndex]);
 
   useEffect(() => {
     // Açı değiştiğinde pozisyon kontrolü yap
     checkPosition();
   }, [phoneAngle, currentStepIndex]);
 
-  // Adım değiştiğinde state'leri sıfırla
+  // İlk açılışta sesli yönlendirme yap
+  useEffect(() => {
+    // Sadece ilk açılışta (currentStepIndex === 0) ve component mount olduğunda
+    if (isInitialMountRef.current && currentStepIndex === 0 && photoSteps[0]) {
+      isInitialMountRef.current = false;
+      const firstStep = photoSteps[0];
+      const ttsMessage = firstStep.tts || firstStep.instruction || firstStep.description;
+      if (ttsMessage) {
+        setTimeout(() => {
+          speak(ttsMessage, true);
+        }, 1000); // Kameranın hazır olması için 1 saniye bekle
+      }
+    }
+  }, [currentStepIndex, photoSteps, speak]); // İlk adımda çalış
+
+  // Adım değiştiğinde state'leri sıfırla (sesli yönlendirme yapma)
   useEffect(() => {
     console.log('🔄 Adım değişti:', {
       currentStepIndex,
@@ -171,6 +271,8 @@ const HairCheckCameraScreen: React.FC<HairCheckCameraScreenProps> = ({
     stablePositionStartRef.current = null;
     stableFaceStartRef.current = null;
     stopCountdown();
+    
+    // Adım değiştiğinde sesli yönlendirme yapma - sadece fotoğraf çekildikten sonra bir sonraki adımın mesajı söylenecek
   }, [currentStepIndex]);
 
   // Otomatik çekim kaldırıldı - sadece manuel çekim
@@ -220,6 +322,7 @@ const HairCheckCameraScreen: React.FC<HairCheckCameraScreenProps> = ({
         const simulatedY = CIRCLE_CENTER_Y + (Math.random() - 0.5) * CIRCLE_SIZE * 0.3;
         const simulatedSize = CIRCLE_SIZE * (0.5 + Math.random() * 0.2);
         
+        const wasFaceDetected = faceDetected;
         setFaceDetected(true);
         setFacePosition({
           x: simulatedX,
@@ -227,10 +330,21 @@ const HairCheckCameraScreen: React.FC<HairCheckCameraScreenProps> = ({
           width: simulatedSize,
           height: simulatedSize,
         });
+        
+        // Yüz ilk kez algılandığında sesli bildirim
+        if (!wasFaceDetected && currentStep.requiresFace) {
+          speak(t('hairCheck.camera.tts.faceDetected'));
+        }
       } else {
+        const wasFaceDetected = faceDetected;
         setFaceDetected(false);
         setFaceInFrame(false);
         setFaceWarning('Yüz algılanamadı. Lütfen kameraya bakın.');
+        
+        // Yüz algılanamadığında sesli uyarı
+        if (wasFaceDetected && currentStep.requiresFace) {
+          speak(t('hairCheck.camera.tts.faceNotDetected'));
+        }
       }
     }, 500); // Her 500ms'de bir kontrol et
   };
@@ -277,29 +391,53 @@ const HairCheckCameraScreen: React.FC<HairCheckCameraScreenProps> = ({
     // Uyarı mesajları
     if (!isValid) {
       let warning = '';
+      let ttsMessage = '';
+      
       if (!isSizeValid) {
         if (faceSize < FACE_SIZE_MIN) {
           warning = 'Daha yakına gelin';
+          ttsMessage = t('hairCheck.camera.tts.faceTooClose');
         } else {
           warning = 'Biraz uzaklaşın';
+          ttsMessage = t('hairCheck.camera.tts.faceTooFar');
         }
       } else if (!isPositionValid) {
         if (distanceFromCenterX > distanceFromCenterY) {
           warning = faceCenterX < CIRCLE_CENTER_X ? 'Sağa kayın' : 'Sola kayın';
+          ttsMessage = faceCenterX < CIRCLE_CENTER_X 
+            ? t('hairCheck.camera.tts.faceMoveRight')
+            : t('hairCheck.camera.tts.faceMoveLeft');
         } else {
           warning = faceCenterY < CIRCLE_CENTER_Y ? 'Aşağı kayın' : 'Yukarı kayın';
+          ttsMessage = faceCenterY < CIRCLE_CENTER_Y
+            ? t('hairCheck.camera.tts.faceMoveDown')
+            : t('hairCheck.camera.tts.faceMoveUp');
         }
       }
+      
       setFaceWarning(warning);
+      
+      // Sesli uyarı (sadece warning değiştiğinde)
+      if (ttsMessage && faceWarning !== warning) {
+        speak(ttsMessage);
+      }
+      
       stableFaceStartRef.current = null;
       setFaceStableTime(0);
     } else {
+      const wasInFrame = faceInFrame;
       setFaceWarning(null);
+      
       if (stableFaceStartRef.current === null) {
         stableFaceStartRef.current = Date.now();
       }
       const stableDuration = Date.now() - (stableFaceStartRef.current || 0);
       setFaceStableTime(stableDuration);
+      
+      // Yüz pozisyona girdiğinde sesli bildirim (sadece ilk kez)
+      if (!wasInFrame && stableDuration > 500) {
+        speak(t('hairCheck.camera.tts.faceInPosition'));
+      }
     }
 
     // Animasyon
@@ -326,6 +464,7 @@ const HairCheckCameraScreen: React.FC<HairCheckCameraScreenProps> = ({
 
     const isValid = pitchDiff <= ANGLE_TOLERANCE && rollDiff <= ANGLE_TOLERANCE;
 
+    const wasPositionValid = isPositionValid;
     setIsPositionValid(isValid);
 
     if (isValid) {
@@ -334,10 +473,20 @@ const HairCheckCameraScreen: React.FC<HairCheckCameraScreenProps> = ({
       }
       const stableDuration = Date.now() - (stablePositionStartRef.current || 0);
       setPositionStableTime(stableDuration);
+      
+      // Pozisyon doğru olduğunda sesli bildirim (sadece ilk kez ve yeterince stabil olduğunda)
+      if (!wasPositionValid && stableDuration > 1000) {
+        speak(t('hairCheck.camera.tts.positionCorrect'));
+      }
     } else {
       stablePositionStartRef.current = null;
       setPositionStableTime(0);
       stopCountdown();
+      
+      // Pozisyon geçersiz olduğunda sesli uyarı
+      if (wasPositionValid) {
+        speak(t('hairCheck.camera.tts.positionWaiting'));
+      }
     }
   }, [phoneAngle, currentStepIndex, photoSteps]);
 
@@ -353,11 +502,16 @@ const HairCheckCameraScreen: React.FC<HairCheckCameraScreenProps> = ({
   const startCountdown = () => {
     let count = 3;
     setCountdown(count);
+    
+    // İlk sayıyı sesli söyle
+    speak(count.toString(), true);
 
     countdownIntervalRef.current = setInterval(() => {
       count--;
       if (count > 0) {
         setCountdown(count);
+        // Sesli geri sayım
+        speak(count.toString(), true);
         // Ses çal (basit bip sesi simülasyonu)
         playBeepSound(count);
       } else {
@@ -405,6 +559,12 @@ const HairCheckCameraScreen: React.FC<HairCheckCameraScreenProps> = ({
     if (!hasPermission) {
       const permission = await requestPermission();
       if (!permission) {
+        // İzin verilmediğinde TTS'i durdur
+        try {
+          Tts.stop();
+        } catch (error) {
+          console.log('⚠️ TTS stop hatası:', error);
+        }
         Alert.alert(
           t('hairCheck.camera.cameraPermission'),
           t('hairCheck.camera.cameraPermission'),
@@ -495,6 +655,21 @@ const HairCheckCameraScreen: React.FC<HairCheckCameraScreenProps> = ({
 
       console.log('✅ Fotoğraf state\'e eklendi');
       
+      // Fotoğraf çekildiğinde sesli bildirim
+      speak(t('hairCheck.camera.tts.photoCaptured'), true);
+      
+      // Eğer son adım değilse, bir sonraki adımın talimatını sesli olarak söyle
+      const currentIsLastStep = currentStepIndex === photoSteps.length - 1;
+      if (!currentIsLastStep) {
+        const nextStepIndex = currentStepIndex + 1;
+        const nextStep = photoSteps[nextStepIndex];
+        if (nextStep && nextStep.tts) {
+          setTimeout(() => {
+            speak(nextStep.tts!, true);
+          }, 1500); // Fotoğraf çekildi mesajından sonra 1.5 saniye bekle
+        }
+      }
+      
       // Otomatik çekim modunu sıfırla
       setAutoCaptureEnabled(false);
       stablePositionStartRef.current = null;
@@ -506,6 +681,10 @@ const HairCheckCameraScreen: React.FC<HairCheckCameraScreenProps> = ({
         name: error.name,
         stack: error.stack,
       });
+      
+      // Hata durumunda sesli uyarı
+      speak(t('hairCheck.camera.tts.photoError'), true);
+      
       Alert.alert(
         t('common.error'),
         error.message || t('hairCheck.camera.photoError'),
@@ -515,7 +694,10 @@ const HairCheckCameraScreen: React.FC<HairCheckCameraScreenProps> = ({
     }
   };
 
-  const handleAllPhotosCaptured = async () => {    
+  const handleAllPhotosCaptured = async () => {
+    // Tüm fotoğraflar çekildiğinde sesli bildirim
+    speak(t('hairCheck.camera.tts.allPhotosCaptured'), true);
+    
     // Fotoğrafları HairCheckCaptureScreen'e gönder
     navigation.navigate('HairCheckCapture', {
       capturedPhotos: capturedPhotos,
@@ -536,6 +718,12 @@ const HairCheckCameraScreen: React.FC<HairCheckCameraScreenProps> = ({
     if (currentStepIndex > 0) {
       setCurrentStepIndex(prev => prev - 1);
     } else {
+      // Geri gidilirken TTS'i durdur
+      try {
+        Tts.stop();
+      } catch (error) {
+        console.log('⚠️ TTS stop hatası:', error);
+      }
       navigation.goBack();
     }
   };
@@ -596,6 +784,13 @@ const HairCheckCameraScreen: React.FC<HairCheckCameraScreenProps> = ({
   }, [currentStepIndex, capturedPhotos, currentStep.id]);
 
   const handleClose = () => {
+    // Kameradan çıkarken TTS'i durdur
+    try {
+      Tts.stop();
+    } catch (error) {
+      console.log('⚠️ TTS stop hatası:', error);
+    }
+    
     Alert.alert(
       t('hairCheck.camera.exit'),
       t('hairCheck.camera.exitConfirm'),
@@ -607,7 +802,15 @@ const HairCheckCameraScreen: React.FC<HairCheckCameraScreenProps> = ({
         {
           text: t('hairCheck.camera.exitConfirmButton'),
           style: 'destructive',
-          onPress: () => navigation.goBack(),
+          onPress: () => {
+            // Çıkış onaylandığında da TTS'i durdur
+            try {
+              Tts.stop();
+            } catch (error) {
+              console.log('⚠️ TTS stop hatası:', error);
+            }
+            navigation.goBack();
+          },
         },
       ]
     );
@@ -615,6 +818,7 @@ const HairCheckCameraScreen: React.FC<HairCheckCameraScreenProps> = ({
 
   return (
     <SafeAreaView style={styles.container}>
+      <StatusBar barStyle={'light-content'} />
       {/* Top Header */}
       <View style={styles.topHeader}>
         <TouchableOpacity
@@ -696,30 +900,7 @@ const HairCheckCameraScreen: React.FC<HairCheckCameraScreenProps> = ({
             {/* Circular Frame Guide */}
             <View style={styles.circularFrame} />
 
-            {/* Face Detection Indicator */}
-            {currentStep.requiresFace && !hasCurrentPhoto && faceDetected && (
-              <Animated.View
-                style={[
-                  styles.faceIndicator,
-                  {
-                    opacity: faceDetectionAnimation,
-                    left: facePosition.x - facePosition.width / 2,
-                    top: facePosition.y - facePosition.height / 2,
-                    width: facePosition.width,
-                    height: facePosition.height,
-                  },
-                ]}
-              >
-                <View
-                  style={[
-                    styles.faceIndicatorBox,
-                    {
-                      borderColor: faceInFrame ? '#10B981' : '#F59E0B',
-                    },
-                  ]}
-                />
-              </Animated.View>
-            )}
+            {/* Yüz algılama devre dışı - Face Detection Indicator kaldırıldı */}
           </View>
         )}
       </View>
